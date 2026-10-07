@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<odoo>
+    <data>
+		<record id="pos_combo_groups_tree_view" model="ir.ui.view">
+			<field name="name">pos.combo.groups.record.tree</field>
+			<field name="model">combo.groups</field>
+			<field name="arch" type="xml">
+				<list string="Combo Categories">
+					<field name="name"/>
+					<field name="maximum_combo_products"/>
+					<field name="minimum_combo_products" />
+					<field name="combo_products_ids"/>
+				</list>
+			</field>
+		</record>
+
+        <record id="pos_combo_products_tree_view" model="ir.ui.view">
+			<field name="name">pos.combo.products.record.tree</field>
+			<field name="model">combo.products</field>
+			<field name="arch" type="xml">
+				<list string="Category Options">
+					<field name="name"/>
+					<field name="price"/>
+					<field name="manage_inventory"/>
+				</list>
+			</field>
+		</record>
+
+
+		<record id="pos_combo_groups_from_view" model="ir.ui.view">
+			<field name="name">pos.combo.form.record.form</field>
+			<field name="model">combo.groups</field>
+			<field name="arch" type="xml">
+				<form string="Combo Categories" >
+					<sheet>
+                        <group style="width:50%;" >
+                            <field name="name"/>
+                            <field name="maximum_combo_products"/>
+                            <field name="minimum_combo_products" />
+                            <field name="combo_products_ids" widget="many2many_tags"/>
+                        </group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+        <record id="wk_pos_combo_products_form_view" model="ir.ui.view">
+            <field name="name">wk.pos.combo.products.form.views</field>
+            <field name="model">combo.products</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                      <field name="image" widget="image" class="oe_avatar" />
+                        <group >
+                            <field name="name"/>
+                            <field name="price"/>
+                            <field name="manage_inventory"/>
+                            <field name="product_id" domain="[('available_in_pos', '=', True),('type','in',['product', 'consu'])]"  invisible="not manage_inventory" required="manage_inventory"  style="width:50%;"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+		</record>
+
+		<record id="pos_combo_groups_tree_view_action" model="ir.actions.act_window">
+			<field name="name">Combo Categories</field>
+            <field name="type">ir.actions.act_window</field>
+			<field name="res_model">combo.groups</field>
+			<field name="view_mode">list,form</field>
+			<field name="view_id" ref="pos_combo_groups_tree_view" />
+		</record>
+
+		<record id="pos_combo_products_tree_view_action" model="ir.actions.act_window">
+			<field name="name">POS Combo Products</field>
+            <field name="type">ir.actions.act_window</field>
+			<field name="res_model">combo.products</field>
+			<field name="view_mode">list,form</field>
+			<field name="view_id" ref="pos_combo_products_tree_view" />
+		</record>
+
+		<record id="product_combo_core_inherited_product_template_form" model="ir.ui.view">
+			<field name="name">product.product.combo</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//div[@name='options']" position="inside">
+					<div class="d-inline-block">
+						<field name="is_combo_product"/>
+						<label for="is_combo_product"/>
+					</div>
+				</xpath>
+				<xpath expr="//page[@name='general_information']" position="after">
+					<page name="combo" string="Combo Products" invisible="not is_combo_product" >
+                        <group>
+							<field name="hide_product_price"/>
+                            <field name="pos_combo_groups_ids" string="Combo Categories" widget="many2many_tags" style="width:50%;" required="is_combo_product"/>
+                        </group>
+						<div>
+							<button name="%(pos_combo_products.pos_combo_groups_tree_view_action)d" icon="fa-arrow-right" type="action" string="Combo Categories" class="btn-link"/>
+						</div>
+                    </page>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="product_template_combo_inherited_variant_form" model="ir.ui.view">
+			<field name="name">product.product.combo</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_only_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//page[@name='general_information']" position="attributes">
+				</xpath>
+			</field>
+		</record>
+
+
+        <menuitem
+            id="pos_combo_config_main_menu"
+            parent="point_of_sale.menu_point_root"
+            name='Combo Product Configuration'
+        />
+	
+        <menuitem
+		id="pos_combo_groups_menu_item"
+		name="Combo Categories"
+		parent="pos_combo_products.pos_combo_config_main_menu"
+		action="pos_combo_products.pos_combo_groups_tree_view_action"
+		sequence="37"/>
+
+		<record id="pos_combo_group_action" model="ir.actions.act_window">
+			<field name="name">Combo Products</field>
+			<field name="res_model">product.template</field>
+			<field name="view_mode">kanban,list,form</field>
+			<field name="domain">[('is_combo_product','=',True)]</field>
+			<field name="context">{'default_is_combo_product':True,'default_hide_product_price':False}</field>
+			<field name="view_id" ref="product.product_template_kanban_view" />
+		</record>
+
+		<menuitem id="pos_menu_combo_products"
+        name="Combo Products "
+        parent="point_of_sale.pos_config_menu_catalog"
+        action="pos_combo_group_action"
+        sequence="1344"/>
+		
+        <menuitem
+            id="pos_combo_products_menu_item"
+            name="Category Options"
+            parent="pos_combo_products.pos_combo_config_main_menu"
+            action="pos_combo_products.pos_combo_products_tree_view_action"
+            sequence="37"
+        />
+
+	</data>
+</odoo>

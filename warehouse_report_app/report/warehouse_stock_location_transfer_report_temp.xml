@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <template id="report_stocklocationtransinfo">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-if ="'warehouse_ids' in data">
+                    <t t-foreach="data.get('warehouse_ids')" t-as="warehouse">
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <div class="header"> 
+                                <center>
+                                    <img t-if="data.get('company_id').logo" t-att-src="image_data_uri(data.get('company_id').logo)" style="width:50%;height:100px;" alt="Logo"/>
+                                </center>
+                                <center>
+                                    <span class="company_address" t-field="data.get('company_id').partner_id"
+                                        t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                                </center>
+                            </div>
+                            <table width="100%" style="font-size:21px;border-style: none;margin-bottom:15px;">
+                                <tr style="border-style: none;">
+                                    <td style="border-style: none;">
+                                        <center>
+                                            <strong>
+                                                Inventory And Stock Location Transfer Report
+                                            </strong>
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;margin-bottom:15px;">
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Warehouse
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="warehouse.name" />
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Company:
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Start Date:
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            End Date:
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('company_id').name" /> 
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('date_from')" /> 
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('date_to')" /> 
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;">
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td rowspan="2" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Code
+                                        </center>
+                                    </td>
+                                    <td rowspan="2" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Product Name
+                                        </center>
+                                    </td>
+                                    <td rowspan="2" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Product Category
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Transfers Dates
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Source Location
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Destination Location
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Transfers Location Qty
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                </tr>
+                                <t t-foreach="get_warehouse_details(data, warehouse)" t-as="records">
+                                    <tr style="font-size:13px;" t-foreach="records.get('product_data')" t-as="record">
+                                        <t t-set="sale_line" t-value="record.get('sale_order_line')"/>
+                                        <t t-set="purchase_line" t-value="record.get('purchase_order_line')"/>
+                                        <t t-set="adjustment_line" t-value="record.get('adjustment_line')"/>
+
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_code')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_name')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_category')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="sale_line.date" t-options='{"widget": "date"}'/>
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="purchase_line.date" t-options='{"widget": "date"}'/>
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="adjustment_line.date" t-options='{"widget": "date"}'/>
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="sale_line.location_id.name"/>
+                                                <t t-set="parent_locations" t-value="sale_line.location_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="purchase_line.location_id.name"/>
+                                                <t t-set="parent_locations" t-value="purchase_line.location_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="adjustment_line.location_id.name"/>
+                                                <t t-set="parent_locations" t-value="adjustment_line.location_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="sale_line.location_dest_id.name"/>
+                                                <t t-set="parent_locations" t-value="sale_line.location_dest_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="purchase_line.location_dest_id.name"/>
+                                                <t t-set="parent_locations" t-value="purchase_line.location_dest_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="adjustment_line.location_dest_id.name"/>
+                                                <t t-set="parent_locations" t-value="adjustment_line.location_dest_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="'%.2f'% sale_line.product_uom_qty" />
+
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="'%.2f'% purchase_line.product_uom_qty" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="'%.2f'% adjustment_line.product_uom_qty" />
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                        <div style="page-break-before:always;"/>
+                    </t>
+                </t>
+                <!-- Location -->
+                <t t-if ="'location_ids' in data">
+                    <t t-foreach="data.get('location_ids')" t-as="location">
+                        <div class="page">
+                            <div class="oe_structure"/> 
+                            <div class="header"> 
+                                <center>
+                                    <img t-if="data.get('company_id').logo" t-att-src="image_data_uri(data.get('company_id').logo)" style="width:50%;height:100px;" alt="Logo"/>
+                                </center>
+                                <center>
+                                    <span class="company_address" t-field="data.get('company_id').partner_id"
+                                        t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                                </center>
+                            </div>
+                            <table width="100%" style="font-size:21px;border-style: none;margin-bottom:15px;">
+                                <tr style="border-style: none;">
+                                    <td style="border-style: none;">
+                                        <center>
+                                            <strong>
+                                                Inventory And Stock Location Transfer Report
+                                            </strong>
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;margin-bottom:15px;">
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Location
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <t t-set="locations" t-value="location.name"/>
+                                            <t t-set="parent_locations" t-value="location.location_id.name"/>
+                                            <t t-if="parent_locations">
+                                                <span t-esc="parent_locations" />
+                                                /
+                                            </t>
+                                            <span t-esc="locations" />
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Company:
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Start Date:
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            End Date:
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('company_id').name" /> 
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('date_from')" /> 
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('date_to')" /> 
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;">
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td rowspan="2" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Code
+                                        </center>
+                                    </td>
+                                    <td rowspan="2" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Product Name
+                                        </center>
+                                    </td>
+                                    <td rowspan="2" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Product Category
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Transfers Dates
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Source Location
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Destination Location
+                                        </center>
+                                    </td>
+                                    <td colspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Transfers Location Qty
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Sale
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Purchase
+                                        </center>
+                                    </td>
+                                    <td style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Last Adjustment
+                                        </center>
+                                    </td>
+                                </tr>
+                                <t t-foreach="get_location_details(data, location)" t-as="records">
+                                    <tr style="font-size:13px;" t-foreach="records.get('product_data')" t-as="record">
+                                        <t t-set="sale_line" t-value="record.get('sale_order_line')"/>
+                                        <t t-set="purchase_line" t-value="record.get('purchase_order_line')"/>
+                                        <t t-set="adjustment_line" t-value="record.get('adjustment_line')"/>
+
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_code')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_name')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_category')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="sale_line.date" t-options='{"widget": "date"}'/>
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="purchase_line.date" t-options='{"widget": "date"}'/>
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="adjustment_line.date" t-options='{"widget": "date"}'/>
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="sale_line.location_id.name"/>
+                                                <t t-set="parent_locations" t-value="sale_line.location_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="purchase_line.location_id.name"/>
+                                                <t t-set="parent_locations" t-value="purchase_line.location_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="adjustment_line.location_id.name"/>
+                                                <t t-set="parent_locations" t-value="adjustment_line.location_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="sale_line.location_dest_id.name"/>
+                                                <t t-set="parent_locations" t-value="sale_line.location_dest_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="purchase_line.location_dest_id.name"/>
+                                                <t t-set="parent_locations" t-value="purchase_line.location_dest_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-set="locations" t-value="adjustment_line.location_dest_id.name"/>
+                                                <t t-set="parent_locations" t-value="adjustment_line.location_dest_id.location_id.name"/>
+                                                <t t-if="parent_locations">
+                                                    <span t-esc="parent_locations" />
+                                                    /
+                                                </t>
+                                                <span t-esc="locations" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="'%.2f'% sale_line.product_uom_qty" />
+
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="'%.2f'% purchase_line.product_uom_qty" />
+                                            </center>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <center>
+                                                <t t-esc="'%.2f'% adjustment_line.product_uom_qty" />
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                        <div style="page-break-before:always;"/>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

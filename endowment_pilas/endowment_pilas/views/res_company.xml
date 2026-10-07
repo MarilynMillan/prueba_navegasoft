@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_company_view_inherit_arl" model="ir.ui.view">
+            <field name="name">res.company.view.inherit.arl</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                
+                <xpath expr="//page//field[@name='administradoras_ids']/list/field[@name='name']" position="after">
+                    <field name="list_administradora_arl_id"/>
+                </xpath>
+
+                <xpath expr="//page//field[@name='administradoras_ids']/form//field[@name='name']" position="after">
+                    <field name="list_administradora_arl_id"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

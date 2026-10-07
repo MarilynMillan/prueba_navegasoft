@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<odoo>
+    <data>
+        <record id="view_pos_config_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.point_of_sale</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='restaurant_section']" position="inside">
+                    <setting id="enable_pos_restaurant_restiction" invisible="not pos_module_pos_restaurant"
+                        help="Enable restriction on some operations once the order has been sent to the kitchen">
+                        <field name="is_pos_restaurant_restiction"/>
+
+                        <div invisible="not is_pos_restaurant_restiction">
+                            <field name="is_restriction_on_orderline_qty_update" class="oe_inline"/>
+                            <label class="fw-normal" for="is_restriction_on_orderline_qty_update" string="Orderline Quantity Update"/>
+                        </div>
+                        
+                        <div invisible="not is_pos_restaurant_restiction">
+                            <field name="is_restriction_on_orderline_delete" class="oe_inline"/>
+                            <label class="fw-normal" for="is_restriction_on_orderline_delete" string="Orderline Delete"/>
+                        </div>
+
+                        <div invisible="not is_pos_restaurant_restiction">
+                            <field name="is_restriction_on_order_delete" class="oe_inline"/>
+                            <label class="fw-normal" for="is_restriction_on_order_delete" string="Order Delete"/>
+                        </div>
+
+                        <div invisible="not is_pos_restaurant_restiction">
+                            <field name="is_restriction_on_session_close" class="oe_inline"/>
+                            <label class="fw-normal" for="is_restriction_on_session_close" string="Session Close"/>
+                        </div>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

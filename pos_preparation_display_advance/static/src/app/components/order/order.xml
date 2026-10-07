@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_preparation_display_advance.Order" t-inherit="pos_preparation_display.Order" t-inherit-mode="extension">
+        <!-- Reemplazar botón Reset: de llamada inline a changeOrderStage → método resetOrder con confirmación -->
+        <xpath expr="//button[contains(@t-on-click.stop, 'changeOrderStage')]" position="replace">
+            <button class="btn btn-lg btn-secondary flex-grow-1 border-end border-white rounded"
+                    type="button"
+                    t-on-click.stop="resetOrder"
+                    t-if="o_pdis_last_stage">
+                <i class="fa fa-undo pe-1" aria-hidden="true"></i><span>Reset</span>
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="screen_order_custom.Orderline" t-inherit="pos_preparation_display.Orderline" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pdis_orderline_infos')]" position="after">
+            <div class="orderline_pos_combo_list" t-if="this.props.orderline.pos_combo_list">
+                <t t-foreach="Object.entries(this.props.orderline.pos_combo_list)" t-as="combo" t-key="combo[0]">
+                    <div class="d-flex ps-3">
+                        <div class="o_pdis_quantity px-2 text-center text-muted">
+                            <div class="o_pdis_todo" t-esc="`${combo[1]}x`"/>
+                        </div>
+                        <div
+                            class="o_pdis_product-name"
+                            t-if="combo[0]"
+                            t-esc="combo[0]"
+                            t-att-class="{ 'o_pdis_orderline--done opacity-25 text-decoration-line-through text-muted': this.props.orderline.todo === false }"
+                        />
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

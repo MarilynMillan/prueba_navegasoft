@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<templates id="template" xml:space="preserve">
+    <t t-name="MinQtyPopupWidget">
+        <Dialog header="false" footer="false" size="'md'">
+            <div class="popup popup-text " style="max-width: 500px;background:white;color: black;">
+                <header class="title p-2 fs-2 fw-bolder" style="color:black;">
+                    <t t-esc=" props.title || 'Minimum Quantity of Products' " />
+                </header>
+                <main class='body p-3'>
+                    <p style="text-align:left;font-size: 19px;color: #c12929;">You cannot proceed without selecting minimum required products as shown below: </p>
+                    <div style="overflow: auto;height: 230px;text-align:left;">
+                        <t t-foreach="env.services.pos.all_combo_groups" t-as='group' t-key="group.id">
+                            <t t-if="props.minimum_qty_dict[group.id]">
+                                <p>Category '
+                                    <t t-esc="group.name"/>
+                                    <span>' still has </span>
+                                    <t t-esc="props.minimum_qty_dict[group.id]"/>
+                                    <span>product(s) left to be selected.</span>
+                                </p>
+                            </t>
+                        </t>
+                    </div>
+                </main>
+                <footer class="d-flex p-2 justify-content-end">
+                    <div class="button confirm btn fs-2 mx-1 px-2 " t-on-click="click_min_comfirm" style=" color: #FFFFFF;background-color: #2ba339;border-radius: 4px;">Back</div>
+                </footer>
+            </div>
+        </Dialog>
+    </t>
+
+
+    <t t-name="ComboPopupWidget">
+        <Dialog header="false" footer="false" size="'md'">
+            <div class="popup popup-text combo_prod_popup" style="max-width: 665px;height: 460px;background:white;color: black;">
+                <header class="title p-2 fs-2 fw-bolder" style="color:black;">
+                    <t t-esc=" props.title || 'Combo Products' " />
+                </header>
+                <main class='body' style="height: 366px; overflow-y: auto;">
+                    <t t-if="props and props.groups">
+                        <t t-foreach='props.groups' t-as='group' t-key="group.id">
+                            <t t-set="wkgroup" t-value="env.services.pos.all_combo_groups_by_id[group.id]" />
+                            <div t-att-id="'tab'+wkgroup.id" class="tab-content current">
+                                <p style="margin: 0px;background: #d2cfcf;padding: 17px;font-size: 22px;text-weight: bold;font-weight: 400;">
+                                    <t t-esc="wkgroup.name" />
+                                </p>
+                                <t t-if="env.services.pos.config.combo_popup_view == 'list'">  
+                                    <table class="combos wk_table_combo" >
+                                        <tr class="wk_tr_combo" t-foreach='wkgroup.combo_products_ids' t-as='combo_product_id' t-key="combo_product_id.id">
+                                            <t t-set="combo_prod" t-value="env.services.pos.all_combo_products_by_id[combo_product_id.id]" />
+                                            
+                                            <td t-att-data-id="combo_prod.id" style="width:20%;">
+                                                <img style="width: 80px;height: 80px;margin: 5px;" t-att-src="wk_get_combo_product_image_url(combo_prod)" />
+                                            </td>
+                                            <td class="combo_product_id" style="text-align:left;font-size: 22px;margin-bottom: 20px;width:50%" t-att-data-id="combo_product_id">
+                                                <t t-esc="env.services.pos.all_combo_products_by_id[combo_product_id.id].name"/>
+                                                <div style="font-size:16px;" class="wk_sel_product_price">
+                                                    <t t-esc="this.env.utils.formatCurrency(env.services.pos.all_combo_products_by_id[combo_product_id.id].price)"/>
+                                                </div>
+                                                <div>
+                                                    <i class="fa fa-check wk_check" style="color:green;display:none; background: #85d385;padding: 3px;border-radius: 50%;border: 1px solid;"/>
+                                                </div>
+                                            </td>
+                                            <t t-if="!env.services.pos.all_combo_products_by_id[combo_product_id.id].manage_inventory">
+                                                <td style="margin-bottom: 20px;">
+                                                    <label class='switch' style="margin-bottom: 5px;">
+                                                       
+                                                        <input style="" 
+                                                                t-att-data-id="combo_product_id.id" 
+                                                                t-att-el-id="'tab'+wkgroup.id+combo_product_id.id" 
+                                                                class="wk_checked_combo" 
+                                                                type='checkbox'/>
+                                                        <span class='btn btn-success check_box round combo_check' style="margin-left: -54px;border: 1px solid;">ADD</span>
+                                                    </label>
+                                                    <p class="max_val_error" style="color:red;display:none;width: 270px;font-size: 15px;">Cannot select more than
+                                                        <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].maximum_combo_products"/>product(s).
+                                                    </p>
+                                                    <p class="min_val_error" style="color:red;display:none;width: 270px;font-size: 15px;">Cannot select less than
+                                                        <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].minimum_combo_products"/>product(s).
+                                                    </p>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td style="display: flex; margin-top: 25px; margin-right: 7px;">
+                                                    <img src="/pos_combo_products/static/description/Vector_2.png" class="fa wk-fa-minus" t-att-data-id="combo_product_id" style="font-size: 25px;" />
+                                                    <input type="number" t-att-el-id="'tab'+wkgroup.id+combo_product_id" t-att-data-id="combo_product_id" class="d-inline-block wk_qty_product" min="0" oninput="validity.valid||(value='');" value="0" style="width: 65px; text-align: center;"></input>
+                                                    <img src="/pos_combo_products/static/description/Vector_1.png" class="fa wk-fa-plus" t-att-data-id="combo_product_id" style="font-size: 25px;"/>
+                                                    <p class="max_val_error" style="color:red;display:none;width: 270px;font-size: 15px;">Cannot select more than
+                                                        <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].maximum_combo_products"/> product(s).
+                                                    </p>
+                                                    <p class="min_val_error" style="color:red;display:none;width: 270px;font-size: 15px;">Cannot select less than
+                                                        <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].minimum_combo_products"/> product(s).
+                                                    </p>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </table>
+                                </t>
+                                <t t-else="">
+                                    <table class="combos wk_table_combo"  style="display:flex;flex-wrap:wrap;">
+                                        <t t-foreach='wkgroup.combo_products_ids' t-as='combo_product_id' t-key="combo_product_id.id">
+                                            <t t-set="combo_prod" t-value="env.services.pos.all_combo_products_by_id[combo_product_id.id]" />
+                                            <article  t-if="!env.services.pos.all_combo_products_by_id[combo_product_id.id].manage_inventory" class='product grid_product' t-att-data-id="combo_prod.id" t-att-el-id="'tabgrid'+wkgroup.id+combo_product_id">
+                                                <div class="product-img" t-att-data-id="combo_prod.id">
+                                                    <img style="height: 100px; width: 100px;" t-att-src="wk_get_combo_product_image_url(combo_prod)" />
+                                                </div>
+                                                <div class="pr" style="font-size:12px; text-align:left;">
+                                                    <div class="wk_product_name" style="font-size: 20px;">
+                                                        <t t-esc="combo_prod.name" />
+                                                    </div>
+                                                    <div class="wk_product_price wk_sel_product_price" style="font-size: 15px;margin-top: 5px;
+                                                                    text-align: center;">
+                                                        <t t-esc="this.env.utils.formatCurrency(combo_prod.price) " />
+                                                    </div>
+                                                    <div>
+                                                        <i class="fa fa-check wk_check" style="color:green;display:none;background: #85d385;padding: 3px;border-radius: 50%;border: 1px solid;"/>
+                                                    </div>
+                                                </div>
+                                                <p class="max_val_error" style="color:red;display:none;width: 270px; font-size: 15px;">Cannot select more than
+                                                    <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].maximum_combo_products"/> product(s).
+                                                </p>
+                                                <p class="min_val_error" style="color:red;display:none;width:270px;font-size: 15px;">Cannot select less than
+                                                    <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].minimum_combo_products"/> product(s).
+                                                </p>
+                                            </article>
+                                            <article t-else="" class='product position-relative grid_product' t-att-data-id="combo_prod.id" t-att-el-id="'tabgrid'+wkgroup.id+combo_product_id">
+                                                <div class="remove_sel_prod" style="width: 20%;background-color: #b8b8b8;">
+                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="grid_qty" style="width: 20%;background-color: #b8b8b8;margin-left: 80%;">0 
+                                                </div>
+                                                <div class="product-img" t-att-data-id="combo_prod.id">
+                                                    <img style="height: 100px; width: 100px;" t-att-src="wk_get_combo_product_image_url(combo_prod)" />
+                                                </div>
+                                                <div class="pr" style="font-size:12px; text-align:left;">
+                                                    <div class="wk_product_name" style="font-size: 20px;">
+                                                        <t t-esc="combo_prod.name" />
+                                                    </div>
+                                                    <div class="wk_product_price wk_sel_product_price" style="font-size: 15px; margin-top: 5px;text-align: center;">
+                                                        <t t-esc="this.env.utils.formatCurrency(combo_prod.price) " />
+                                                    </div>
+                                                    <div>
+                                                        <i class="fa fa-check wk_check" style="color:green;display:none;background: #85d385;padding: 3px;border-radius: 50%;border: 1px solid;"/>
+                                                    </div>
+                                                    <p class="max_val_error" style="color:red;display:none;width:270px;font-size: 15px;">Cannot select more than
+                                                        <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].maximum_combo_products"/> product(s).
+                                                    </p>
+                                                    <p class="min_val_error" style="color:red;display:none; width: 270px;
+                                                                font-size: 15px;">Cannot select less than
+                                                        <t t-esc="env.services.pos.all_combo_groups_by_id[wkgroup.id].minimum_combo_products"/> product(s).
+                                                    </p>
+                                                </div>
+                                            </article>
+                                        </t>
+                                    </table>
+                                </t>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <p>No groups found for this product.Please add groups for the product from backend.</p>
+                    </t>
+                </main>
+                <footer style="">
+                    <div class="m-0  p-2 d-flex justify-content-end">
+                        <div class="m-0 button wk_confirm btn fs-2 mx-1 px-2" style="color: rgb(255, 255, 255); background-color: rgb(43, 163, 57); border-radius: 4px; margin-top: 10px;" t-on-click="wk_click_confirm">Add</div>
+                        <div class="m-0 button cancel wk_cancel btn fs-2 mx-1 px-2" style="border-radius: 4px; color: rgb(234, 71, 71); border: 1px solid rgb(234, 71, 71); margin-top: 10px;" t-on-click="cancel"> Cancel</div>
+                    </div>
+                    <div>
+                        <span class="negative_val_error m-0  fs-2 mx-1 px-2" style="color:red;display:none; ">Quantity cannot be negative. </span>
+                        <span class="wk_max_val_error m-0  fs-2 mx-1 px-2" style="color: red; display: none;">Cannot add more products from this Category. </span>
+                    </div>
+                </footer>
+            </div>
+        </Dialog>
+    </t>
+</templates>

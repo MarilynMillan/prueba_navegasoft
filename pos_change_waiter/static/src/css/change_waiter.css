@@ -1,0 +1,17 @@
+/* Botón Cambiar Mesero en Actions */
+.change-waiter-btn {
+    min-width: 140px;
+    border-color: #009688 !important;
+    color: #009688 !important;
+}
+
+.change-waiter-btn:hover,
+.change-waiter-btn:focus {
+    background-color: #009688 !important;
+    color: #fff !important;
+}
+
+.change-waiter-btn .text-muted {
+    font-size: 0.75em;
+    opacity: 0.8;
+}

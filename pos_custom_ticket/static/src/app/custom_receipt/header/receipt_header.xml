@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_custom_ticket.ReceiptHeader">
+        <div class="d-flex flex-column align-items-center">
+            <img t-attf-src="/web/image?model=res.company&amp;id={{props.data.company.id}}&amp;field=logo" alt="Logo" style="width: 50%;display: block;margin: 0 auto;"/>
+            <div class="text-center">
+                <!-- <t t-set="address" t-value="[props.data.company.street, props.data.company.street2, props.data.company.city, props.data.company.state_id?.name].join(', ')"/> -->
+                <t t-if="props.data.company.name" t-esc="props.data.company.name"/>
+                <t t-if="props.data.company.vat">
+                    <div><t t-esc="props.data.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="props.data.company.vat" /></div>
+                </t>
+                <t t-if="companyAddress">
+                    <div><t t-esc="companyAddress"/></div>
+                </t>
+                <t t-if="props.data.company.phone">
+                    <div>Teléfono:<t t-esc="props.data.company.phone" /></div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

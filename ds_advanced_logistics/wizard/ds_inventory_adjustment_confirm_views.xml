@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ds_inventory_adjustment_confirm_form" model="ir.ui.view">
+        <field name="name">ds.inventory.adjustment.confirm.form</field>
+        <field name="model">ds.inventory.adjustment.confirm</field>
+        <field name="arch" type="xml">
+            <form string="Confirmar Ajuste Retroactivo">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Atención:</strong> Esta acción generará movimientos de stock
+                        con fecha retroactiva. Esta operación no se puede deshacer fácilmente.
+                    </div>
+                    <group>
+                        <field name="adjustment_id" invisible="1"/>
+                        <field name="reason" placeholder="Ej: Inventario físico mensual de bodega..."/>
+                        <field name="responsible_employee_ids"
+                               widget="many2many_tags"
+                               placeholder="Seleccione los empleados que realizaron el conteo..."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm_and_apply"
+                            string="Confirmar y Aplicar"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

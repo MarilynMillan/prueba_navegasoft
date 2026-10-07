@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ds_purchase_requisition_user,ds.purchase.requisition.user,model_ds_purchase_requisition,purchase.group_purchase_user,1,1,1,0
+access_ds_purchase_requisition_manager,ds.purchase.requisition.manager,model_ds_purchase_requisition,purchase.group_purchase_manager,1,1,1,1
+access_ds_purchase_requisition_line_user,ds.purchase.requisition.line.user,model_ds_purchase_requisition_line,purchase.group_purchase_user,1,1,1,0
+access_ds_purchase_requisition_line_manager,ds.purchase.requisition.line.manager,model_ds_purchase_requisition_line,purchase.group_purchase_manager,1,1,1,1
+access_ds_purchase_requisition_stock_user,ds.purchase.requisition.stock,model_ds_purchase_requisition,stock.group_stock_user,1,0,0,0
+access_ds_purchase_requisition_line_stock_user,ds.purchase.requisition.line.stock,model_ds_purchase_requisition_line,stock.group_stock_user,1,0,0,0
+access_ds_requisition_load_wizard,ds.requisition.load.wizard,model_ds_requisition_load_wizard,purchase.group_purchase_user,1,1,1,1
+access_ds_requisition_load_wizard_line,ds.requisition.load.wizard.line,model_ds_requisition_load_wizard_line,purchase.group_purchase_user,1,1,1,1

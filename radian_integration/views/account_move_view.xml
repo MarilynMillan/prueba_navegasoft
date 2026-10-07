@@ -1,0 +1,25 @@
+<odoo>
+  <record id="view_move_form_inherit_radian" model="ir.ui.view">
+    <field name="name">account.move.form.radian</field>
+    <field name="model">account.move</field>
+    <field name="inherit_id" ref="account.view_move_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet/notebook" position="inside">
+        <page string="RADIAN">
+          <group>
+            <field name="dian_radian_status" readonly="1"/>
+            <button name="action_send_radian" string="Enviar a RADIAN" type="object" class="btn-primary"/>
+          </group>
+          <field name="radian_event_ids">
+            <tree>
+              <field name="event_type"/>
+              <field name="status"/>
+              <field name="date"/>
+              <field name="response"/>
+            </tree>
+          </field>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

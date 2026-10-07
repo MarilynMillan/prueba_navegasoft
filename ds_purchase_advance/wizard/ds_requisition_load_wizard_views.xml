@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================== -->
+    <!-- WIZARD - CARGAR PRODUCTOS DESDE REQUISICIONES -->
+    <!-- ================================================================== -->
+    <record id="ds_requisition_load_wizard_view_form" model="ir.ui.view">
+        <field name="name">ds.requisition.load.wizard.view.form</field>
+        <field name="model">ds.requisition.load.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cargar Productos de Requisiciones">
+                <group>
+                    <group>
+                        <field name="purchase_order_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="requisition_ids"
+                               widget="many2many_tags"
+                               readonly="1"/>
+                    </group>
+                </group>
+                <separator string="Productos Pendientes"/>
+                <p class="text-muted">
+                    Marca los productos que deseas agregar a esta Orden
+                    de Compra. Puedes ajustar la cantidad en "Cant. a Pedir".
+                </p>
+                <div class="mb-3">
+                    <button name="action_select_all"
+                            string="✓ Seleccionar Todo"
+                            type="object"
+                            class="btn-link"/>
+                    <button name="action_deselect_all"
+                            string="✗ Deseleccionar Todo"
+                            type="object"
+                            class="btn-link ms-3"/>
+                </div>
+                <field name="line_ids">
+                    <list editable="bottom"
+                          decoration-muted="not selected"
+                          decoration-info="selected">
+                        <field name="selected" widget="boolean_toggle"/>
+                        <field name="requisition_id" readonly="1"/>
+                        <field name="product_id" readonly="1"/>
+                        <field name="product_uom_id" readonly="1"
+                               groups="uom.group_uom"/>
+                        <field name="qty_requested" readonly="1"/>
+                        <field name="qty_already_ordered" readonly="1"
+                               decoration-info="qty_already_ordered &gt; 0"/>
+                        <field name="qty_pending" readonly="1"
+                               decoration-danger="qty_pending &gt; 0"/>
+                        <field name="qty_to_order"
+                               decoration-bf="1"/>
+                        <field name="requisition_line_id"
+                               column_invisible="1"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_confirm"
+                            string="Agregar a la Orden de Compra"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancelar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

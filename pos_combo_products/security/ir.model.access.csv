@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_combo_groups,combo.groups,model_combo_groups,,1,1,1,1
+access_combo_products,combo.products,model_combo_products,,1,1,1,1

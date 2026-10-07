@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Stock Aging Movement Report PaperFormat -->
+    <record id="paperformat_stock_aging_movement_report" model="report.paperformat">
+        <field name="name">Stock Aging Movement Report</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">350</field>
+        <field name="page_width">250</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">45</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">40</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Stock Aging Movement Report -->
+    <record id="action_stock_aging_ware_movement" model="ir.actions.report">
+        <field name="name">Stock Aging Movement Report</field>
+        <field name="model">stock.aging.warehouse.movement.report</field>
+        <field name="binding_model_id" ref="model_stock_aging_warehouse_movement_report"/>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">warehouse_report_app.report_stockagingmovementinfo</field>
+        <field name="report_file">warehouse_report_app.report_stockagingmovementinfo</field>
+        <field name="binding_view_types">list</field>
+        <field name="paperformat_id" ref="paperformat_stock_aging_movement_report"/>
+    </record>
+
+
+</odoo>

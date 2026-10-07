@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="preparation_display_view_form_inherit_advance" model="ir.ui.view">
+        <field name="name">preparation.display.form.view.inherit.advance</field>
+        <field name="model">pos_preparation_display.display</field>
+        <field name="inherit_id" ref="pos_preparation_display.preparation_display_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Agregar campo display_type antes de los campos existentes -->
+            <xpath expr="//field[@name='pos_config_ids']" position="before">
+                <field name="display_type" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+
+            <!-- Ocultar campo global de categorías si hay config por POS (v1) o si es waiter -->
+            <xpath expr="//field[@name='category_ids']" position="replace">
+                <field name="category_ids"
+                       widget="many2many_tags"
+                       options="{'create':false}"
+                       placeholder="Categorías globales (si no hay config por POS)"
+                       invisible="config_category_ids or display_type == 'waiter'"/>
+            </xpath>
+
+            <!-- Pestañas adicionales después de Stages -->
+            <xpath expr="//page[@name='stages']" position="after">
+
+                <!-- Pestaña: Categorías Propias (solo kitchen) -->
+                <page name="owned_categories"
+                      string="Categorías Propias"
+                      invisible="display_type == 'waiter'">
+                    <group>
+                        <div class="text-muted" colspan="2">
+                            Defina qué categorías son "propiedad" de esta pantalla.
+                            Los productos de otras categorías se mostrarán en color diferente
+                            y las interacciones de subrayado individual NO afectarán otras pantallas
+                            para esos productos.
+                        </div>
+                    </group>
+                    <group>
+                        <field name="owned_category_ids"
+                               widget="many2many_tags"
+                               options="{'no_create': true}"
+                               placeholder="Ej: PIZZAS E CALZONES, PIZZA MITADES"/>
+                    </group>
+                </page>
+
+                <!-- Pestaña: Categorías por POS (solo kitchen, v1) -->
+                <page name="config_categories"
+                      string="Categorías por Punto de Venta"
+                      invisible="display_type == 'waiter'">
+                    <field name="config_category_ids">
+                        <list editable="bottom">
+                            <field name="pos_config_id" options="{'no_create': true}"/>
+                            <field name="category_ids" widget="many2many_tags" options="{'no_create': true}"/>
+                        </list>
+                    </field>
+                </page>
+
+                <!-- Pestaña: Pantallas Fuente (solo waiter, v2) -->
+                <page name="source_displays"
+                      string="Pantallas Fuente"
+                      invisible="display_type != 'waiter'">
+                    <group>
+                        <div class="text-muted" colspan="2">
+                            Configure de qué pantallas de cocina recibirá órdenes esta pantalla de meseros,
+                            y qué categorías de producto mostrará de cada una.
+                        </div>
+                    </group>
+                    <field name="source_category_ids">
+                        <list editable="bottom">
+                            <field name="source_display_id"
+                                   domain="[('display_type', '=', 'kitchen')]"
+                                   options="{'no_create': true}"/>
+                            <field name="category_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': true}"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

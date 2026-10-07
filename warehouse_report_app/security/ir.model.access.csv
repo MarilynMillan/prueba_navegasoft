@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_aging_warehouse_movement_report,access.stock.aging.warehouse.movement.report,model_stock_aging_warehouse_movement_report,,1,1,1,0
+access_stock_aging_warehouse_wout_movement,access.stock.aging.warehouse.wout.movement,model_stock_aging_warehouse_wout_movement,,1,1,1,0
+access_inventory_stock_valution_report_wizard,access.inventory.stock.valution.report.wizard,model_inventory_stock_valution_report_wizard,,1,1,1,0
+access_stock_status_warehouse_report,access.stock.status.warehouse.report,model_stock_status_warehouse_report,,1,1,1,0
+access_stock_location_transfer_warehouse_report,access.stock.location.transfer.warehouse.report,model_stock_location_transfer_warehouse_report,,1,1,1,0
+access_stock_movement_warehouse_report,access.stock.movement.warehouse.report,model_stock_movement_warehouse_report,,1,1,1,0

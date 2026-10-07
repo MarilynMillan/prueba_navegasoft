@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inventory And Stock Movement Report PaperFormat -->
+    <record id="paperformat_inventory_movement_report" model="report.paperformat">
+        <field name="name">Inventory And Stock Movement Report</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">350</field>
+        <field name="page_width">250</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">45</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">40</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Inventory And Stock Location Transfer Report Action -->
+
+    <record id="action_report_stock_movement" model="ir.actions.report">
+        <field name="name">Inventory And Stock Movement Report</field>
+        <field name="model">stock.location.transfer.warehouse.report</field>
+        <field name="binding_model_id" ref="model_stock_movement_warehouse_report"/>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">warehouse_report_app.report_stockmovementsinfo</field>
+        <field name="report_file">warehouse_report_app.report_stockmovementsinfo</field>
+        <field name="binding_view_types">list</field>
+        <field name="paperformat_id" ref="paperformat_inventory_movement_report"/>
+    </record>
+
+</odoo>

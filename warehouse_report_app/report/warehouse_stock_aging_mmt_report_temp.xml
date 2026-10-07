@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <template id="report_stockagingmovementinfo">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-if ="'warehouse_ids' in data">
+                    <t t-foreach="data.get('warehouse_ids')" t-as="warehouse">
+                        <div class="page">
+                            <div class="oe_structure"/> 
+                            <div class="header"> 
+                                <center>
+                                    <img t-if="data.get('company_id').logo" t-att-src="image_data_uri(data.get('company_id').logo)" style="width:50%;height:100px;" alt="Logo"/>
+                                </center>
+                                <center>
+                                    <span class="company_address" t-field="data.get('company_id').partner_id"
+                                        t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                                </center>
+                            </div>
+                            <table width="100%" style="font-size:21px;border-style: none;margin-bottom:15px;">
+                                <tr style="border-style: none;">
+                                    <td style="border-style: none;">
+                                        <center>
+                                            <strong>
+                                                Stock Aging Movement Report
+                                            </strong>
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;margin-bottom:15px;">
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Warehouse/Location
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="warehouse.name" />
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Company:
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Start Date:
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Period Length:
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('company_id').name" /> 
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('date_from')" /> 
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('period_length')" /> 
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;">
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td rowspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Code
+                                        </center>
+                                    </td>
+                                    <td rowspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Product Name
+                                        </center>
+                                    </td>
+                                    <t t-foreach="get_columns(data)" t-as="col">
+                                        <td colspan="6" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col"/>
+                                            </center>
+                                        </td>
+                                    </t>
+                                </tr>
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;">
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                </tr>
+                                <t t-foreach="get_warehouse_details(data, warehouse)" t-as="records">
+                                    <tr style="font-size:13px;" t-foreach="records.get('product_data')" t-as="record">
+                                        
+                                        <!-- Fetch Value Col - 1 -->
+                                        <t t-set="col_received1_data" t-value="record.get('col_received1')"/>
+                                        <t t-set="col_delivered1_data" t-value="record.get('col_delivered1')"/>
+                                        <t t-set="col_adjustment1_data" t-value="record.get('col_adjustment1')"/>
+
+                                        <!-- Fetch Value Col - 2 -->
+                                        <t t-set="col_received2_data" t-value="record.get('col_received2')"/>
+                                        <t t-set="col_delivered2_data" t-value="record.get('col_delivered2')"/>
+                                        <t t-set="col_adjustment2_data" t-value="record.get('col_adjustment2')"/>
+
+                                        <!-- Fetch Value Col - 3 -->
+                                        <t t-set="col_received3_data" t-value="record.get('col_received3')"/>
+                                        <t t-set="col_delivered3_data" t-value="record.get('col_delivered3')"/>
+                                        <t t-set="col_adjustment3_data" t-value="record.get('col_adjustment3')"/>
+
+                                        <!-- Fetch Value Col - 4 -->
+                                        <t t-set="col_received4_data" t-value="record.get('col_received4')"/>
+                                        <t t-set="col_delivered4_data" t-value="record.get('col_delivered4')"/>
+                                        <t t-set="col_adjustment4_data" t-value="record.get('col_adjustment4')"/>
+
+                                        <!-- Fetch Value Col - 5 -->
+                                        <t t-set="col_received5_data" t-value="record.get('col_received5')"/>
+                                        <t t-set="col_delivered5_data" t-value="record.get('col_delivered5')"/>
+                                        <t t-set="col_adjustment5_data" t-value="record.get('col_adjustment5')"/>
+
+
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_code')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_name')"/>
+                                        </td>
+                                        <!-- Received Qty  Col-1 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered1_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_1_data_value" t-value="col_delivered1_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_1_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-1 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received1_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_1_data_value" t-value="col_received1_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_1_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-1 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment1_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_1_data_value" t-value="col_adjustment1_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_1_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-2 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered2_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_2_data_value" t-value="col_delivered2_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_2_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-2 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received2_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_2_data_value" t-value="col_received2_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_2_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-2 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment2_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_2_data_value" t-value="col_adjustment2_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_2_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-3 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered3_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_3_data_value" t-value="col_delivered3_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_3_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-3 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received3_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_3_data_value" t-value="col_received3_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_3_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-3 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment3_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_3_data_value" t-value="col_adjustment3_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_3_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-4 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered4_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_4_data_value" t-value="col_delivered4_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_4_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-4 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received4_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_4_data_value" t-value="col_received4_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_4_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-4 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment4_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_4_data_value" t-value="col_adjustment4_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_4_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-5 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered5_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_5_data_value" t-value="col_delivered5_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_5_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-5 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received5_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_5_data_value" t-value="col_received5_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_5_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-5 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment5_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_5_data_value" t-value="col_adjustment5_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_5_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                        <div style="page-break-before:always;"/>
+                    </t>
+                </t>
+                <!-- Location -->
+                <t t-if ="'location_ids' in data">
+                    <t t-foreach="data.get('location_ids')" t-as="location">
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <div class="header"> 
+                                <center>
+                                    <img t-if="data.get('company_id').logo" t-att-src="image_data_uri(data.get('company_id').logo)" style="width:50%;height:100px;" alt="Logo"/>
+                                </center>
+                                <center>
+                                    <span class="company_address" t-field="data.get('company_id').partner_id"
+                                        t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                                </center>
+                            </div>
+                            <table width="100%" style="font-size:21px;border-style: none;margin-bottom:15px;">
+                                <tr style="border-style: none;">
+                                    <td style="border-style: none;">
+                                        <center>
+                                            <strong>
+                                                Stock Aging Movement Report        
+                                            </strong>
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;margin-bottom:15px;">
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Warehouse/Location
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <t t-set="locations" t-value="location.name"/>
+                                            <t t-set="parent_locations" t-value="location.location_id.name"/>
+                                            <t t-if="parent_locations">
+                                                <span t-esc="parent_locations" />
+                                                /
+                                            </t>
+                                            <span t-esc="locations" />
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Company:
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Start Date:
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="background:#e6e6e6;color:#000000;font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            Period Length:
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr width="100%" style="font-size:13px;font-family: 'Times New Roman', Times, serif;">
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('company_id').name" /> 
+                                        </center>
+                                    </td>
+                                    <td width="33%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('date_from')" /> 
+                                        </center>
+                                    </td>
+                                    <td width="34%" style="font-weight:bold;min-height:30px;line-height:20px;font-size:13px;border: 1px solid black;">
+                                        <center>
+                                            <span t-esc="data.get('period_length')" /> 
+                                        </center>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table width="100%" style="font-size:13px;">
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td rowspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Code
+                                        </center>
+                                    </td>
+                                    <td rowspan="3" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Product Name
+                                        </center>
+                                    </td>
+                                    <t t-foreach="get_columns(data)" t-as="col">
+                                        <td colspan="6" style="padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col"/>
+                                            </center>
+                                        </td>
+                                    </t>
+                                </tr>
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;" width="100%">
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Sale
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Purchase
+                                        </center>
+                                    </td>
+                                    <td colspan="2" style="border: 1px solid black;font-weight:bold;" >
+                                        <center>
+                                            Adjust
+                                        </center>
+                                    </td>
+                                </tr>
+                                <tr style="min-height:30px;line-height:20px;font-size:13px;">
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Qty
+                                        </center>
+                                    </td>
+                                    <td style="border: 1px solid black;font-weight:bold;">
+                                        <center>
+                                            Value
+                                        </center>
+                                    </td>
+                                </tr>
+                                <t t-foreach="get_location_details(data, location)" t-as="records">
+                                    <tr style="font-size:13px;" t-foreach="records.get('product_data')" t-as="record">
+                                        
+                                        <!-- Fetch Value Col - 1 -->
+                                        <t t-set="col_received1_data" t-value="record.get('col_received1')"/>
+                                        <t t-set="col_delivered1_data" t-value="record.get('col_delivered1')"/>
+                                        <t t-set="col_adjustment1_data" t-value="record.get('col_adjustment1')"/>
+
+                                        <!-- Fetch Value Col - 2 -->
+                                        <t t-set="col_received2_data" t-value="record.get('col_received2')"/>
+                                        <t t-set="col_delivered2_data" t-value="record.get('col_delivered2')"/>
+                                        <t t-set="col_adjustment2_data" t-value="record.get('col_adjustment2')"/>
+
+                                        <!-- Fetch Value Col - 3 -->
+                                        <t t-set="col_received3_data" t-value="record.get('col_received3')"/>
+                                        <t t-set="col_delivered3_data" t-value="record.get('col_delivered3')"/>
+                                        <t t-set="col_adjustment3_data" t-value="record.get('col_adjustment3')"/>
+
+                                        <!-- Fetch Value Col - 4 -->
+                                        <t t-set="col_received4_data" t-value="record.get('col_received4')"/>
+                                        <t t-set="col_delivered4_data" t-value="record.get('col_delivered4')"/>
+                                        <t t-set="col_adjustment4_data" t-value="record.get('col_adjustment4')"/>
+
+                                        <!-- Fetch Value Col - 5 -->
+                                        <t t-set="col_received5_data" t-value="record.get('col_received5')"/>
+                                        <t t-set="col_delivered5_data" t-value="record.get('col_delivered5')"/>
+                                        <t t-set="col_adjustment5_data" t-value="record.get('col_adjustment5')"/>
+
+
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_code')"/>
+                                        </td>
+                                        <td style="padding-left:5px;border: 1px solid black;text-align:left;">
+                                            <t t-esc="record.get('product_name')"/>
+                                        </td>
+                                        <!-- Received Qty  Col-1 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered1_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_1_data_value" t-value="col_delivered1_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_1_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-1 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received1_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_1_data_value" t-value="col_received1_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_1_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-1 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment1_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_1_data_value" t-value="col_adjustment1_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_1_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-2 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered2_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_2_data_value" t-value="col_delivered2_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_2_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-2 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received2_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_2_data_value" t-value="col_received2_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_2_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-2 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment2_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_2_data_value" t-value="col_adjustment2_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_2_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-3 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered3_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_3_data_value" t-value="col_delivered3_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_3_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-3 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received3_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_3_data_value" t-value="col_received3_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_3_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-3 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment3_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_3_data_value" t-value="col_adjustment3_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_3_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-4 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered4_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_4_data_value" t-value="col_delivered4_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_4_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-4 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received4_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_4_data_value" t-value="col_received4_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_4_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-4 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment4_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_4_data_value" t-value="col_adjustment4_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_4_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+                                        <!-- Received Qty  Col-5 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_delivered5_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_5_data_value" t-value="col_delivered5_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_5_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Delivered Qty Col-5 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_received5_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_5_data_value" t-value="col_received5_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_5_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                        <!-- Adjustment Qty Col-5 -->
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-esc="col_adjustment5_data"/>
+                                            </center>
+                                        </td>
+                                        <td style="color:#006600;padding-left:5px;border: 1px solid black;font-weight:bold;">
+                                            <center>
+                                                <t t-set="col_5_data_value" t-value="col_adjustment5_data * record.get('cost_price')"/>
+                                                <span t-esc="'%.2f'% col_5_data_value or 0.00"/>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                        <div style="page-break-before:always;"/>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('product-information-tag')]" position="after">
+            <t t-if="props and props.productId and wk_is_combo_product(props.productId)">
+                <div class="combo_product_bundle">Combo Product</div>
+            </t>
+        </xpath>
+    </t>
+    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[@t-esc='line.productName']" position='after'>
+            <t t-set="orderline" t-value="this.env.services.pos.models['pos.order.line'].get(props.line.orderline_id)"/>
+            <t t-if="orderline.is_combo_product and this.env.services.pos.mainScreen.component.name == 'ProductScreen'">
+                <span class="wk_combo_orderline px-2 btn" t-on-click="open_combo_popup" >
+                    <i class="fa fa-info-circle wk_combo_orderline fs-3 wkorderline" ></i>
+                </span>
+            </t>
+        </xpath>
+        <xpath expr="//span[@t-esc='line.productName']" position="inside">
+            <t t-set="orderline" t-value="this.env.services.pos.models['pos.order.line'].get(props.line.orderline_id)"/>
+            <t t-if="orderline.is_combo_product">
+                <t t-set="wk_val" t-value="0"/>
+                <t t-foreach='orderline.sel_combo_prod' t-as='product_id' t-key="product_id">
+                    <t t-value="this.env.services.pos.models['combo.products'].get(product_id)" t-set="product"/>
+                    <t t-if="env.services.pos.config.combo_popup_view == 'list'">
+                        <t t-set="combo_qty" t-value="orderline.temp_arr" />
+                    </t>
+                    <t t-else="">
+                        <t t-set="combo_qty" t-value="orderline.grid_temp_arr" />
+                    </t>
+                    <t t-if="product">
+                        <div class="pos-receipt-left-padding combo_wk_wrapped" style="font-style:italic;font-size:12px;">
+                            <t t-if="combo_qty[wk_val]>0">
+                                <div style="margin-left:10px;">
+                                    <em> 
+                                        +
+                                        <t t-esc="product['combo_qty']"/>
+                                        <t t-esc="product.name" />@
+                                        <span>
+                                            <t t-esc="env.utils.formatCurrency(product.price)" />
+                                        </span>
+                                    </em>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//ul[hasclass('info-list')]" position="inside">
+            <t t-set="orderline" t-value="this.env.services.pos.models['pos.order.line'].get(props.line.orderline_id)"/>
+            <li t-if="orderline.sel_combo_prod ">
+                <t t-if="orderline.is_combo_product">
+                        <div style=" background: #017e84;color: white;padding: 5px;width: 55%;
+                        border-radius: 5px;">
+                        <u>
+                            <b>Combo Item(s):</b>
+                        </u>
+                        <t t-set="count" t-value="0"/>
+                        <t t-foreach="orderline.sel_combo_prod" t-as="product_id" t-key="product_id">
+                            <t t-value="this.env.services.pos.models['combo.products'].get(product_id)" t-set="product"/>
+                            <t t-if="env.services.pos.config.combo_popup_view == 'list'">
+                                <t t-set="combo_qty" t-value="orderline.temp_arr[count]" />
+                            </t>
+                            <t t-else="">
+                                <t t-set="combo_qty" t-value="orderline.grid_temp_arr[count]" />
+                            </t>
+                            <t t-set="count" t-value="count+1"/>
+                            <div style="font-style: italic;">
+                                <span>
+                                    -
+                                    <t t-if="combo_qty == true">
+                                        <t t-esc="1"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="combo_qty"/>
+                                    </t>
+                                    <span>
+                                        <t t-esc="product.name"/>
+                                    </span>
+                                </span>
+                                @
+                                <span >
+                                    <t t-esc="env.utils.formatCurrency(product.price)" />
+                                </span>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </li>
+        </xpath>
+    </t>
+</templates>
