@@ -16,7 +16,7 @@ class ListAdmin(models.Model):
     type_entity = fields.Selection([
         ('salud', 'EPS'),
         ('pension', 'AFP'),
-        ('arl', 'ARL / Riesgos Laborales'),
+        ('arl', 'Riesgo'),
         ('ccf', 'CCF / Caja de Compensación'),
         ('otros', 'Otros'),
     ],

@@ -13,21 +13,21 @@ class HrContract(models.Model):
     date_wage_change = fields.Date(
         string='Último Cambio Sueldo',
         help="Fecha en la que el campo Salario ('wage') fue modificado por última vez."
-    ,tracking=True, readonly="1")
+    ,tracking=True, readonly=True)
 
     wage_integral = fields.Boolean(string='Salario Integral',tracking=True)
     wage_variable = fields.Boolean(string='Salario Variable',tracking=True)
 
     auxilio_de_transporte = fields.Float("Auxilio de transporte",tracking=True)
-    uvt =  fields.Float("UVT",tracking=True)
-    salario_minimo = fields.Float("Salario Minimo",tracking=True)
+    uvt = fields.Float(tracking=True)
+    salario_minimo = fields.Float(tracking=True)
     tipo_contrato = fields.Selection([
         ('1', 'Término Fijo'),
         ('2', 'Término Indefinido'),
         ('3', 'Obra o Labor'),
         ('4', 'Aprendizaje'),
         ('5', 'Practicas'),
-    ], string='Tipo Contrato',tracking=True)
+    ], tracking=True)
     
 
     pila_tipo_trabajador_id = fields.Many2one(
@@ -51,7 +51,7 @@ class HrContract(models.Model):
         ('false', 'NO'),
         ('true', 'SI'),
         ], string='Salario Integral',default='false',tracking=True)
-    banco = fields.Char("Banco",tracking=True)
+    banco = fields.Char(tracking=True)
     tipo_cuenta = fields.Char("Tipo cuenta",tracking=True)
     numero_cuenta = fields.Char("Numero de cuenta",tracking=True)
     metodo_pago = fields.Selection([
@@ -139,7 +139,7 @@ class HrContract(models.Model):
         ('2', 'Senadores'),
         ('3', 'CTI'),
         ('4', 'Aviadores'),
-        ('5', 'Sin riesgo'),
+        ('5', 'Sin Riesgo'),
     ], string='Indicador alto riesgo',default='5',tracking=True)
 
     clase = fields.Selection([
@@ -149,6 +149,8 @@ class HrContract(models.Model):
         ('4', '4'),
         ('5', '5'),
     ], string='Clase ',tracking=True)
+
+    tarifa_arl = fields.Float(string='ARL (%)',compute='_compute_tarifa_arl', tracking=True,readonly=True,digits=(16, 3))
 
 
     economic_activitity = fields.Integer( string='Actividad economica ',tracking=True)
@@ -170,19 +172,47 @@ class HrContract(models.Model):
         domain=[('type', '=', 'retiro')]
     )
 
-    @api.model
+    
+
+    @api.depends('clase')
+    def _compute_tarifa_arl(self):
+        for rec in self:
+            if rec.clase:
+                arl = self.env['hr.fee.arl'].search([
+                    ('code', '=', rec.clase)
+                ], limit=1)
+                rec.tarifa_arl = arl.percentage if arl else 0.0
+            else:
+                rec.tarifa_arl = 0.0
+
+    @api.model_create_multi
+    def create(self, vals_list):
+
+        for vals in vals_list:
+
+            # --------------------------------------------------
+            # FECHA CAMBIO SALARIO
+            # --------------------------------------------------
+            if vals.get('wage'):
+                vals['date_wage_change'] = fields.Date.today()
+
+        return super(HrContract, self).create(vals_list)
+
     def write(self, vals):
-        # Usamos write para capturar cambios desde el formulario o por código.
-        # Si 'wage' está siendo modificado Y el nuevo valor es diferente al actual
+
         if 'wage' in vals:
+
             for contract in self:
-                # Comparamos solo si el contrato ya existe (self.exists()) y el valor es distinto
+
+                # Validar si realmente cambió el salario
                 if contract.exists() and contract.wage != vals['wage']:
+
                     vals['date_wage_change'] = fields.Date.today()
-                    # Salimos del bucle si solo hay un contrato para evitar doble asignación de hoy()
-                    break 
+                    break
 
         return super(HrContract, self).write(vals)
+
+        
 
     def get_admin_by_type(self, tipo):
         """Retorna la administradora del tipo solicitado."""
@@ -211,5 +241,3 @@ class HrContract(models.Model):
 
         # Siempre devuelva un valor escalar predecible.
         return 0.0
-
-

@@ -32,6 +32,7 @@
                 <xpath expr="//field[@name='AltoRiegoPension']" position="after">
                     <field name="alto_riesgo"/>
                     <field name="clase"/>
+                    <field name="tarifa_arl" readonly="1"/>
                 </xpath> 
 
                 <xpath expr="//field[@name='contract_type_id']" position="after">

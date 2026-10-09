@@ -1,19 +1,21 @@
-import io
-import os
 import base64
-import openpyxl
-
-from odoo import fields, models, api, _
-from odoo.exceptions import UserError
-from odoo.modules import get_module_resource
-
-from openpyxl.styles import Alignment
-from datetime import datetime, date
-
+import io
 import logging
+import re
+import unicodedata
+import zipfile
+from datetime import date, datetime
+
+import openpyxl
+from dateutil.relativedelta import relativedelta
+from openpyxl.styles import Alignment
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+PILA_TEMPLATE_ATTACHMENT_PARAM = 'endowment_pilas.pila_template_attachment_id'
 
 
 class PayrollExcelWizard(models.TransientModel):
@@ -24,62 +26,468 @@ class PayrollExcelWizard(models.TransientModel):
     date_to = fields.Date(string="Fecha Hasta")
     payslip_run_id = fields.Many2one('hr.payslip.run', string="Lote de Nómina")
 
-    plantilla_excel = fields.Binary(string='Plantilla Excel', help='Sube la plantilla de Excel para usar en el reporte. Si está vacío, se usará la plantilla por defecto.')
+    plantilla_excel = fields.Binary(
+        help=(
+            'Sube la plantilla de Excel para usar en el reporte. Si está '
+            'vacío, se usará la plantilla guardada para la compañía.'
+        ),
+    )
     plantilla_excel_name = fields.Char(string='Nombre Archivo Plantilla')
+    plantilla_guardada_nombre = fields.Char(
+        string='Plantilla actual',
+        compute='_compute_plantilla_guardada',
+    )
+    plantilla_guardada_fecha = fields.Datetime(
+        string='Última actualización',
+        compute='_compute_plantilla_guardada',
+    )
 
-    #file_input = fields.Binary(string="Archivo Excel del Cliente", required=True)
-    #file_name = fields.Char(string="Nombre del Archivo")
+    tipo_planilla = fields.Selection(
+        [
+            ('E', 'E - Planilla Empleados Empresas'),
+            ('A', 'A - Planilla Empleados Adicionales'),
+            ('I', 'I - Planilla Independientes'),
+            ('Y', 'Y - Planilla Independientes Empresas'),
+            ('S', 'S - Planilla Empleados de Independientes'),
+            ('N', 'N - Planilla Correcciones'),
+            ('M', 'M - Planilla Mora'),
+            ('H', 'H - Plantilla Madres Comunitarias'),
+            ('T', 'T - Planilla Sistema General de Participación'),
+            ('F', 'F - Planilla Faltante SGP'),
+            ('J', 'J - Planilla Aportes en Sentencia Judicial'),
+            ('K', 'K - Planilla Estudiantes'),
+            ('O', 'O - Obligaciones Determinadas Por La UGPP'),
+            ('B', 'B - Piso Protección Total'),
+        ],
+        default='E',
+        required=True,
+    )
 
-    
+    tipo_aportante = fields.Selection(
+        [
+            ('EMPLEADOR', 'EMPLEADOR'),
+            ('INDEPENDIENTE', 'INDEPENDIENTE'),
+        ],
+        default='EMPLEADOR',
+        required=True,
+    )
+
+    sucursal_codigo = fields.Char(string="Código", required=True)
+
+    sucursal_nombre = fields.Char(
+        string="Nombre",
+        default='PRINCIPAL',
+        required=True,
+    )
+
+    administradora_riesgos = fields.Selection(
+        [
+            ('COLMENA', 'COLMENA'),
+            ('COLPATRIA ARP', 'COLPATRIA ARP'),
+            ('COLSANITAS ARL', 'COLSANITAS ARL'),
+            ('FONDO DE RIESGOS LABORALES', 'FONDO DE RIESGOS LABORALES'),
+            ('LA EQUIDAD SEGUROS', 'LA EQUIDAD SEGUROS'),
+            ('POSITIVA COMPAÑIA DE SEGUROS', 'POSITIVA COMPAÑIA DE SEGUROS'),
+            ('SEGUROS BOLIVAR', 'SEGUROS BOLIVAR'),
+            ('SEGUROS DE VIDA AURORA', 'SEGUROS DE VIDA AURORA'),
+        ],
+        default='COLMENA',
+        required=True,
+    )
+
+    planilla_asociada_fecha = fields.Date(string="Fecha")
+
+    planilla_asociada_clave = fields.Char(
+        string="Clave"
+    )
+
+    @api.model
+    def default_get(self, fields_list):
+        values = super().default_get(fields_list)
+        attachment = self._get_company_template_attachment()
+        if attachment:
+            if 'plantilla_excel' in fields_list:
+                values['plantilla_excel'] = attachment.datas
+            if 'plantilla_excel_name' in fields_list:
+                values['plantilla_excel_name'] = attachment.name
+        return values
+
+    # =========================
+    # HELPERS PILA
+    # =========================
+
+    def _pila_norm(self, value):
+        if not value:
+            return ''
+        # Convertir a string, quitar espacios extremos y pasar a mayúsculas
+        value = str(value).strip().upper()
+        value = value.replace('\n', ' ').replace('\r', ' ')
+
+        # Eliminar comillas dobles y simples que dañan el match.
+        value = value.replace('"', '').replace("'", "")
+
+        # Quitar acentos y tildes
+        value = unicodedata.normalize('NFD', value)
+        value = ''.join(
+            c for c in value
+            if unicodedata.category(c) != 'Mn'
+        )
+
+        # Colapsar espacios múltiples en uno solo
+        value = re.sub(r'\s+', ' ', value)
+        return value.strip()
+
+    def _get_defined_name_values(self, wb, name):
+        values = []
+
+        try:
+            defined_name = wb.defined_names[name]
+        except Exception:
+            return values
+
+        for sheet_name, coord in defined_name.destinations:
+            ws = wb[sheet_name]
+
+            for row in ws[coord]:
+                for cell in row:
+                    if cell.value:
+                        values.append(str(cell.value).strip())
+
+        return values
+
+    def _match_catalog_value(self, raw_value, allowed_values):
+        raw_norm = self._pila_norm(raw_value)
+
+        for value in allowed_values:
+            if self._pila_norm(value) == raw_norm:
+                return value
+
+        return False
+
+    def _normalize_location_pila(
+        self,
+        wb,
+        departamento_odoo,
+        ciudad_odoo
+    ):
+
+        departamentos = self._get_defined_name_values(
+            wb,
+            'RGDIVIDEPTO'
+        )
+
+        if not departamentos:
+            raise UserError(self.env._("No se encontró RGDIVIDEPTO"))
+
+        dept_map = {
+            'BOGOTA': 'BOGOTA_D.E.',
+            'BOGOTA DC': 'BOGOTA_D.E.',
+            'BOGOTA D C': 'BOGOTA_D.E.',
+            'BOGOTA D.C.': 'BOGOTA_D.E.',
+            'BOGOTA D.E.': 'BOGOTA_D.E.',
+            'NARINO': 'NARIÑO',
+        }
+
+        city_map = {
+            'BOGOTA': 'BOGOTA',
+            'BOGOTA DC': 'BOGOTA',
+            'BOGOTA D C': 'BOGOTA',
+            'BOGOTA D.C.': 'BOGOTA',
+            'BOGOTA D.E.': 'BOGOTA',
+            'CARTAGENA DE INDIAS': 'CARTAGENA',
+        }
+
+        dept_raw = self._pila_norm(departamento_odoo)
+        city_raw = self._pila_norm(ciudad_odoo)
+
+        dept_candidate = dept_map.get(dept_raw, dept_raw)
+        city_candidate = city_map.get(city_raw, city_raw)
+
+        departamento_pila = self._match_catalog_value(
+            dept_candidate,
+            departamentos
+        )
+
+        if not departamento_pila:
+            raise UserError(self.env._(
+                "Departamento inválido PILA:\n%s",
+                departamento_odoo,
+            ))
+
+        ciudades = self._get_defined_name_values(
+            wb,
+            departamento_pila
+        )
+
+        ciudad_pila = self._match_catalog_value(
+            city_candidate,
+            ciudades
+        )
+
+        if not ciudad_pila:
+            raise UserError(self.env._(
+                "Ciudad inválida PILA:\n%s",
+                ciudad_odoo,
+            ))
+
+        return departamento_pila, ciudad_pila
+
+    def _validate_pila_value(
+        self,
+        errores,
+        employee,
+        campo,
+        value,
+        allowed_values,
+        required=False
+    ):
+        value = str(value or '').strip()
+
+        if not value or value.upper() in ['NINGUNA', 'NINGUNO', 'NO', 'FALSE']:
+            if required:
+                errores.add(
+                    "%s | %s vacío."
+                    % (employee.display_name, campo)
+                )
+            return ''
+
+        # Normalizamos el valor que viene de Odoo (ej: elimina comillas o espacios)
+        value_norm = self._pila_norm(value)
+
+        # Normalizar también cada opción del catálogo de Excel antes de comparar.
+        for allowed in allowed_values:
+            if self._pila_norm(allowed) == value_norm:
+                return allowed
+
+        errores.add(
+            "%s | %s inválido para PILA: %s"
+            % (employee.display_name, campo, value)
+        )
+
+        return ''
+
+    def _get_named_range_values(self, wb, range_name):
+        try:
+            defined_name = wb.defined_names[range_name]
+        except Exception:
+            return []
+
+        values = []
+
+        for sheet_name, coord in defined_name.destinations:
+            ws = wb[sheet_name]
+
+            for row in ws[coord]:
+                for cell in row:
+                    if cell.value:
+                        values.append(str(cell.value).strip())
+
+        return values
+
+    def _get_company_template_param(self):
+        return '%s.%s' % (
+            PILA_TEMPLATE_ATTACHMENT_PARAM,
+            self.env.company.id,
+        )
+
+    def _get_company_template_attachment(self):
+        param = self.env['ir.config_parameter'].sudo().get_param(
+            self._get_company_template_param()
+        )
+
+        try:
+            attachment_id = int(param or 0)
+        except ValueError:
+            return self.env['ir.attachment']
+
+        attachment = self.env['ir.attachment'].sudo().browse(attachment_id)
+        if (
+            not attachment.exists()
+            or not attachment.datas
+            or attachment.company_id != self.env.company
+        ):
+            return self.env['ir.attachment']
+
+        return attachment
+
+    @api.depends_context('company')
+    def _compute_plantilla_guardada(self):
+        attachment = self._get_company_template_attachment()
+        for wizard in self:
+            wizard.plantilla_guardada_nombre = attachment.name or False
+            wizard.plantilla_guardada_fecha = attachment.write_date or False
+
+    def _save_company_template_attachment(self):
+        attachment_model = self.env['ir.attachment'].sudo()
+        attachment = self._get_company_template_attachment()
+        file_name = self.plantilla_excel_name or 'pila_template.xlsx'
+
+        values = {
+            'name': file_name,
+            'type': 'binary',
+            'datas': self.plantilla_excel,
+            'company_id': self.env.company.id,
+            'mimetype': (
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ),
+        }
+
+        if attachment:
+            attachment.write(values)
+        else:
+            attachment = attachment_model.create(values)
+            self.env['ir.config_parameter'].sudo().set_param(
+                self._get_company_template_param(),
+                attachment.id
+            )
+
+        return attachment
+
+    @api.onchange('plantilla_excel', 'plantilla_excel_name')
+    def _onchange_plantilla_excel(self):
+        for wizard in self:
+            if wizard.plantilla_excel:
+                attachment = wizard._save_company_template_attachment()
+                wizard.plantilla_guardada_nombre = attachment.name
+                wizard.plantilla_guardada_fecha = attachment.write_date
+
+    def _get_template_content(self):
+        if self.plantilla_excel:
+            self._save_company_template_attachment()
+            template_data = self.plantilla_excel
+        else:
+            attachment = self._get_company_template_attachment()
+            if not attachment:
+                raise UserError(self.env._(
+                    "Debe cargar una plantilla PILA para la compañía %s. La "
+                    "plantilla cargada se guardará para futuros reportes de "
+                    "esta compañía.",
+                    self.env.company.display_name,
+                ))
+            template_data = attachment.datas
+
+        try:
+            return base64.b64decode(template_data)
+        except Exception as error:
+            raise UserError(self.env._(
+                "La plantilla PILA no es un archivo válido."
+            )) from error
+
+    def _validate_generate_excel_fields(self):
+        missing_fields = []
+        if not self.tipo_planilla:
+            missing_fields.append(self.env._("Tipo de planilla"))
+        if not self.tipo_aportante:
+            missing_fields.append(self.env._("Tipo de aportante"))
+        if not self.sucursal_codigo:
+            missing_fields.append(self.env._("Código de sucursal"))
+        if not self.sucursal_nombre:
+            missing_fields.append(self.env._("Nombre de sucursal"))
+        if not self.administradora_riesgos:
+            missing_fields.append(self.env._("Administradora de riesgos"))
+
+        if missing_fields:
+            raise UserError(self.env._(
+                "Complete estos campos antes de generar el Excel:\n%s",
+                "\n".join("- %s" % field for field in missing_fields),
+            ))
 
     def action_generate_excel_report(self):
+        """Genera el reporte Excel de recibos de nómina filtrados."""
+        self._validate_generate_excel_fields()
+        template_content = self._get_template_content()
 
-
-        """
-        Genera el reporte Excel de recibos de nómina filtrados.
-        """
         # 1. DEFINICIÓN DEL DOMINIO Y BÚSQUEDA
-        domain = [('state', '=', 'done')]
-        if self.date_from: domain.append(('date_from', '>=', self.date_from))
-        if self.date_to: domain.append(('date_to', '<=', self.date_to))
-        if self.payslip_run_id: domain.append(('payslip_run_id', '=', self.payslip_run_id.id))
+        domain = [('state', 'in', ['done', 'paid'])]
+        if self.date_from:
+            domain.append(('date_from', '>=', self.date_from))
+        if self.date_to:
+            domain.append(('date_to', '<=', self.date_to))
+        if self.payslip_run_id:
+            domain.append(('payslip_run_id', '=', self.payslip_run_id.id))
 
         payslips = self.env['hr.payslip'].search(domain)
         if not payslips:
-            raise UserError(_("No se encontró ningún recibo de nómina para los filtros"))
+            raise UserError(self.env._(
+                "No se encontró ningún recibo de nómina para los filtros"
+            ))
 
         # 2. CARICAMENTO MODELLO (Ottimizzato per non corrompere il file)
-        output = io.BytesIO()
+        input_buffer = io.BytesIO(template_content)
+        wb = openpyxl.load_workbook(
+            input_buffer,
+            data_only=False,
+            keep_vba=False,
+            keep_links=False
+        )
 
-        if self.plantilla_excel:
-            input_buffer = io.BytesIO(base64.b64decode(self.plantilla_excel))
-            wb = openpyxl.load_workbook(
-                input_buffer,
-                data_only=False,
-                keep_links=False  # 🔥 IMPORTANTE
-            )
-        else:
-            file_name_in_data = 'DIVITIASSAS.xlsx'
-            path = get_module_resource('endowment_pilas', 'data', file_name_in_data)
+        if 'DatosPruebaEmp' not in wb.sheetnames:
+            raise UserError(self.env._(
+                "No existe DatosPruebaEmp. Hojas: %s",
+                wb.sheetnames,
+            ))
 
-            if not path or not os.path.exists(path):
-                raise UserError(_("El modelo %s no se encuentra.") % file_name_in_data)
+        if 'Liquidaciones' not in wb.sheetnames:
+            raise UserError(self.env._(
+                "No existe Liquidaciones. Hojas: %s",
+                wb.sheetnames,
+            ))
 
-            wb = openpyxl.load_workbook(
-                path,
-                data_only=False,
-                keep_links=False  # 🔥 IMPORTANTE
-            )
+        datos_sheet = wb['DatosPruebaEmp']
+        sheet = wb['Liquidaciones']
 
-        # Cerchiamo il foglio "Liquidaciones" o quello attivo
-        try:
-            sheet = wb['Liquidaciones']
-        except KeyError:
-            sheet = wb.active
+
+
+        datos_sheet.sheet_state = 'veryHidden'
+        sheet.sheet_state = 'visible'
+
+        wb.active = wb.sheetnames.index('Liquidaciones')
+
+        # =====================================================
+        # ENCABEZADO PILA
+        # =====================================================
+
+        fecha_base = self.date_to or fields.Date.today()
+
+        # Salud = periodo actual
+        periodo_salud = fecha_base.strftime('%Y-%m')
+
+        # Pensión = periodo anterior
+        periodo_pension = (
+            fecha_base - relativedelta(months=1)
+        ).strftime('%Y-%m')
+
+        # ---------------- PERIODO ----------------
+        sheet['A10'] = periodo_pension
+        sheet['C10'] = periodo_salud
+
+        # ---------------- TIPO PLANILLA ----------------
+        sheet['D10'] = self.tipo_planilla or 'E'
+
+        # ---------------- PLANILLA ASOCIADA ----------------
+        sheet['E10'] = (
+            self.planilla_asociada_fecha.strftime('%Y-%m-%d')
+            if self.planilla_asociada_fecha
+            else ''
+        )
+
+        sheet['F10'] = self.planilla_asociada_clave or ''
+
+        # ---------------- SUCURSAL ----------------
+        sheet['G10'] = self.sucursal_codigo or ''
+        sheet['H10'] = self.sucursal_nombre or 'PRINCIPAL'
+
+        # ---------------- TIPO APORTANTE ----------------
+        sheet['I10'] = self.tipo_aportante or 'EMPLEADOR'
+
+        # ---------------- ADMINISTRADORA RIESGOS ----------------
+        sheet['K10'] = self.administradora_riesgos or 'COLMENA'
 
         # 3. LLENADO DE DATOS (Empezamos en la fila 19 porque la 17 y 18 son encabezados)
         row_num = 19
         row_counter = 1
+
+        errores_pila = set()
 
         for payslip in payslips:
             employee = payslip.employee_id
@@ -96,11 +504,12 @@ class PayrollExcelWizard(models.TransientModel):
                 'Tarjeta de Identidad': 'TI',
                 'Registro Civil': 'RC',
                 'Pasaporte': 'PA',
-                'Permiso por Protección Temporal': 'PT', # El que viste en la lista
+                'Permiso por Protección Temporal': 'PT',
                 'PEP (Permiso Especial de Permanencia)': 'PE',
-                'NIT': 'NI',
                 'ID Extranjera': 'CE',
-                'Documento de identificación extranjero': 'CD'
+                'Documento de identificación extranjero': 'CD',
+                'NIT': 'CC',
+
             }
 
             # 1. Obtenemos el registro
@@ -112,33 +521,46 @@ class PayrollExcelWizard(models.TransientModel):
             # 3. Aplicamos el mapeo que definimos antes para que salga "CC", "CE", etc.
             # mapeo_id es el diccionario que definimos en el paso anterior
             tipo_doc_abreviado = mapeo_id.get(nombre_largo, nombre_largo)
+            tipo_doc_abreviado = self._pila_norm(tipo_doc_abreviado)
+
+            _logger.error(
+                "DOC RAW=%r | DOC NORMAL=%r",
+                nombre_largo,
+                tipo_doc_abreviado
+            )
+            TIPOS_DOC_VALIDOS = [
+                'CC',
+                'CE',
+                'TI',
+                'RC',
+                'PA',
+                'CD',
+                'SC',
+                'PE',
+                'PT',
+            ]
+
+            if tipo_doc_abreviado not in TIPOS_DOC_VALIDOS:
+                errores_pila.add(
+                    "%s | Tipo documento inválido PILA: %s"
+                    % (
+                        employee.display_name,
+                        tipo_doc_abreviado
+                    )
+                )
             #####################################################################
-            tipo_cotizante_excel_label = 'NINGUNA' 
+            tipo_cotizante_excel_label = '1. Dependiente'
             if contract:
                 if contract.pila_tipo_trabajador_id:
                     # Usamos el nombre del nuevo campo configurable, si tiene algo (como '1.Dependiente')
-                    tipo_cotizante_excel_label = contract.pila_tipo_trabajador_id.name or "NINGUNA"
-                #elif contract.tipo_trabajador:
-                    # --- CORRECCIÓN AQUÍ ---
-                    # Método recomendado para obtener la etiqueta legible del campo Selection
-                    #tipo_cotizante_excel_label = dict(contract._fields['tipo_trabajador'].selection).get(contract.tipo_trabajador, '')
+                    tipo_cotizante_excel_label = contract.pila_tipo_trabajador_id.name or "1. Dependiente"
 
-            sub_cotizante_excel_label = 'NINGUNO' 
+            sub_cotizante_excel_label = 'NINGUNO'
             if contract:
                 if contract.pila_subtipo_trabajador_id:
                     sub_cotizante_excel_label = contract.pila_subtipo_trabajador_id.name or "NINGUNA"
-                #elif contract.sub_tipo_trabajador:
-                    # --- CORRECCIÓN AQUÍ ---
-                    # Método recomendado para obtener la etiqueta legible del campo Selection
-                    #sub_cotizante_excel_label = dict(contract._fields['sub_tipo_trabajador'].selection).get(contract.sub_tipo_trabajador, '')
+            #####################################################################################
 
-            # --- NUEVO: Lógica para 'Horas Laboradas' ---
-
-            dias_cotizados_pension = 0.0
-            dias_cotizados_salud = 0.0
-            dias_cotizados_arl = 0.0
-            dias_cotizados_ccf = 0.0
-            
             horas_laboradas = 0.0
             dias_laborados = 0.0  # 👈 nuevo acumulador
 
@@ -146,19 +568,40 @@ class PayrollExcelWizard(models.TransientModel):
                 days = worked_day_line.number_of_days
                 hours = worked_day_line.number_of_hours
                 code = worked_day_line.code
-                
-                # DÍAS: Se acumulan todos para que coincida con el total (sum) del XML
-                dias_laborados += days 
-                
+
+                # DÍAS: Se acumulan todos los días procesados de la nómina
+                dias_laborados += days
+
                 # HORAS: Únicamente si es el código de asistencia
-                if code == 'WORK100': 
+                if code == 'WORK100':
                     horas_laboradas += hours
 
-                
-                # 2. ACUMULACIÓN DE DÍAS COTIZADOS 
-                # Se utiliza el código de la línea del día trabajado directamente 
+            # =========================================================================
+            # 🟢 AJUSTE DE PRECISIÓN Y VALIDACIÓN TOTAL (FUERA DEL BUCLE FOR)
+            # =========================================================================
+
+            # 1. Convertimos a número entero completo para destruir decimales flotantes (Ej: 30.00014 -> 30)
+            dias_laborados = int(round(dias_laborados, 0))
+
+            # 2. VALIDACIÓN DEFINITIVA: Al estar fuera del bucle, evalúa la suma real final.
+            # Si la nómina está mal hecha y suma 31, 37, 45, etc., saltará la alerta para que la arreglen.
+            """if dias_laborados > 30:
+                errores_pila.add(
+                    "%s | Días laborados inválidos: %s. Máximo permitido 30."
+                    % (employee.display_name, dias_laborados)
+                )"""
+
+            if dias_laborados < 0:
+                errores_pila.add(
+                    "%s | Días laborados inválidos: %s."
+                    % (employee.display_name, dias_laborados)
+                )
+
+
+                # 2. ACUMULACIÓN DE DÍAS COTIZADOS
+                # Se utiliza el código de la línea del día trabajado directamente
                 # para determinar a qué columna PILA se suma.
-                
+
                 if code == 'pension':
                     dias_cotizados_pension += days
                 elif code == 'salud':
@@ -179,12 +622,12 @@ class PayrollExcelWizard(models.TransientModel):
             if employee and employee.country_id:
                 if employee.country_id.name != 'Colombia':
                     es_extranjero_label = 'Si'
-                    
+
             if employee and employee.is_non_resident:
                 es_residente_label = 'Si'
 
-            
-            
+
+
             # --- Lógica: Fecha de radicación en el exterior ---
             fecha_radicacion = ''
             if employee and getattr(employee, 'date_resident', False):
@@ -215,7 +658,7 @@ class PayrollExcelWizard(models.TransientModel):
 
                 # Si está en el rango, aplicamos el concepto del contrato
                 if es_periodo_ingreso:
-                    # Buscamos el código del Many2one, si no hay, ponemos 'X'
+
                     valor_ing = contract.pila_ingreso_concepto_id.name or 'NO'
 
             # --- Lógica: Fecha final del contrato ---
@@ -242,14 +685,47 @@ class PayrollExcelWizard(models.TransientModel):
 
                 # Si está en el rango, aplicamos el concepto del contrato
                 if es_periodo_retiro:
-                    # Buscamos el código del Many2one, si no hay, ponemos 'X'
+
                     valor_ret = contract.pila_retiro_concepto_id.name or 'NO'
 
-            # Inicializar un diccionario para guardar los valores por defecto 'NO'
-            # Asegúrate de que los códigos aquí coincidan con los de tu campo 'novelty_code'
             # 1. Inicializamos todas las novedades simples en 'NO' por defecto
             novelty_values = {code: 'NO' for code in ['TDE', 'TAE', 'TDP', 'TAP']} # Agrega aquí tus códigos
-            
+
+            if contract and contract.pila_novelty_ids:
+
+                lineas_novedad = contract.pila_novelty_ids
+
+
+                for nov_line in lineas_novedad:
+
+                    # Código PILA configurado (TDE, TAE, TDP, TAP)
+                    code_novelty = (
+                        nov_line.novelty_type_id.code
+                        if nov_line.novelty_type_id
+                        else False
+                    )
+
+                    fecha_ini = nov_line.date_start
+                    fecha_fin = nov_line.date_end
+
+                    # Validar que el código exista en el diccionario
+                    if code_novelty and code_novelty in novelty_values:
+
+                        # Validación de intersección de fechas
+                        if (
+                            fecha_ini
+                            and self.date_from
+                            and self.date_to
+                            and fecha_ini <= self.date_to
+                            and (
+                                not fecha_fin
+                                or fecha_fin >= self.date_from
+                            )
+                        ):
+
+                            novelty_values[code_novelty] = 'SI'
+
+            ############################################################################################
             report_start_date = self.date_from
             report_end_date = self.date_to
 
@@ -284,11 +760,11 @@ class PayrollExcelWizard(models.TransientModel):
             fecha_cambio_sueldo = contract.date_wage_change
 
             if fecha_cambio_sueldo and report_start_date and report_end_date:
-                
+
                 # 2. Verificamos si la fecha de cambio cae DENTRO del rango del reporte.
                 # El filtro que usa el reporte: [self.date_from, self.date_to]
                 if report_start_date <= fecha_cambio_sueldo <= report_end_date:
-                    
+
                     # Si la fecha de cambio está dentro del periodo, es VSP = 'SI'
                     valor_vsp = 'SI'
                     fecha_vsp_str = fecha_cambio_sueldo # Ya es un objeto date
@@ -350,7 +826,7 @@ class PayrollExcelWizard(models.TransientModel):
                         count_lma = int(current_leave.number_of_days)
                     elif novelty_code == 'IGE':
                         count_ige = int(current_leave.number_of_days)
-                        
+
                     absence_novelties[novelty_code]['value'] = current_leave.holiday_status_id.name or 'SI'
 
                     if novelty_code != 'AVP':
@@ -359,7 +835,15 @@ class PayrollExcelWizard(models.TransientModel):
 
                 # Usaremos el nombre (label) para el Excel.
                 # El método _get_selection_label() toma el nombre legible del campo de selección.
-                correction_status_excel_value = payslip.correction_status if hasattr(payslip, 'correction_status') else 'no'
+                correction_status_raw = payslip.correction_status or 'no'
+
+                mapeo_correccion = {
+                    'no': 'NO',
+                    'actual': 'ACTUAL',
+                    'coreccion': 'CORRECCIÓN',
+                }
+
+                correction_status_excel_value = mapeo_correccion.get(correction_status_raw, 'NO')
 
                 salario_mensual = contract.wage if contract else 0.0
 
@@ -402,8 +886,7 @@ class PayrollExcelWizard(models.TransientModel):
                     'valor_cotizacion_ccf', 'cotizacion_voluntaria_afiliado', 'cotizacion_voluntaria_empleador',
                     'fondo_solidaridad', 'fondo_subsistencia', 'valor_no_retenido', 'total_aportes',
                     'valor_upc', 'valor_incapacidad_eg', 'valor_licencia_maternidad',
-                    'ibc','ibc_otros_parafiscales',
-                    'valor_cotizacion_sena', 'valor_cotizacion_icbf', 'valor_cotizacion_esap',
+                    'ibc','ibc_pension', 'ibc_arl','ibc_caja_c','ibc_otros_parafiscales','valor_cotizacion_sena', 'valor_cotizacion_icbf', 'valor_cotizacion_esap',
                     'valor_cotizacion_men', 'exonerado_1607'
                 ]
 
@@ -447,13 +930,17 @@ class PayrollExcelWizard(models.TransientModel):
                 ################################upc adicional################################
                 mapeo_id = {
                     'Cédula de ciudadanía': 'CC',
-                    'Tarjeta de identidad': 'TI',
-                    'Registro civil': 'RC',
                     'Cédula de extranjería': 'CE',
+                    'Tarjeta de Identidad': 'TI',
+                    'Registro Civil': 'RC',
                     'Pasaporte': 'PA',
-                    'NIT': 'NI',
-                    'Permiso Especial de Permanencia': 'PE',
                     'Permiso por Protección Temporal': 'PT',
+                    'PEP (Permiso Especial de Permanencia)': 'PE',
+                    'ID Extranjera': 'CE',
+                    'Documento de identificación extranjero': 'CD',
+                    'NIT': 'CC',
+
+
                 }
 
                 tipo_doc_upc_rec = employee.l10n_latam_identification_type_id
@@ -461,14 +948,255 @@ class PayrollExcelWizard(models.TransientModel):
                 # 2. Extraemos el nombre (o cadena vacía si no hay)
                 nombre_doc_upc = tipo_doc_upc_rec.name or ''
 
-                # 3. Buscamos la abreviatura en el mapeo. Si no está, dejamos el nombre original.
-                tipo_doc_upc_abreviado = mapeo_id.get(nombre_doc_upc, nombre_doc_upc)
+                # 3. Buscamos la abreviatura en el mapeo
+                tipo_doc_upc_abreviado = mapeo_id.get(
+                    nombre_doc_upc,
+                    nombre_doc_upc
+                )
 
-                # 4. Obtenemos el número y le quitamos puntos/guiones/espacios
+                tipo_doc_upc_abreviado = self._pila_norm(
+                    tipo_doc_upc_abreviado
+                )
+
+                # 4. Número UPC
                 raw_upc = employee.upc_identification_number or ''
-                numero_upc_limpio = str(raw_upc).replace('.', '').replace('-', '').strip()
+
+                numero_upc_limpio = str(raw_upc).replace(
+                    '.',
+                    ''
+                ).replace(
+                    '-',
+                    ''
+                ).strip()
+
+                # 5. Validación PILA
+                if (
+                    numero_upc_limpio
+                    and tipo_doc_upc_abreviado
+                    and tipo_doc_upc_abreviado not in TIPOS_DOC_VALIDOS
+                ):
+                    errores_pila.add(
+                        "%s | Tipo documento UPC inválido PILA: %s"
+                        % (
+                            employee.display_name,
+                            tipo_doc_upc_abreviado
+                        )
+                    )
                 # 4. Obtenemos el número de identificación adicional
                 #numero_upc = employee.upc_identification_number or ''
+
+                ##################################################################
+
+                if not employee.employee_address_home.state_id:
+                    errores_pila.add(
+                        "%s | No tiene departamento/state configurado en el contacto."
+                        % employee.display_name
+                    )
+
+                if not employee.employee_address_home.city_id:
+                    errores_pila.add(
+                        "%s | No tiene ciudad configurada en el contacto."
+                        % employee.display_name
+                    )
+
+                departamento_pila = ''
+                ciudad_pila = ''
+
+                if employee.employee_address_home.state_id and employee.employee_address_home.city_id:
+                    departamento_pila, ciudad_pila = self._normalize_location_pila(
+                        wb,
+                        employee.employee_address_home.state_id.name,
+                        employee.employee_address_home.city_id.name
+                    )
+
+                #########################################################################
+
+                lista_conceptos_pila = self._get_defined_name_values(wb, 'RGINCO')
+
+                # 🟢 CORRECCIÓN: Si el Excel no expone el rango global (vuelve []),
+                # cargamos las opciones oficiales del operador para que la validación no quede vacía.
+                if not lista_conceptos_pila:
+                    lista_conceptos_pila = [
+                        'NO',
+                        'X',
+                        'Todos los sistemas (ARL, AFP, CCF, EPS)',
+                        'Solo Salud, Pensión y CCF',
+                        'Solo Salud'
+                    ]
+
+                # Limpiamos los textos que vienen del registro relacional de Odoo
+                valor_ing = (valor_ing or 'NO').strip()
+                valor_ret = (valor_ret or 'NO').strip()
+
+                # Validamos contra la estructura interna normalizada
+                valor_ing = self._validate_pila_value(
+                    errores_pila, employee, 'ING', valor_ing, lista_conceptos_pila
+                ) or 'NO'
+
+                valor_ret = self._validate_pila_value(
+                    errores_pila, employee, 'RET', valor_ret, lista_conceptos_pila
+                ) or 'NO'
+
+                # =========================================================
+                # VALIDACIONES PILA ANTES DE ARMAR DATA
+                # =========================================================
+                novedad_map = {
+                'INCAPACIDAD 100 %': 'INCAPACIDAD GENERAL',
+                'INCAPACIDAD 100%': 'INCAPACIDAD GENERAL',
+                'INCAPACIDAD 66.66 %': 'INCAPACIDAD GENERAL',
+                'INCAPACIDAD 66.66%': 'INCAPACIDAD GENERAL',
+                'SUSPENSION': 'LICENCIA NO REMUNERADA', # 🟢 Mapea "Suspensión" a la opción aceptada por PILA
+                'LICENCIA DE LUTO': 'LICENCIA REMUNERADA',
+            }
+
+
+                # 1) Novedades / licencias
+                novedades_permitidas = {
+                    'SLN': ['NO', 'LICENCIA NO REMUNERADA', 'COMISIÓN DE SERVICIO'],
+                    'IGE': ['NO', 'INCAPACIDAD GENERAL', 'LICENCIA POR CUIDADO DE LA NIÑEZ'],
+                    'LMA': ['NO', 'LICENCIA DE MATERNIDAD (LMA)', 'LICENCIA PARENTAL FLEXIBLE (MEDIO TIEMPO)'],
+                    'VAL-LR': ['NO', 'VACACIONES', 'LICENCIA REMUNERADA'],
+                    'AVP': ['NO', 'SI'],
+                    'VCT': ['NO', 'SI'],
+                }
+
+                for code, permitidos in novedades_permitidas.items():
+
+                    valor_novedad = absence_novelties[code]['value']
+
+                    # =====================================================
+                    # NORMALIZAR NOMBRES ODOO -> PILA
+                    # =====================================================
+
+                    valor_novedad_norm = self._pila_norm(valor_novedad)
+
+                    valor_novedad = novedad_map.get(
+                        valor_novedad_norm,
+                        valor_novedad
+                    )
+
+                    # Guardamos el valor ya normalizado
+                    absence_novelties[code]['value'] = valor_novedad
+
+                    self._validate_pila_value(
+                        errores_pila,
+                        employee,
+                        f"Novedad {code}",
+                        valor_novedad,
+                        permitidos
+                    )
+
+                # 2) IRL debe ser numérico
+                valor_irl = absence_novelties['IRL']['value']
+
+                if self._pila_norm(valor_irl) in ['', 'NO', 'NONE', 'FALSE']:
+                    valor_irl_excel = 0
+                else:
+                    try:
+                        valor_irl_excel = int(float(valor_irl))
+                    except Exception:
+                        errores_pila.add(
+                            "%s | IRL inválido: %s. Debe ser numérico."
+                            % (employee.display_name, valor_irl)
+                        )
+                        valor_irl_excel = 0
+
+                # =========================================================
+                # VALIDACIÓN ADMINISTRADORAS PILA
+                # =========================================================
+
+                # Listas reales desde la plantilla
+                lista_eps = self._get_defined_name_values(wb, 'RGEPS')
+                lista_afp = self._get_defined_name_values(wb, 'RGAFP')
+                lista_arl = self._get_defined_name_values(wb, 'RGARL')
+                lista_ccf = self._get_defined_name_values(wb, 'RGCCF')
+
+                # 🟢 FALLBACK DE EMERGENCIA: Si el Excel no expone los rangos globales (vuelven []),
+                # cargamos respaldos con las opciones principales para que el validador no quede vacío.
+                if not lista_arl:
+                    lista_arl = ['COLMENA', 'COLPATRIA ARP', 'COLSANITAS ARL', 'POSITIVA COMPAÑIA DE SEGUROS', 'SEGUROS BOLIVAR', 'LA EQUIDAD SEGUROS']
+                if not lista_eps:
+                    lista_eps = ['SURALICUOTA', 'SANITAS', 'COMPENSAR', 'NUEVA EPS', 'SALUD TOTAL', 'COOMEVA']
+                if not lista_afp:
+                    lista_afp = ['PROTECCION', 'PORVENIR', 'COLFONDOS', 'SKANDIA', 'COLPENSIONES']
+                if not lista_ccf:
+                    lista_ccf = ['COMPENSAR', 'COLSUBSIDIO', 'CAFAM', 'COMFENALCO']
+
+                # ORIGEN: Evaluación segura con operador ternario y remoción estricta de espacios (.strip())
+                pension_label = (pension_admin.get_pension_label() if pension_admin else '').strip()
+                salud_label = (salud_admin.get_salud_label() if salud_admin else '').strip()
+                #arl_label = (arl_admin.get_arl_label() if arl_admin else '').strip()   # ✔ ¡Saneado!
+                ccf_label = (ccf_admin.get_ccf_label() if ccf_admin else '').strip()
+
+                arl_label = ''
+                if contract and contract.department_id:
+                    # 1. Buscamos el Centro de Costos de la compañía que contenga el departamento del contrato
+                    centro_costo = self.env['hr.centrocostos'].search([
+                        ('company_id', '=', payslip.company_id.id),
+                        ('departamentos', 'in', contract.department_id.id)
+                    ], limit=1)
+
+                    if centro_costo:
+                        # 2. Buscamos en las administradoras configuradas en la Compañía
+                        # Filtramos las líneas buscando el Centro de Costos y tu nuevo campo exclusivo
+                        arl_admin_company = payslip.company_id.administradoras_ids.filtered(
+                            lambda a: a.ccostos == centro_costo.name and a.list_administradora_arl_id
+                        )
+
+                        if arl_admin_company:
+                            # 3. Extraemos el nombre de la ARL del campo list_administradora_arl_id
+                            arl_label = arl_admin_company[0].list_administradora_arl_id.name
+
+                # Fallback de Seguridad: Si el departamento no está enlazado a un Centro de Costos,
+                # extraemos la primera ARL válida configurada en la compañía para que el archivo no salga vacío.
+                if not arl_label:
+                    arl_admin_default = payslip.company_id.administradoras_ids.filtered(lambda a: a.list_administradora_arl_id)
+                    if arl_admin_default:
+                        arl_label = arl_admin_default[0].list_administradora_arl_id.name
+
+                # Limpieza estricta de la cadena para el Excel
+                arl_label = (arl_label or '').strip()
+
+                # DESTINO
+                pension_destino = (pension_admin.get_pension_destino_label() if pension_admin else '').strip()
+                salud_destino = (salud_admin.get_salud_destino_label() if salud_admin else '').strip()
+
+                # --- PROCESO DE VALIDACIÓN CONTRA EL ARCHIVO DE PRUEBA ---
+
+                # AFP origen
+                pension_label = self._validate_pila_value(
+                    errores_pila, employee, "AFP origen", pension_label, lista_afp
+                ) or ''
+
+                # EPS origen
+                salud_label = self._validate_pila_value(
+                    errores_pila, employee, "EPS origen", salud_label, lista_eps
+                ) or ''
+
+
+                # ARL (Ya no fallará si el contrato anterior venía vacío o incompleto)
+                arl_label = self._validate_pila_value(
+                    errores_pila, employee, "ARL", arl_label, lista_arl
+                ) or ''
+
+                # CCF
+                ccf_label = self._validate_pila_value(
+                    errores_pila, employee, "CCF", ccf_label, lista_ccf
+                ) or ''
+
+                # AFP destino
+                if pension_admin and pension_admin.traslado:
+                    pension_destino = self._validate_pila_value(
+                        errores_pila, employee, "AFP destino", pension_destino, lista_afp
+                    ) or ''
+
+                # EPS destino
+                if salud_admin and salud_admin.traslado:
+                    salud_destino = self._validate_pila_value(
+                        errores_pila, employee, "EPS destino", salud_destino, lista_eps
+                    ) or ''
+
+
 
                 data = [
                     row_counter,                                      # 1 (A)
@@ -478,8 +1206,8 @@ class PayrollExcelWizard(models.TransientModel):
                     (employee.employee_address_home.second_last_name or '').upper(), # 5 (E)
                     (employee.employee_address_home.first_name or '').upper(), # 6 (F)
                     (employee.employee_address_home.middle_name or '').upper(), # 7 (G)
-                    (employee.employee_address_home.state_id.name or 'BOGOTA').upper(), # 8 (H)
-                    (employee.employee_address_home.city_id.name or 'BOGOTA').upper(), # 9 (I)
+                    departamento_pila, # 8 (H)
+                    ciudad_pila, # 9 (I)
                     tipo_cotizante_excel_label or '1.DEPENDIENTE',   # 10 (J)
                     sub_cotizante_excel_label or 'NINGUNO',           # 11 (K)
                     horas_laboradas or 0,                             # 12 (L)
@@ -507,7 +1235,11 @@ class PayrollExcelWizard(models.TransientModel):
                     absence_novelties['VAL-LR']['value'], absence_novelties['VAL-LR']['start'], absence_novelties['VAL-LR']['end'], # 36,37,38
                     absence_novelties['AVP']['value'],                # 39 (Solo marca)
                     absence_novelties['VCT']['value'], absence_novelties['VCT']['start'], absence_novelties['VCT']['end'], # 40,41,42
-                    absence_novelties['IRL']['value'], absence_novelties['IRL']['start'], absence_novelties['IRL']['end'], # 43,44,45
+                    #absence_novelties['IRL']['value'], absence_novelties['IRL']['start'], absence_novelties['IRL']['end'], # 43,44,45
+                    valor_irl_excel, #43
+                    absence_novelties['IRL']['start'],  # 44
+                    absence_novelties['IRL']['end'],    # 45
+
 
                     correction_status_excel_value,  # 46 Corrección / IRP numérico
                     salario_mensual or 0,                             # 47
@@ -515,9 +1247,10 @@ class PayrollExcelWizard(models.TransientModel):
                     variable_excel_value or 'NO',                     # 49
 
                     # --- PENSION ---
-                    pension_admin.get_pension_label() if pension_admin else 'NINGUNO', # 50
+                    #pension_admin.get_pension_label() if pension_admin else 'NINGUNA', # 50
+                    pension_label, # 50
                     dias_laborados or 0,                      # 51
-                    valores_reglas['ibc'] or 0,               # 52
+                    valores_reglas['ibc_pension'] or 0,               # 52
                     contract.get_tarifa_by_type('pension') or 0,      # 53
                     valores_reglas['valor_cotizacion_pension'] or 0,  # 54
                     alto_riesgo_label or 'NO',                        # 55
@@ -527,10 +1260,11 @@ class PayrollExcelWizard(models.TransientModel):
                     valores_reglas['fondo_subsistencia'] or 0,        # 59
                     valores_reglas['valor_no_retenido'] or 0,         # 60
                     valores_reglas['total_aportes'] or 0,             # 61
-                    pension_admin.get_pension_destino_label() if pension_admin else 'NINGUNO', # 62
-
+                    #pension_admin.get_pension_destino_label() if pension_admin else 'NINGUNA', # 62
+                    pension_destino, # 62
                     # --- SALUD ---
-                    salud_admin.get_salud_label() if salud_admin else 'NINGUNO', # 63
+                    #salud_admin.get_salud_label() if salud_admin else 'NINGUNA', # 63
+                    salud_label,# 63
                     dias_laborados or 0,                        # 64
                     valores_reglas['ibc'] or 0,                 # 65
                     contract.get_tarifa_by_type('salud') or 0,        # 66
@@ -540,13 +1274,16 @@ class PayrollExcelWizard(models.TransientModel):
                     valores_reglas['valor_incapacidad_eg'] or 0,      # 70
                     count_lma or '',                                  # 71 N° Autorización LMA
                     valores_reglas['valor_licencia_maternidad'] or 0, # 72
-                    salud_admin.get_salud_destino_label() if salud_admin else 'NINGUNO', # 73
+                    #salud_admin.get_salud_destino_label() if salud_admin else 'NINGUNA', # 73
+                    salud_destino, # 73
+
 
                     # --- RIESGOS (ARL) ---
-                    arl_admin.get_arl_label() if arl_admin else 'NINGUNA', # 74
-                    dias_laborados or 0,                          # 75
-                    valores_reglas['ibc'] or 0,                # 76
-                    contract.get_tarifa_by_type('arl') or 0,          # 77
+                    #arl_admin.get_arl_label() if arl_admin else 'NINGUNA', # 74
+                    arl_label, # 74
+                    dias_laborados or 0,                             # 75
+                    valores_reglas['ibc_arl'] or 0,                      # 76
+                    contract.tarifa_arl ,                              # 77 (Se divide entre 100 porque openpyxl lo formatea con '%')         # 77
                     valor_clase or '1',                               # 78
                     #nombre_departamento or '',                        # 79
                     val_centro_trabajo or '',                        # 79
@@ -555,8 +1292,9 @@ class PayrollExcelWizard(models.TransientModel):
 
                     # --- CAJA Y PARAFISCALES ---
                     dias_laborados or 0,                          # 82
-                    ccf_admin.get_ccf_label() if ccf_admin else 'NINGUNA', # 83
-                    valores_reglas['ibc'] or 0,                   # 84
+                    #ccf_admin.get_ccf_label() if ccf_admin else 'NINGUNA', # 83
+                    ccf_label, # 83
+                    valores_reglas['ibc_caja_c'] or 0,                       # 84
                     contract.get_tarifa_by_type('ccf') or 0,          # 85
                     valores_reglas['valor_cotizacion_ccf'] or 0,      # 86
                     valores_reglas['ibc_otros_parafiscales'] or 0,    # 87
@@ -628,7 +1366,7 @@ class PayrollExcelWizard(models.TransientModel):
                         cell.value = row_counter
                         cell.number_format = '0'
                         cell.alignment = Alignment(horizontal='right', vertical='center')
-                        
+
                         continue
 
                     # ---------------- IDs ----------------
@@ -645,12 +1383,27 @@ class PayrollExcelWizard(models.TransientModel):
                         cell.value = limit(val, 20)  # ajusta según PILA real
                         continue
 
+
+
                     # ---------------- ADMINISTRADORAS ----------------
                     if col_num in [50, 62, 63, 73, 74, 83]:
                         val = clean_text(cell_value)
                         val = val if val else "NINGUNA"
                         cell.value = val   # ✔ SIN LIMIT
-                        continue   
+                        continue
+
+                    # ---------------- 🟢 CONCEPTOS DE INGRESO Y RETIRO (ING / RET) ----------------
+                    if col_num in [16, 18]:
+                        # 🟢 SOLUCIÓN PUREZA: No llamamos a clean_text() para evitar el .upper().
+                        # Limpiamos los saltos de línea a mano, respetando las minúsculas de Odoo.
+                        val = str(cell_value or '').replace('\n', '').replace('\r', '').strip()
+                        val = val if val and val.upper() not in ['NONE', 'FALSE', '0'] else "NO"
+
+                        # Escribimos el valor idéntico al de la Base de Datos
+                        cell.value = val
+                        cell.data_type = 's'
+                        cell.alignment = Alignment(horizontal='left', vertical='center')
+                        continue
 
                     # ---------------- CORRECCIÓN / IRP ----------------
                     if col_num == 46:
@@ -706,7 +1459,7 @@ class PayrollExcelWizard(models.TransientModel):
 
 
                     # ---------------- PORCENTAJES ----------------
-                    if col_num in [53, 66, 77, 85, 88, 90, 92, 94]:
+                    if col_num in [53, 66, 85, 88, 90, 92, 94]:
                         try:
                             val = float(str(cell_value or 0).replace('%', '').strip())
                             cell.value = val / 100 if val > 1 else val
@@ -715,8 +1468,33 @@ class PayrollExcelWizard(models.TransientModel):
                             cell.value = ""
                         continue
 
+                    if col_num == 77:
+
+                        try:
+                            val = float(str(cell_value or 0).replace('%', '').replace(',', '.').strip())
+
+                            # 👇 Guardar valor exacto convertido a porcentaje Excel
+                            cell.value = val / 100
+
+                            # 👇 Mostrar 3 decimales
+                            cell.number_format = '0.000%'
+
+                        except:
+                            cell.value = ""
+
+                        continue
+
                     # ---------------- NOVEDADES LISTAS DESPLEGABLES ----------------
-                    if col_num in [27, 30, 33, 36, 39, 40, 43]:
+                    if col_num == 43:
+                        try:
+                            cell.value = int(float(cell_value or 0))
+                        except Exception:
+                            cell.value = 0
+                        cell.number_format = '0'
+                        cell.alignment = Alignment(horizontal='right', vertical='center')
+                        continue
+
+                    if col_num in [27, 30, 33, 36, 39, 40]:
                         val = clean_text(cell_value)
                         cell.value = val if val else "NO"
                         cell.data_type = 's'
@@ -732,7 +1510,7 @@ class PayrollExcelWizard(models.TransientModel):
                                     val_fecha = cell_value
                                 else:
                                     val_fecha = fields.Date.from_string(cell_value)
-                                
+
                                 cell.value = val_fecha
                                 cell.number_format = 'yyyy-mm-dd' # Estándar requerido por PILA
                                 cell.alignment = Alignment(horizontal='center', vertical='center')
@@ -767,204 +1545,125 @@ class PayrollExcelWizard(models.TransientModel):
             row_counter += 1
 
         # fuera de todos los bucles
-        last_data_row = row_num - 1
+        start_clean_row = row_num
+        end_clean_row = sheet.max_row
+        max_col = 98
 
-        if sheet.max_row > last_data_row:
-            sheet.delete_rows(last_data_row + 1, sheet.max_row - last_data_row)
+        if end_clean_row >= start_clean_row:
+            from openpyxl.styles import Border, Side, PatternFill
 
-        # 1. Guardar directamente con openpyxl (SIN pandas, SIN xlsxwriter)
+            no_border = Border(left=Side(border_style=None),
+                               right=Side(border_style=None),
+                               top=Side(border_style=None),
+                               bottom=Side(border_style=None))
+            no_fill = PatternFill(fill_type=None)
+
+            # 1. Limpieza visual y de estilos en el lienzo de Excel
+            for row in range(start_clean_row, end_clean_row + 1):
+                for col in range(1, max_col + 1):
+                    cell = sheet.cell(row=row, column=col)
+                    cell.value = None
+                    cell.style = 'Normal'
+                    cell.border = no_border
+                    cell.fill = no_fill
+                    cell.comment = None
+                    cell.hyperlink = None
+
+            # 2. 🟢 EL TRUCO ABSOLUTO: Eliminar las celdas de la memoria interna de la hoja
+            # Esto arranca de raíz las comas fantasmas del CSV que detecta Aportes en Línea
+            for row in range(start_clean_row, end_clean_row + 1):
+                for col in range(1, max_col + 1):
+                    cell_key = (row, col)
+                    # Si openpyxl guardó la celda en su diccionario interno, la exterminamos
+                    if cell_key in sheet._cells:
+                        del sheet._cells[cell_key]
+
+            # 3. Recortar y purgar las listas desplegables (Data Validations)
+            if hasattr(sheet, 'data_validations') and sheet.data_validations.dataValidation:
+                validaciones_a_mantener = []
+
+                for dv in sheet.data_validations.dataValidation:
+                    nuevas_celdas = []
+
+                    for sqref in dv.sqref.ranges:
+                        # Cortamos el rango para que muera estrictamente en el último empleado real
+                        if sqref.max_row >= start_clean_row:
+                            sqref.max_row = start_clean_row - 1
+
+                        # Si el rango modificado sigue siendo válido arriba, se conserva
+                        if sqref.max_row >= sqref.min_row:
+                            nuevas_celdas.append(sqref)
+
+                    if nuevas_celdas:
+                        from openpyxl.worksheet.cell_range import MultiCellRange
+                        dv.sqref = MultiCellRange(nuevas_celdas)
+                        validaciones_a_mantener.append(dv)
+
+                sheet.data_validations.dataValidation = validaciones_a_mantener
+
+        # 4. Forzado seguro de dimensiones borrando la caché interna
+        if hasattr(sheet, '_invalidated_dimensions'):
+            sheet._invalidated_dimensions = True
+
+        sheet.calculate_dimension()
+
+        #if sheet.max_row > last_data_row:
+            #sheet.delete_rows(last_data_row + 1, sheet.max_row - last_data_row)
+
+        if errores_pila:
+
+            errores_ordenados = sorted(list(errores_pila))
+
+            raise UserError(
+                self.env._(
+                    "Corrija estos datos antes de generar PILA:\n\n%s",
+                    "\n".join(errores_ordenados[:80]),
+                )
+            )
+
         output = io.BytesIO()
         wb.save(output)
+        output.seek(0)
 
-        # 2. Obtener datos
-        out_data = output.getvalue()
+        fixed_output = io.BytesIO()
+
+        with zipfile.ZipFile(output, 'r') as zin:
+            with zipfile.ZipFile(fixed_output, 'w', zipfile.ZIP_DEFLATED) as zout:
+
+                for item in zin.infolist():
+
+                    content = zin.read(item.filename)
+
+                    if item.filename == 'xl/workbook.xml':
+
+                        xml = content.decode('utf-8')
+
+                        xml = re.sub(
+                            r'(<sheet[^>]*name="DatosPruebaEmp"[^>]*sheetId=")\d+(")',
+                            r'\g<1>2\2',
+                            xml
+                        )
+
+                        xml = re.sub(
+                            r'(<sheet[^>]*name="Liquidaciones"[^>]*sheetId=")\d+(")',
+                            r'\g<1>1\2',
+                            xml
+                        )
+
+                        content = xml.encode('utf-8')
+
+                    zout.writestr(item, content)
+
+        out_data = fixed_output.getvalue()
+
         output.close()
+        fixed_output.close()
 
-        # 3. Crear el adjunto
         attachment = self.env['ir.attachment'].create({
-            'name': f"PILA_DIVITIASSAS_{fields.Date.today()}.xlsx",
+            'name': f"PILA_{fields.Date.today()}.xlsx",
             'type': 'binary',
             'datas': base64.b64encode(out_data),
             'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        })
-
-        # 4. Descargar
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/web/content/{attachment.id}?download=true',
-            'target': 'self',
-        }
-
-
-    def _format_pila(self, value, length, field_type='text'):
-        """ Limpieza de datos y ajuste de ancho fijo para PILA """
-        # 1. Manejo de Nulos y limpieza básica
-        if value is None or (isinstance(value, float) and pd.isna(value)) or value is False:
-            val = ""
-        else:
-            val = str(value).strip().upper()
-
-        # 2. Lógica para Novedades (Campos de marca X)
-        # Si la longitud es 1 o 2 y es una marca de "SI/NO"
-        if field_type == 'text' and length <= 2:
-            if val in ['SI', 'S', 'X', '1', 'TRUE']:
-                return 'X'.ljust(length)[:length]
-            return ' '.ljust(length)[:length]
-
-        # 3. Lógica para Números Enteros (IBC, Cotizaciones, Cédulas)
-        if field_type == 'num':
-            # Eliminamos decimales si vienen (ej: "1500.0" -> "1500")
-            clean_num = val.split('.')[0]
-            # Dejamos solo los dígitos
-            clean_num = "".join(filter(str.isdigit, clean_num))
-            # Rellenamos con ceros a la izquierda
-            return clean_num.zfill(length)[:length]
-
-        # 4. Lógica para Tarifas (7 decimales)
-        if field_type == 'float_7dec':
-            try:
-                num = float(val)
-                # Formato 0.1600000
-                return f"{num:.7f}".ljust(length)[:length]
-            except:
-                return "0.0000000".ljust(length)[:length]
-
-        # 5. Texto Normal (Nombres, Apellidos, Códigos)
-        # Alinea a la izquierda y rellena con espacios
-        return val.ljust(length)[:length]
-
-
-    def action_generate_txt_pila(self):
-        """ Genera el Archivo Plano (TXT) con la lógica completa del Excel """
-        self.ensure_one()
-
-        # 1. MISMA BÚSQUEDA Y FILTROS QUE EL EXCEL
-        domain = [('state', '=', 'done')]
-        if self.date_from: domain.append(('date_from', '>=', self.date_from))
-        if self.date_to: domain.append(('date_to', '<=', self.date_to))
-        if self.payslip_run_id: domain.append(('payslip_run_id', '=', self.payslip_run_id.id))
-
-        payslips = self.env['hr.payslip'].search(domain)
-        if not payslips:
-            raise UserError(_("No se encontraron nóminas validadas para los filtros seleccionados."))
-
-        company = self.env.company
-        lines = []
-
-        # 2. REGISTRO TIPO 1 (Encabezado de Empresa - 305 caracteres)
-        periodo_salud = self.date_from.strftime('%Y-%m') if self.date_from else "2026-02"
-        periodo_nosalud = self.date_from.strftime('%Y-%m') if self.date_from else "2026-01"
-        
-        t1 = "011" # Tipo registro y modalidad
-        t1 += "0001" # Secuencia
-        t1 += self._format_pila(company.name, 200) # Nombre empresa
-        t1 += "S" # Tipo identificación (S para NI)
-        t1 += self._format_pila(company.vat or '0', 16, 'num') # NIT
-        t1 += "0" # Dígito verificación
-        t1 += "E" # Tipo aportante
-        t1 = t1.ljust(235)
-        t1 += "S" # Acción
-        t1 += "54" # Código operador
-        t1 += self._format_pila("COLMENA", 40) # ARL
-        t1 += periodo_nosalud.replace('-', '') # Periodo Pensión
-        t1 += periodo_salud.replace('-', '') # Periodo Salud
-        t1 = t1.ljust(305)
-        lines.append(t1)
-
-        # 3. REGISTRO TIPO 2 (Detalle Empleados - 693 caracteres)
-        row_counter = 1
-        for payslip in payslips:
-            employee = payslip.employee_id
-            contract = payslip.contract_id
-            address = employee.employee_address_home
-
-            # --- Lógica de Reglas Salariales ---
-            claves = ['ibc', 'valor_cotizacion_pension', 'valor_cotizacion_salud', 
-                      'valor_cotizacion_riesgo', 'valor_cotizacion_ccf']
-            valores = {k: 0.0 for k in claves}
-            for line in payslip.line_ids:
-                tipo = line.salary_rule_id.tipo_reporte_excel
-                if tipo in valores:
-                    valores[tipo] += line.total
-
-            # --- Lógica de Días y Horas ---
-            dias_p = 0
-            horas_lab = 0
-            for wd in payslip.worked_days_line_ids:
-                if wd.code == 'pension': dias_p += int(wd.number_of_days)
-                if wd.code == 'WORK100': horas_lab += int(wd.number_of_hours)
-
-            # --- Lógica de Novedades (ING, RET, VSP) ---
-            flag_ing = "X" if contract.date_start and self.date_from <= contract.date_start <= self.date_to else " "
-            flag_ret = "X" if contract.date_end and self.date_from <= contract.date_end <= self.date_to else " "
-            flag_vsp = "X" if contract.date_wage_change and self.date_from <= contract.date_wage_change <= self.date_to else " "
-
-            # --- Construcción de la línea ---
-            l2 = "02"
-            l2 += self._format_pila(row_counter, 5, 'num')
-            
-            # Identificación
-            tipo_doc = {'Cédula de ciudadanía': 'CC', 'NIT': 'NI'}.get(address.l10n_latam_identification_type_id.name, 'CC')
-            l2 += self._format_pila(tipo_doc, 2)
-            l2 += self._format_pila(address.vat, 16)
-            
-            # Tipo Cotizante
-            tipo_coti = "".join(filter(str.isdigit, contract.pila_tipo_trabajador_id.name or '01'))[:2].zfill(2)
-            sub_coti = "".join(filter(str.isdigit, contract.pila_subtipo_trabajador_id.name or '00'))[:2].zfill(2)
-            l2 += tipo_coti + sub_coti + " " # Extranjero
-            l2 += "63001" # Depto/Ciudad (Ajustar según necesidad)
-
-            # Nombres (Mayúsculas)
-            l2 += self._format_pila(address.last_name, 20)
-            l2 += self._format_pila(address.second_last_name, 30)
-            l2 += self._format_pila(address.first_name, 20)
-            l2 += self._format_pila(address.middle_name, 30)
-
-            # Marcas de Novedad (Posiciones 136-150 aprox)
-            l2 += flag_ing + flag_ret + " " + " " + " " + " " + flag_vsp + " "
-            # Ausencias (SLN, IGE, LMA...)
-            l2 += " " * 7 # Espacios para ausencias si no hay lógica hr.leave activa
-
-            # Administradoras
-            l2 += self._format_pila(contract.get_admin_by_type('pension').code or '230301', 6)
-            l2 += " " * 6 # Pension destino
-            l2 += self._format_pila(contract.get_admin_by_type('salud').code or 'EPS001', 6)
-            l2 += " " * 6 # Salud destino
-            l2 += self._format_pila(contract.get_admin_by_type('ccf').code or 'CCF01', 6)
-
-            # Días y Salario
-            l2 += self._format_pila(dias_p, 2, 'num') * 4 # Repite días para P, S, R, C
-            l2 += self._format_pila(int(contract.wage), 9, 'num')
-            l2 += "X" if contract.wage_integral else " "
-            
-            # IBC y Aportes
-            ibc_val = self._format_pila(int(valores['ibc']), 9, 'num')
-            l2 += ibc_val * 4 # IBC para P, S, R, C
-            
-            # Tarifas y Cotizaciones (Ejemplo Pensión)
-            l2 += self._format_pila(contract.get_tarifa_by_type('pension') or 0.16, 9, 'float_7dec')
-            l2 += self._format_pila(int(valores['valor_cotizacion_pension']), 9, 'num')
-            l2 += "0" * 27 # Aportes solidaridad/subsistencia/no retenidos
-
-            # Salud
-            l2 += self._format_pila(contract.get_tarifa_by_type('salud') or 0.125, 9, 'float_7dec')
-            l2 += self._format_pila(int(valores['valor_cotizacion_salud']), 9, 'num')
-            l2 += "0" * 9 # UPC
-
-            # Finalización de línea (Ancho fijo)
-            l2 = l2.ljust(660)
-            l2 += self._format_pila(horas_lab, 3, 'num') # Horas laboradas al final
-            
-            lines.append(l2.ljust(693))
-            row_counter += 1
-
-        # 4. EXPORTACIÓN
-        final_txt = "\r\n".join(lines) + "\r\n"
-        attachment = self.env['ir.attachment'].create({
-            'name': f"PILA_PLANO_{fields.Date.today()}.txt",
-            'type': 'binary',
-            'datas': base64.b64encode(final_txt.encode('latin-1', 'ignore')),
-            'mimetype': 'text/plain',
         })
 
         return {

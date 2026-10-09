@@ -12,16 +12,47 @@
                     </group>
                     <group>
                         <field name="payslip_run_id"/>
+                        <field name="plantilla_guardada_nombre" readonly="1" invisible="not plantilla_guardada_nombre"/>
+                        <field name="plantilla_guardada_fecha" readonly="1" invisible="not plantilla_guardada_nombre"/>
                         <field name="plantilla_excel" filename="plantilla_excel_name" widget="binary"/>
                         <field name="plantilla_excel_name" invisible="1"/>
                     </group>
                 </group>
+
+                <group>
+                    <group>
+                        <separator string="Tipo"/>
+                        <field name="tipo_planilla"/>
+                     </group>
+
+                     <group>
+                        <separator string="Planilla Asociada"/>
+                        <field name="planilla_asociada_fecha"/>
+                        <field name="planilla_asociada_clave"/>
+
+                     </group>
+
+                     <group>
+                        <separator string="Sucursal"/>
+                        <field name="sucursal_nombre"/>
+                        <field name="sucursal_codigo"/>
+                       
+                    </group>
+
+                     <group>
+                        <separator string="Aportante"/>
+                        <field name="tipo_aportante"/>
+
+                     </group>
+
+                     <group>
+                        <separator string="Admistradora Riesgo"/>
+                        <field name="administradora_riesgos"/>
+
+                     </group>
+                </group>
                 <footer>
                     <button name="action_generate_excel_report" string="Generar Excel" type="object" class="btn-primary"/>
-
-                    <button name="action_generate_txt_pila" string="Convertir a TXT Aportes" type="object" class="btn-success"/>
-
-
                     <button string="Cancelar" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

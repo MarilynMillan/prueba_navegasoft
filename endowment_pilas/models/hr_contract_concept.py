@@ -4,7 +4,7 @@ class HrContractConcepto(models.Model):
     _name = 'hr.contract.concept'
     _description = 'Conceptos de contrato'
 
-    name = fields.Char(string="Name", required=True) 
+    name = fields.Char(required=True)
     type = fields.Selection([
         ('ingreso', 'Ingreso'),
         ('retiro', 'Egreso')

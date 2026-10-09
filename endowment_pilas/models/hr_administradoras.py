@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 class administradoras(models.Model):
@@ -8,7 +8,7 @@ class administradoras(models.Model):
     _inherit = ['hr.administradoras', 'mail.thread', 'mail.activity.mixin']
 
 
-    tarifa = fields.Float( string="Tarifa",tracking=True)
+    tarifa = fields.Float(tracking=True)
     tarifa_sena = fields.Float( string="Tarifa SENA" ,tracking=True)
     tarifa_icbf = fields.Float( string="Tarifa ICBF" ,tracking=True)
     tarifa_esap = fields.Float( string="Tarifa ESAP" ,tracking=True)
@@ -20,9 +20,7 @@ class administradoras(models.Model):
         tracking=True
     )
 
-    traslado = fields.Boolean(
-        string='Traslado',
-        tracking=True,default=False)
+    traslado = fields.Boolean(tracking=True, default=False)
 
     list_administradora_destino_id = fields.Many2one(
         'list.administradoras',
@@ -37,7 +35,7 @@ class administradoras(models.Model):
     type_entity = fields.Selection([
         ('salud', 'EPS'),
         ('pension', 'AFP'),
-        ('arl', 'ARL / Riesgos Laborales'),
+        #('arl', 'ARL / Riesgos Laborales'),
         ('ccf', 'CCF / Caja de Compensación'),
         ('otros', 'Otros')
     ], default="otros",
@@ -50,6 +48,13 @@ class administradoras(models.Model):
     show_ccf = fields.Boolean(compute="_compute_show_ccf",store=True)
     contract_id = fields.Many2one('hr.contract', string="Contrato Relacionado")
 
+    list_administradora_arl_id = fields.Many2one(
+        'list.administradoras',
+        string="Administradora ARL",
+        domain="[('type_entity', '=', 'arl')]",
+        tracking=True
+    )
+
 
     @api.constrains('list_administradora_id','list_administradora_destino_id','traslado')
     def _check_administradora_destino(self):
@@ -61,7 +66,9 @@ class administradoras(models.Model):
                 and rec.list_administradora_id == rec.list_administradora_destino_id
             ):
                 raise ValidationError(
-                    "La administradora destino debe ser diferente a la administradora origen."
+                    self.env._(
+                        "La administradora destino debe ser diferente a la administradora origen."
+                    )
                 )
 
     @api.onchange('traslado')
@@ -128,8 +135,8 @@ class administradoras(models.Model):
         return self._get_admin_label_by_type('salud')
 
 
-    def get_arl_label(self):
-        return self._get_admin_label_by_type('arl')
+    """def get_arl_label(self):
+        return self._get_admin_label_by_type('arl')"""
 
 
     def get_ccf_label(self):
