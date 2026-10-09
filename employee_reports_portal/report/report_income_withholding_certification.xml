@@ -1,0 +1,1065 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="iw_certification">
+        <t t-call="web.html_container">
+            <t t-foreach="emp_data" t-as="ed">
+                <t t-call="web.basic_layout">
+                    <xpath expr="//head" position="inside">
+                        <link href="/employee_reports_portal/static/src/css/bootstrap3/bootstrap.css" rel="stylesheet"/>
+                        <link href="/employee_reports_portal/static/src/css/style_report_income.css" rel="stylesheet"/>
+                    </xpath>
+                    <div class="page" t-translation="off">
+                       <div class="container">
+                            <div class="row">
+                                <div class="col-xs-12 div-table container-border rounded">
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 20%" align="center" >
+                                                    <t t-if="company and company.iw_logo_left"><img t-att-src="'/web/image/res.company/%s/iw_logo_left' % company.id" style="width: 10em;"/></t><t t-else=""><img src="/employee_reports_portal/static/src/img/dian_logo.jpg" style="width: 10em;"/></t>
+                                                </td>
+                                                <td style="width: 50%">
+                                                    <blockquote class="blockquote text-center no-border">
+                                                        <p class="font-weight-bolder" style="font-size: 15px; ">Certificado de Ingresos y Retenciones por Rentas de Trabajo y de Pensiones Año Gravable <t t-esc="year"/></p>
+                                                    </blockquote>
+                                                </td>
+                                                <td style="width: 20%" align="center">
+                                                     <t t-if="company and company.iw_logo_right"><img t-att-src="'/web/image/res.company/%s/iw_logo_right' % company.id" style="width: 10em;"/></t><t t-else=""><t t-if="company and company.iw_logo_right"><img t-att-src="'/web/image/res.company/%s/iw_logo_right' % company.id" style="width: 10em;"/></t><t t-else=""><img src="/employee_reports_portal/static/src/img/muiscas_logo.jpg" style="width: 10em;"/></t></t>
+                                                </td>
+                                                <td style="width: 10%; background: green!important" valign="middle">
+                                                    <blockquote class="blockquote text-center no-border">
+                                                        <p class="font-weight-bolder" style="font-size: 30px; color:white!important">220</p>
+                                                    </blockquote>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-xs-12 div-table container-border rounded ">
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 70%">
+                                                    <p class="text-left margin-text que-text">Antes de diligenciar este formulario lea cuidadosamente las instrucciones</p>
+                                                </td>
+                                                <td style="width: 30%">
+                                                    <p class="text-left margin-text"><span class="font-weight-bold que-text">4. Número de Formulario</span></p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 container-border div-table rounded">
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td rowspan="2" style="border: 0px;">
+                                                    <div style="width: 40px;">
+                                                        <p class="rotate text-center font-weight-bold" style="font-size: 10px; padding-right: 40px !important; padding-bottom: 30px !important;">Retenedor</p>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 38%">
+                                                    <div class="row">
+                                                        <div class="col-xs-9">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">5. Número de Identificación Tributaria (NIT)</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">6. DV.</span></p>
+                                                        </div>
+                                                        <div class="col-xs-9">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['vat']"/></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['verification_code']"/></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">7. Primer Apellido</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">8. Segundo Apellido</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">9. Primer Nombre</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">10. Otros Nombres</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-left que-answer"><span class="void">-</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">11. Razón Social</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['display_name']"/></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-xs-12 container-border div-table rounded">
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+
+                                            <tr>
+                                                <td rowspan="2" style="border: 0px;">
+                                                    <div style="width: 40px;">
+                                                        <p class="rotate text-center font-weight-bold" style="font-size: 10px; padding-right: 40px !important; padding-bottom: 30px !important;">Trabajador</p>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 15%">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">24. Tipo de documento</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-center que-answer"><t t-esc="ed['emp_documenttype']"/></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left que-text" ><span class="font-weight-bold  void" >-</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 20%" colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">25. Número de Identificación</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-center que-answer" ><t t-esc="ed['identification_id']"/></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left que-text" ><span class="font-weight-bold  void" >-</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td  style="width: 65%" colspan="4">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">Apellidos y Nombres</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['name_employee']"/></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left" ><span class="font-weight-bold que-text" >26. Primer Apellido</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left" ><span class="font-weight-bold que-text" >27. Segundo Apellido</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left" ><span class="font-weight-bold que-text" >28. Primer Nombre</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-left" ><span class="font-weight-bold que-text" >29. Otros Nombres</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="3">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">Periodo de la Certificación</span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 pr-0">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">30. DE:</span></p>
+                                                        </div>
+                                                        <div class="col-xs-4 pl-4">
+                                                            <p class="text-left que-answer"><t t-esc="ed['start_date']"/></p>
+                                                        </div>
+                                                        <div class="col-xs-2 pr-0">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">31. A:</span></p>
+                                                        </div>
+                                                        <div class="col-xs-4 pl-0">
+                                                            <p class="text-left que-answer"><t t-esc="ed['end_date']"/></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">32. Fecha de Expedición</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['c_date']"/></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">33. Donde se practicó la retención</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['city']"/></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">34. Cód. Dpto</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['state_id']"/></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">35. Cód. Municipio</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-answer text-left que-answer"><t t-esc="ed['zip']"/></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="6">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left"><span class="font-weight-bold que-text">36. Número de agencias., sucursales, filiales o subsidiarias de la empresa retenedora cuyos montos de retencion se consolidan</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                </td>
+                                            </tr>
+
+                                            <tr style="border-bottom: 1px solid green;">
+                                                <td colspan="6">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Concepto de los Ingresos</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Valor</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+
+                                            <t t-foreach="cer_vals" t-as="cv">
+                                                <t t-if = "cv['type'] == 1">
+                                                    <tr>
+                                                        <td  style="width: 76.5%;">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <p class="margin-text text-left" style="font-size: 10px;"><t t-esc="cv['name']"/></p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width: 1%;">
+                                                            <div class="col-xs-12">
+                                                                <p class="margin-text text-center" style="font-size: 10px;"><t t-esc="cv['code']"/></p>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-xs-10">
+                                                                    <p class="margin-text text-right" style="font-size: 10px;"><t t-esc="cv['value']"/></p>
+                                                                </div>
+                                                                <div class="col-xs-2 void">
+                                                                    <p class="margin-text text-right void" style="font-size: 10px;">_</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                            <tr>
+                                                <td  style="width: 76.5%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold">Total de Ingresos Brutos (Sume 37 a 47)</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">48</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"><t t-esc="cer_tota[0]['value']"/></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 76.5%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Concepto de los aportes</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Valor</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <t t-foreach="cer_vals" t-as="cv">
+                                                <t t-if = "cv['type'] == 2">
+                                                    <tr>
+                                                        <td  style="width: 76.5%;">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <p class="margin-text text-left" style="font-size: 10px;"><t t-esc="cv['name']"/></p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width: 1%;">
+                                                            <div class="col-xs-12">
+                                                                <p class="margin-text text-center" style="font-size: 10px;"><t t-esc="cv['code']"/></p>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="row">
+                                                                <div class="col-xs-10">
+                                                                    <p class="margin-text text-right" style="font-size: 10px;"><t t-esc="cv['value']"/></p>
+                                                                </div>
+                                                                <div class="col-xs-2 void">
+                                                                    <p class="margin-text text-right void" style="font-size: 10px;">_</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+
+                                            <tr style="border-bottom: 1px solid green;">
+                                                <td colspan="3">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <p class="margin-text text-left" style="font-size: 10px; color: gray;"><span class="font-weight-bold">Nombre del pagador o agente retenedor</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-right" style="font-size: 14px;"><span class="font-weight-bold"><t t-esc="ed['display_name']"/></span></p>
+                                                        </div>
+                                                        <div class="col-xs-1">
+                                                            <p class="margin-text text-right void" style="font-size: 14px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                        <div class="col-xs-2">
+                                                            <p class="margin-text text-right" style="font-size: 11px;"><span class="font-weight-bold">Nit</span></p>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <p class="margin-text text-right" style="font-size: 11px;"><span class="font-weight-bold"><t t-esc="ed['vat']"/>-<t t-esc="ed['verification_code']"/></span></p>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <p class="margin-text text-right" style="font-size: 11px;"><span class="font-weight-bold"> - D.R. 836/1991, art.10; D.R. 4345/2004, art.34; D.R. 460/86, art.8; </span></p>
+                                                        </div>
+                                                        <div class="col-xs-1">
+                                                            <p class="margin-text text-right void" style="font-size: 14px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Concepto de Otros Ingresos</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Valor recibido</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Valor retenido</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;">Arriendamientos</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">54</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">61</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;">Honorarios, comisiones y servicios</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">55</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">62</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;">Intereses y rendimientos Financieros</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">56</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">63</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;">Enajenación de activos fijos</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">57</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">64</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;">Loterias, rifas, apuestas y similares</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">58</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">65</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;">Otros</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">59</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">66</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td  style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold">Totales: (Valor recibido: Sume 54 a 59), (Valor retenido: sume 61 a 66)</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">60</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">67</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="border-bottom: 1px solid green;">
+                                                <td colspan="3" style="width: 53%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold">Total Retenciones año gravable <t t-esc="year"/> (Sume 53 + 67)</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 1%;">
+                                                    <div class="col-xs-12">
+                                                        <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">68</span></p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-10">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                        <div class="col-xs-2 void">
+                                                            <p class="margin-text text-right" style="font-size: 10px;"><span class="font-weight-bold void">_</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Item</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">69. Identificación de los bienes y derechos poseídos</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px; color: gray;"><span class="font-weight-bold">70. Valor patrimonial</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">1</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">2</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">3</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">4</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">5</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">6</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">7</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">8</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 75%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr >
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold">Deudas vigentes a 31 de Diciembre de <t t-esc="year"/></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 3.6%;">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">71</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold"></span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="border-bottom: 1px solid green;">
+                                                <td colspan="5">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Idetificación de las personas dependientes de acuerdo al parágrafo 2 del artículo 387 del Estatuto Tributario</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="tblborder table-inner" style="width: 100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px; color: gray;"><span class="font-weight-bold">72. C.C. ó NIT.</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold void">-</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2" style="width: 60%;" >
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px; color: gray;"><span class="font-weight-bold">73. Apellidos y Nombres</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold void">-</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px; color: gray;"><span class="font-weight-bold">74. Parentesco</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold void">-</span></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="3" style="width: 60%;" >
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px; color: gray;"><span class="font-weight-bold">Certifico que durante el año gravable de <t t-esc="year"/>:</span>
+                                                                <br/>1. Mi patrimonio bruto era igual o inferior a 4.500 UVT ($149.202.000).
+                                                                <br/>2. No fui responsable del impuesto sobre las ventas ni del impuesto nacional al consumo.
+                                                                <br/>3. Mis ingresos brutos fueron inferiores a 1.400 UVT ($46,418.000).
+                                                                <br/>4. Mis consumos mediante tarjeta de crédito no excedieron la suma de 1.400 UVT ($46.418.000).
+                                                                <br/>5. Que el total de mis compras y consumos no superaron la suma de 1.400 UVT ($46.418.000)
+                                                                <br/>6. Que el valor total de mis consignaciones bancarias, depósitos o inversiones financieras no excedieron los
+                                                                1.400 UVT ($46.418.000). Por lo tanto, manifiesto que no estoy obligado a presentar declaración de renta y complementario por el año
+                                                                gravable <t t-esc="year"/>.</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">Firma del trabajador o pensionado</span></p>
+                                                        </div>
+                                                        <div class="col-xs-12">
+                                                            <p class="margin-text text-left" style="font-size: 10px;"><span class="font-weight-bold void">-</span></p>
+                                                        </div>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-xs-12">
+                                    <p class="margin-text text-center" style="font-size: 10px;"><span class="font-weight-bold">NOTA Este certificado sustituye para todos los efectos legales la declaración de Renta y Complementarios para el trabajador o pensionado que lo firme.</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

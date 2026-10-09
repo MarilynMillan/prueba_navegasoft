@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_hr_contract_form_payroll_rules_planning" model="ir.ui.view">
+    <field name="name">hr.contract.form.payroll.rules.planning</field>
+    <field name="model">hr.contract</field>
+    <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//page[@name='information']//group[@name='salary']" position="after">
+        <group name="mob_rod_group" string="Asignaciones de transporte (por dia)" col="2">
+          <field
+            name="mobility_bonus"
+            string="Bono Movilidad"
+            class="o_force_label"
+            widget="monetary"
+            options="{'currency_field': 'currency_id'}"
+            placeholder="0.00"
+          />
+          <field
+            name="aux_rodamiento"
+            string="Auxilio Rodamiento"
+            class="o_force_label"
+            widget="monetary"
+            options="{'currency_field': 'currency_id'}"
+            placeholder="0.00"
+          />
+          <field
+            name="auxilio_de_transporte"
+            string="Auxilio de Transporte"
+            class="o_force_label"
+            widget="monetary"
+            options="{'currency_field': 'currency_id'}"
+            placeholder="0.00"
+          />
+        </group>
+      </xpath>
+      <xpath expr="//sheet//group" position="inside">
+        <field name="hr_night_shift_successive"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

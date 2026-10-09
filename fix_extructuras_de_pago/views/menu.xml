@@ -1,0 +1,61 @@
+<odoo>
+  <data>
+
+
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="tipos">
+      <field name="name">Tipos</field>
+      <field name="res_model">hr.tipo</field>
+      <field name="view_mode">list,form</field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="centro_de_costos">
+      <field name="name">Centro de costos</field>
+      <field name="res_model">hr.centrocostos</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="administradoras">
+      <field name="name">Administradoras</field>
+      <field name="res_model">hr.administradoras</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="fix_extructuras_de_pago.action_server">
+      <field name="name">fix_extructuras_de_pago server</field>
+      <field name="model_id" ref="model_fix_extructuras_de_pago_fix_extructuras_de_pago"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="Reglas Nomina" id="fix_extructuras_de_pago.menu_root" groups="fix_extructuras_de_pago.group_editar_reglas"/>
+
+    <!-- menu categories -->
+    <menuitem name="Regla" id="fix_extructuras_de_pago.menu_1" parent="fix_extructuras_de_pago.menu_root" action="tipos"/>
+    <menuitem name="Centros de costos" id="fix_extructuras_de_pago.menu_2" parent="fix_extructuras_de_pago.menu_root" action="centro_de_costos"/>
+    <menuitem name="Administradoras" id="fix_extructuras_de_pago.menu_3" parent="fix_extructuras_de_pago.menu_root" action="administradoras"/>
+    
+
+    <!-- actions -->
+
+    <!-- <menuitem name="List" id="fix_extructuras_de_pago.menu_1_list" parent="fix_extructuras_de_pago.menu_1"
+              action="centro_de_costos"/>
+    <menuitem name="List" id="fix_extructuras_de_pago.menu_1_list" parent="fix_extructuras_de_pago.menu_1"
+              action="administradoras"/> -->
+    
+
+  </data>
+</odoo>

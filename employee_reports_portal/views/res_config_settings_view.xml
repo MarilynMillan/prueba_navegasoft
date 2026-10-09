@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.payroll</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="45"/>
+            <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <block title="Reporte empleados" name="employee_reports">
+                        <setting company_dependent="1" id="employee_reports_payroll_manager">
+                            manager nomina
+                            <field name="payroll_manager"/>
+                        </setting>
+                    </block>
+
+                    <block title="Certificados (Portal Empleados)" name="employee_certificates">
+                        <setting company_dependent="1" id="employee_reports_certificates_settings">
+                            <div class="o_setting_right_pane">
+                                <div class="text-muted">Parametrización de certificados por compañía (títulos, logos, firma y pie).</div>
+                                <group>
+                                    <group>
+                                        <label string="Logo / Firma (Certificados)" for="company_logo"/>
+                                        <field name="company_logo" widget="image" class="oe_avatar" options='{"preview_image": "company_logo", "accept": "image/*"}'/>
+                                    </group>
+                                    <group>
+                                        <label string="Logo secundario (opcional)" for="certificate_logo_2"/>
+                                        <field name="certificate_logo_2" widget="image" class="oe_avatar" options='{"preview_image": "certificate_logo_2", "accept": "image/*"}'/>
+                                       <!--  <div class="text-muted">Si no se configura, se usa el logo estático del módulo (campoalto.png).</div> -->
+                                    </group>
+                                </group>
+
+                                <group>
+                                    <group>
+                                        <label string="Título 1 (Certificado Laboral)" for="cert_laboral_title_1"/>
+                                        <field name="cert_laboral_title_1" placeholder="LA DIRECCIÓN DE TALENTO HUMANO"/>
+                                        <label string="Título 2 (Certificado Laboral)" for="cert_laboral_title_2"/>
+                                        <field name="cert_laboral_title_2" placeholder="CERTIFICA QUE:"/>
+                                    </group>
+                                    <group>
+                                        <label string="Título 1 (Certificado Funciones)" for="cert_functions_title_1"/>
+                                        <field name="cert_functions_title_1" placeholder="LA DIRECCIÓN DE TALENTO HUMANO"/>
+                                        <label string="Título 2 (Certificado Funciones)" for="cert_functions_title_2"/>
+                                        <field name="cert_functions_title_2" placeholder="CERTIFICA QUE:"/>
+                                    </group>
+                                </group>
+
+                                <group>
+                                    <group>
+                                        <label string="Ciudad de expedición" for="cert_city"/>
+                                        <field name="cert_city" placeholder="Bogotá"/>
+                                    </group>
+                                    <group>
+                                        <label string="Texto de cierre" for="cert_closing_text"/>
+                                        <field name="cert_closing_text" placeholder="Cordialmente,"/>
+                                    </group>
+                                </group>
+
+                                <group>
+                                    <label string="Pie de página (HTML)" for="certificate_company_info"/>
+                                    <field name="certificate_company_info"/>
+                                </group>
+
+                                <group>
+                                    <label string="Bloque de firma (HTML) - opcional" for="cert_signature_block_html"/>
+                                    <field name="cert_signature_block_html"/>
+                                    <div class="text-muted">Si se llena, reemplaza el bloque estándar de firma en los certificados laborales.</div>
+                                </group>
+
+                                <group>
+                                    <separator string="Logos (Certificado de Ingresos y Retenciones)"/>
+                                    <group>
+                                        <label string="Logo izquierdo" for="iw_logo_left"/>
+                                        <field name="iw_logo_left" widget="image" class="oe_avatar" options='{"preview_image": "iw_logo_left", "accept": "image/*"}'/>
+                                    </group>
+                                    <group>
+                                        <label string="Logo derecho" for="iw_logo_right"/>
+                                        <field name="iw_logo_right" widget="image" class="oe_avatar" options='{"preview_image": "iw_logo_right", "accept": "image/*"}'/>
+                                    </group>
+                                </group>
+                            </div>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payroll_recargo_rule_hrn_21_24" model="payroll.recargo.rule">
+        <field name="name">Recargo Nocturno Normal 21-24</field>
+        <field name="sequence">10</field>
+        <field name="work_entry_type_id" search="[('code', '=', 'HRN')]" model="hr.work.entry.type"/>
+        <field name="hour_from">21.0</field>
+        <field name="hour_to">24.0</field>
+        <field name="apply_on_normal">True</field>
+        <field name="apply_on_sunday">False</field>
+        <field name="apply_on_holiday">False</field>
+        <field name="apply_art_161_weekly_limit">True</field>
+    </record>
+
+    <record id="payroll_recargo_rule_hrn_00_06" model="payroll.recargo.rule">
+        <field name="name">Recargo Nocturno Normal 00-06</field>
+        <field name="sequence">20</field>
+        <field name="work_entry_type_id" search="[('code', '=', 'HRN')]" model="hr.work.entry.type"/>
+        <field name="hour_from">0.0</field>
+        <field name="hour_to">6.0</field>
+        <field name="apply_on_normal">True</field>
+        <field name="apply_on_sunday">False</field>
+        <field name="apply_on_holiday">False</field>
+        <field name="apply_art_161_weekly_limit">True</field>
+    </record>
+
+    <record id="payroll_recargo_rule_hrndf_21_24" model="payroll.recargo.rule">
+        <field name="name">Recargo Nocturno DF 21-24</field>
+        <field name="sequence">30</field>
+        <field name="work_entry_type_id" search="[('code', '=', 'HRNDF')]" model="hr.work.entry.type"/>
+        <field name="hour_from">21.0</field>
+        <field name="hour_to">24.0</field>
+        <field name="apply_on_normal">False</field>
+        <field name="apply_on_sunday">True</field>
+        <field name="apply_on_holiday">True</field>
+        <field name="apply_art_161_weekly_limit">True</field>
+    </record>
+
+    <record id="payroll_recargo_rule_hrndf_00_06" model="payroll.recargo.rule">
+        <field name="name">Recargo Nocturno DF 00-06</field>
+        <field name="sequence">40</field>
+        <field name="work_entry_type_id" search="[('code', '=', 'HRNDF')]" model="hr.work.entry.type"/>
+        <field name="hour_from">0.0</field>
+        <field name="hour_to">6.0</field>
+        <field name="apply_on_normal">False</field>
+        <field name="apply_on_sunday">True</field>
+        <field name="apply_on_holiday">True</field>
+        <field name="carry_previous_day_df">True</field>
+        <field name="apply_art_161_weekly_limit">True</field>
+    </record>
+
+    <record id="payroll_recargo_rule_hrddf_06_21" model="payroll.recargo.rule">
+        <field name="name">Recargo Diurno DF 06-21</field>
+        <field name="sequence">50</field>
+        <field name="work_entry_type_id" search="[('code', '=', 'HRDDF')]" model="hr.work.entry.type"/>
+        <field name="hour_from">6.0</field>
+        <field name="hour_to">21.0</field>
+        <field name="apply_on_normal">False</field>
+        <field name="apply_on_sunday">True</field>
+        <field name="apply_on_holiday">True</field>
+    </record>
+
+    <record id="hr_rule_time_window_mobility_normal" model="hr.rule.time.window">
+        <field name="name">Bono Movilidad - Dia Normal</field>
+        <field name="sequence">10</field>
+        <field name="rule_type">mobility</field>
+        <field name="check_in_from">23.0</field>
+        <field name="check_in_to">6.0</field>
+        <field name="check_out_from">23.0</field>
+        <field name="check_out_to">5.5</field>
+        <field name="apply_on_normal">True</field>
+        <field name="apply_on_sunday">False</field>
+        <field name="apply_on_holiday">False</field>
+    </record>
+
+    <record id="hr_rule_time_window_mobility_holiday" model="hr.rule.time.window">
+        <field name="name">Bono Movilidad - Domingo / Festivo</field>
+        <field name="sequence">20</field>
+        <field name="rule_type">mobility</field>
+        <field name="check_in_from">22.0</field>
+        <field name="check_in_to">6.0</field>
+        <field name="check_out_from">22.0</field>
+        <field name="check_out_to">6.0</field>
+        <field name="apply_on_normal">False</field>
+        <field name="apply_on_sunday">True</field>
+        <field name="apply_on_holiday">True</field>
+    </record>
+
+    <record id="hr_rule_time_window_rodamiento_normal" model="hr.rule.time.window">
+        <field name="name">Auxilio Rodamiento - Dia Normal</field>
+        <field name="sequence">30</field>
+        <field name="rule_type">rodamiento</field>
+        <field name="check_in_from">23.0</field>
+        <field name="check_in_to">6.0</field>
+        <field name="check_out_from">23.0</field>
+        <field name="check_out_to">5.5</field>
+        <field name="apply_on_normal">True</field>
+        <field name="apply_on_sunday">False</field>
+        <field name="apply_on_holiday">False</field>
+    </record>
+
+    <record id="hr_rule_time_window_rodamiento_holiday" model="hr.rule.time.window">
+        <field name="name">Auxilio Rodamiento - Domingo / Festivo</field>
+        <field name="sequence">40</field>
+        <field name="rule_type">rodamiento</field>
+        <field name="check_in_from">22.0</field>
+        <field name="check_in_to">6.0</field>
+        <field name="check_out_from">22.0</field>
+        <field name="check_out_to">6.0</field>
+        <field name="apply_on_normal">False</field>
+        <field name="apply_on_sunday">True</field>
+        <field name="apply_on_holiday">True</field>
+    </record>
+</odoo>

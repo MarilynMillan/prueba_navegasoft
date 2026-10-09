@@ -1,0 +1,56 @@
+<odoo>
+  <data>
+  
+    <record id="hr_contract_administradora_view" model="ir.ui.view">
+            <field name="name">hr.contract.administradora</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//page[1]" position="after">
+              <page string="Administradoras">
+                  <group >
+                    <field name="administradoras_ids" options="{'no_create': True, 'no_create_edit':True}" string="">
+                    <list>
+                        <field name="administradora"/>
+                        <field name="name"/>
+                        <field name="ccostos"/>
+                    </list>
+                    <form>
+                     <group>
+                      <field name="administradora"/>
+                        <field name="name"/>
+                        <field name="ccostos"/>
+                    </group>
+                    </form>
+                    </field>
+                  </group>
+              </page>
+              <page name="datos_nomina_colombia" string="Datos de nomina"
+                    groups="hr_payroll.group_hr_payroll_user">
+                <group string="Auxilios legales">
+                  <field name="salario_minimo"/>
+                  <field name="auxilio_de_transporte"/>
+                  <field name="tipo_auxilio"/>
+                </group>
+              </page>
+                 
+            </xpath>
+        </field>
+    </record>
+
+
+<!-- <record id="nomina_hr_contract_pasante" model="ir.ui.view">
+        <field name="name">nomina_hr_contract_pasante</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='calendar_mismatch']" position="after">
+                <field name="pasante"/>
+			</xpath>
+
+        </field>
+    </record> -->
+  
+  </data>
+</odoo>

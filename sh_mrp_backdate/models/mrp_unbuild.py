@@ -7,6 +7,7 @@ class MrpUnbuild(models.Model):
     _inherit = 'mrp.unbuild'
 
     def write(self, vals):
+
         res = super(MrpUnbuild, self).write(vals)
         if 'state' in vals and vals['state'] == 'done' and self.mo_id:
             stock_moves = self.env['stock.move'].search(
@@ -32,12 +33,8 @@ class MrpUnbuild(models.Model):
                 move.date = self.mo_id.date_start
 
             for layer in valuation_layers:
-                self.env.cr.execute(
-                    """
-                    UPDATE stock_valuation_layer
-                    SET create_date = %s
-                    WHERE id = %s
-                    """,
-                    (self.mo_id.date_start, layer.id),
-                )
+                self.env.cr.execute("""
+                    Update stock_valuation_layer set create_date='%s' where id=%s; 
+                """ % (self.mo_id.date_start, layer.id))
+
         return res

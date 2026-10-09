@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <record id="assets_from_website" inherit_id="website.assets_frontend" >
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/employee_reports_portal/src/js/condicion.js"></script>
+            </xpath>
+        </record>
+        
+   
+</odoo>
+
+<!-- <script>
+                                  var data_ids = <t t-esc="tipos2"/>;
+                                  function getComboA(selectObject) {
+                                    var value = selectObject.value;  
+                                    console.log(value);
+                                    console.log(value);
+                                    console.log(data_ids);
+                                    }
+                                    //document.getElementById("tipos").addEventListener("change", function() {getComboA();});
+                                  </script>          -->

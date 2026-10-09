@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="wizard_medios_magneticos2" model="ir.ui.view">
+        <field name="name">Ventana medios magnéticos</field>
+        <field name="model">wizard.medios.magneticos</field>
+        <field name="arch" type="xml">
+            <form string="Medios Magnéticos">
+                <group>
+                    <field name="company_id" string="Compañía"/>
+                    <field name="year" string="Año"/>
+                    <field name="formato"/>
+                </group>
+                <footer>
+                    <button string="Generar" name="open_taxes" type="object" class="oe_highlight"/>
+                    <button string="Cancelar" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_medios_magneticos2" model="ir.actions.act_window">
+        <field name="name">Medios Magnéticos</field>
+        <field name="res_model">wizard.medios.magneticos</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_medios_magneticos2"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="medios_magneticos_xlsx" model="ir.actions.report">
+        <field name="name">Reporte de Excel</field>
+        <field name="model">account.medios_magneticos</field>
+        <field name="report_type">xlsx</field>
+        <field name="attachment_use">False</field>
+        <field name="binding_view_types"/>
+        <field name="report_name">medios_magneticos.report_name</field>
+    </record>
+</odoo>

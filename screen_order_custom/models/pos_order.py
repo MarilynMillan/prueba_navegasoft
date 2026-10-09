@@ -2,6 +2,7 @@ import json
 
 from odoo import models, api
 
+
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
@@ -31,15 +32,8 @@ class PosOrder(models.Model):
                 category_ids.update(line.product_id.pos_categ_ids.ids)
             return {'change': True, 'sound': False, 'category_ids': category_ids}
 
-        pdis_lines_by_key = {}
         for pdis_line in pdis_lines:
-            key = (
-                pdis_line.product_id.id,
-                pdis_line.internal_note or '',
-                json.dumps(pdis_line.attribute_value_ids.ids),
-                pdis_line.pos_order_line_uuid,
-            )
-            pdis_lines_by_key.setdefault(key, []).append(pdis_line)
+            key = (pdis_line.product_id.id, pdis_line.internal_note or '', json.dumps(pdis_line.attribute_value_ids.ids), pdis_line.pos_order_line_uuid)
             line_qty = pdis_line.product_quantity - pdis_line.product_cancelled
             if not quantity_data.get(key):
                 quantity_data[key] = {
@@ -55,10 +49,7 @@ class PosOrder(models.Model):
                 quantity_data[key]['display'] += line_qty
 
         # Filtrar: solo líneas que no sean hijas de combo nativo
-        valid_order_lines = self.lines.filtered(lambda li: not li.skip_change and not li.combo_parent_id)
-        order_lines_by_uuid = {}
-        for line in valid_order_lines:
-            order_lines_by_uuid.setdefault(line.uuid, []).append(line)
+        for line in self.lines.filtered(lambda li: not li.skip_change and not li.combo_parent_id):
             line_note = line.note or ""
             key = (line.product_id.id, line_note, json.dumps(line.attribute_value_ids.ids), line.uuid)
 
@@ -116,9 +107,8 @@ class PosOrder(models.Model):
                             }
 
                         old_quantity = quantity_data.pop(key, None)
-                        if old_quantity:
-                            quantity_data[key_new]["display"] += old_quantity["display"]
-                            quantity_data[key_new]["order"] += old_quantity["order"]
+                        quantity_data[key_new]["display"] += old_quantity["display"]
+                        quantity_data[key_new]["order"] += old_quantity["order"]
 
         # Check if pos_order have new lines or if some lines have more quantity than before
         if any([quantities['order'] > quantities['display'] for quantities in quantity_data.values()]):
@@ -132,14 +122,12 @@ class PosOrder(models.Model):
             })
 
         product_ids = self.env['product.product'].browse([data['product_id'] for data in quantity_data.values()])
-        product_by_id = {product.id: product for product in product_ids}
-        new_pdis_line_vals = []
         for data in quantity_data.values():
             product_id = data['product_id']
-            product = product_by_id.get(product_id)
+            product = product_ids.filtered(lambda p: p.id == product_id)
             if data['order'] > data['display']:
                 missing_qty = data['order'] - data['display']
-                filtered_lines = order_lines_by_uuid.get(data['uuid'], [])
+                filtered_lines = self.lines.filtered(lambda li: li.uuid == data['uuid'] and not li.combo_parent_id)
                 line_qty = 0
 
                 for line in filtered_lines:
@@ -155,8 +143,7 @@ class PosOrder(models.Model):
 
                     if missing_qty == 0 and line_qty > 0:
                         flag_change = True
-                        if product:
-                            category_ids.update(product.pos_categ_ids.ids)
+                        category_ids.update(product.pos_categ_ids.ids)
 
                         # Construir pos_combo_list desde combo_line_ids nativo
                         pos_combo_list = False
@@ -166,7 +153,7 @@ class PosOrder(models.Model):
                                 for child in line.combo_line_ids
                             })
 
-                        new_pdis_line_vals.append({
+                        self.env['pos_preparation_display.orderline'].create({
                             'todo': True,
                             'internal_note': line.note or "",
                             'attribute_value_ids': line.attribute_value_ids.ids,
@@ -178,13 +165,12 @@ class PosOrder(models.Model):
                         })
             elif data['order'] < data['display']:
                 qty_to_cancel = data['display'] - data['order']
-                key = (
-                    product_id,
-                    data['note'],
-                    json.dumps(data['attribute_value_ids']),
-                    data['uuid'],
-                )
-                for line in pdis_lines_by_key.get(key, []):
+                for line in pdis_lines.filtered(
+                    lambda li: li.product_id.id == product_id
+                    and li.internal_note == data['note']
+                    and li.attribute_value_ids.ids == data['attribute_value_ids']
+                    and li.pos_order_line_uuid == data['uuid']
+                ):
                     flag_change = True
                     pdis_qty = line.product_quantity - line.product_cancelled
 
@@ -198,9 +184,6 @@ class PosOrder(models.Model):
                         line.product_cancelled += pdis_qty
                         qty_to_cancel -= pdis_qty
                     category_ids.update(line.product_id.pos_categ_ids.ids)
-
-        if new_pdis_line_vals and pdis_ticket:
-            self.env['pos_preparation_display.orderline'].create(new_pdis_line_vals)
 
         if general_note is not None:
             for order in pdis_order:

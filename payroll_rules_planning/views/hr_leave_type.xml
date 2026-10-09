@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payroll_hr_leave_type_form_full_day_auto" model="ir.ui.view">
+        <field name="name">hr.leave.type.form.payroll.full.day.auto</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='responsible_ids']" position="after">
+                <field name="full_day_auto"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

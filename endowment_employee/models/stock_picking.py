@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 class StockPicking(models.Model):
@@ -31,7 +31,9 @@ class StockPicking(models.Model):
         res = super().button_validate()
         for picking in self:
             if picking.has_dotacion_product and not picking.employee_id:
-                raise UserError("Debe seleccionar un empleado para órdenes con productos de dotación.")
+                raise UserError(self.env._(
+                    "Debe seleccionar un empleado para órdenes con productos de dotación."
+                ))
                 
             if picking.employee_id:
                 total_cost = 0.0

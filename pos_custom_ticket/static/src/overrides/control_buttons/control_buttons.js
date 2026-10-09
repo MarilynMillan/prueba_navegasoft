@@ -9,13 +9,21 @@ patch(ControlButtons.prototype, {
   async clickPrintBill() {
     // Need to await to have the result in case of automatic skip screen.
     const order = this.pos.get_order();
-    const invoiceId = order && order.raw ? order.raw.account_move : false;
+    let invoiceId = order.raw.account_move;
     let receiptData = {
       data: this.pos.orderExportForPrinting(order),
       formatCurrency: this.env.utils.formatCurrency,
       orderUuid: order.uuid,
     };
 
+    if (!invoiceId) {
+      const invoice = await this.pos.data.orm.searchRead(
+        "account.move",
+        [["ref", "=", order.name]],
+        ["id"]
+      );
+      invoiceId = invoice.length ? invoice[0].id : false;
+    }
     if (invoiceId) {
       const dianValues = await this.data.call(
         "account.move",

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="medios_magneticos_xlsx" model="ir.actions.report">
+    <field name="name">Medios Magnéticos</field>
+    <field name="model">account.medios_magneticos</field>
+    <field name="report_type">xlsx</field>
+    <field name="report_name">medios_magneticos.report_name</field>
+    <field name="print_report_name">'Medios_Magneticos_XLSX'</field>
+    <field name="attachment_use">False</field>
+</record>
+
+
+</odoo>

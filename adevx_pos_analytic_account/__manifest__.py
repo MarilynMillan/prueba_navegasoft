@@ -1,6 +1,5 @@
 {
     'name': "POS Analytic Account",
-    'version': '0.0.2',
 
     'category': 'Sales/Point of Sale',
     'author': 'Adevx',

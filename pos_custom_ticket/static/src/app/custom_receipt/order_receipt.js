@@ -54,7 +54,10 @@ export class OrderReceipt extends Component {
   }
   get orderlines() {
     const tipProduct = this.pos.config.tip_product_id;
-    return this.props.data.orderlines.filter((line) => line.product_id !== tipProduct?.id);
+    console.log("Data: ", this.props.data);
+    console.log("Order: ", this.order);
+    let resultLines = this.props.data.orderlines.filter((line) => line.product_id !== tipProduct?.id)
+    return resultLines;
   }
   get orderDate() {
     return DateTime.now().toLocaleString();

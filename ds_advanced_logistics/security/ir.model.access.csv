@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ds_inv_adj_user,ds.inventory.adjustment user,model_ds_inventory_adjustment,stock.group_stock_user,1,0,0,0
-access_ds_inv_adj_manager,ds.inventory.adjustment manager,model_ds_inventory_adjustment,stock.group_stock_manager,1,1,1,1
-access_ds_inv_adj_line_user,ds.inventory.adjustment.line user,model_ds_inventory_adjustment_line,stock.group_stock_user,1,0,0,0
-access_ds_inv_adj_line_manager,ds.inventory.adjustment.line manager,model_ds_inventory_adjustment_line,stock.group_stock_manager,1,1,1,1
-access_ds_inv_adj_confirm_manager,ds.inventory.adjustment.confirm manager,model_ds_inventory_adjustment_confirm,stock.group_stock_manager,1,1,1,1
-access_ds_inv_adj_import_manager,ds.inventory.adjustment.import manager,model_ds_inventory_adjustment_import,stock.group_stock_manager,1,1,1,1

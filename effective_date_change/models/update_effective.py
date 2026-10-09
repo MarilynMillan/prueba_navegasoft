@@ -95,6 +95,7 @@ class UpdateEffective(models.Model):
                         recent_svl.remaining_value = recent_svl.remaining_qty * corrected_unit_cost
 
     def button_validate(self):
+
         for picking in self:
             if not picking.date_of_transfer:
                 raise ValidationError('The Effective Date is empty')
@@ -165,6 +166,7 @@ class UpdateEffective(models.Model):
                                         WHERE id = %s
                                         """, (selected_date, account_move.id))
 
+                                    self.env.cr.commit()
 
                         line.product_id._run_fifo_vacuum(picking.company_id)
 
@@ -209,6 +211,7 @@ class UpdateEffective(models.Model):
                                         WHERE id = %s
                                     """, (account_move.id,))
 
+                            self.env.cr.commit()
 
 
             elif picking.picking_type_id.code == 'incoming':
@@ -331,6 +334,7 @@ class UpdateEffective(models.Model):
                                                             WHERE id = %s
                                                         """, (selected_date, journal.id))
 
+                                                self.env.cr.commit()
 
                             elif product_id in duplicate_product:
                                 valuation_layers = self.env['stock.valuation.layer'].search([
@@ -454,6 +458,7 @@ class UpdateEffective(models.Model):
                                     WHERE id = %s
                                 """, (selected_date, new_sequence_prefix, new_sequence_number, account_move.id))
 
+                                self.env.cr.commit()
 
                                 # Step 4: Finally update the name with the new formatted name
                                 self.env.cr.execute("""
@@ -478,8 +483,10 @@ class UpdateEffective(models.Model):
                                 """, (account_move.id,))
 
                         # Recalculate the cost
+                        self.env.cr.commit()
                         self.action_update_valuation_layers()
 
+            self.env.cr.commit()
 
             # Link lots in picking to each stock valuation
             for move in picking.move_ids_without_package:

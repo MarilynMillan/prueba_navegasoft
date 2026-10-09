@@ -79,14 +79,9 @@ class MrpBackdateWizard(models.TransientModel):
                     move.date = self.date_start
 
                 for layer in valuation_layers:
-                    self.env.cr.execute(
-                        """
-                        UPDATE stock_valuation_layer
-                        SET create_date = %s
-                        WHERE id = %s
-                        """,
-                        (self.date_start, layer.id),
-                    )
+                    self.env.cr.execute("""
+                        Update stock_valuation_layer set create_date='%s' where id=%s; 
+                    """ % (self.date_start, layer.id))
 
                 mrp_production.with_context(force_date=True).write({
                     'date_start': self.date_start,

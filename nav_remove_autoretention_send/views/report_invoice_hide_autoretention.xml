@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  
+  <!-- PARA PABONI PORQUE TIENE UNA PLANTILLA ESPECIAL -->
+  <!-- <template id="nav_inherit_tax_by_group_totals"
+              inherit_id="sale_order_paboni.report_saleorder_document">
+        
+        <xpath expr="//t[@t-foreach='doc._get_tax_amount_by_group()']"
+               position="replace">
+            <t t-foreach="doc._nav_get_tax_amount_by_group_filtered()"
+               t-as="amount_by_group">
+                <tr style="border-bottom:1px solid #dddddd;">
+                    <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
+                        <td>
+                            <span t-esc="amount_by_group[0]"/>
+                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;
+                                <t t-esc="amount_by_group[2]"
+                                   t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="amount_by_group[1]"
+                                  t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                        </td>
+                    </t>
+                    <t t-else="">
+                        <td>
+                            <span t-esc="amount_by_group[0]"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="amount_by_group[1]"
+                                  t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </xpath>
+    </template> -->
+
+  
+    <template id="nav_document_tax_totals_template"
+              inherit_id="account.document_tax_totals_template">
+        
+        <!-- Justo antes de que el template haga:
+             <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
+             metemos nuestra reasignación de tax_totals
+        -->
+        <xpath expr="//t[@t-set='same_tax_base']" position="before">
+            <t t-set="tax_totals" t-value="o._nav_tax_totals_filtered_print(tax_totals)"/>
+        </xpath>
+
+    </template>
+    
+    <template id="nav_document_tax_totals"
+              inherit_id="account.document_tax_totals"
+              priority="90">
+        <xpath expr="." position="replace">
+            <t t-name="account.document_tax_totals">
+                <!--
+                    Aquí recibimos:
+                    - o: el account.move
+                    - tax_totals: el dict original que el reporte le pasó
+                    - currency: la moneda (generalmente o.currency_id)
+                -->
+
+                <!-- Filtrar tax_totals con nuestro método Python -->
+                <t t-set="tax_totals" t-value="o._nav_tax_totals_filtered_print(tax_totals)"/>
+                <!-- Dejar currency tal como venga del caller -->
+                <t t-call="account.document_tax_totals_template"/>
+            </t>
+        </xpath>
+    </template>
+
+   <template id="nav_l10n_co_dian_report_invoice_document"
+              inherit_id="l10n_co_dian.report_invoice_document">
+        <!-- Reemplazamos el bloque donde se llaman los totales -->
+        <xpath expr="//t[@t-call='account.document_tax_totals']" position="replace">
+            <t t-if="o.tax_totals" t-call="account.document_tax_totals">
+                <t t-set="tax_totals" t-value="o._nav_tax_totals_filtered_print(o.tax_totals)"/>
+                <t t-set="currency" t-value="o.currency_id"/>
+            </t>
+        </xpath>
+    </template> 
+ 
+
+<template id="nav_report_invoice_document_line_taxes"
+              inherit_id="account.report_invoice_document">
+
+        <!--
+            En la tabla de líneas de factura (name="invoice_line_table"),
+            reemplazamos el cálculo original de "taxes"
+            por nuestra función de línea.
+        -->
+        <xpath expr="//table[@name='invoice_line_table']//t[@t-set='taxes']"
+               position="replace">
+            <t t-set="taxes" t-value="line._nav_line_taxes_print()"/>
+        </xpath>
+
+    </template>
+</odoo>

@@ -1,8 +1,8 @@
 {
     'name': 'Screen POS Custom',
-    'version': '5.0',
+    'version': '4.0',
     'description': 'Screen POS Custom - Combo nativo Odoo 18',
-    'summary': 'Muestra items del combo agrupados en la pantalla de preparación, manteniendo el orden original de comandeo. Encabezado personalizado con MESA, nombre de zona y mesero. Fix debounce doble click.',
+    'summary': 'Muestra items del combo agrupados en la pantalla de preparación, manteniendo el orden original de comandeo. Encabezado personalizado con MESA, nombre de zona y mesero.',
     'author': 'MyCompany',
     'license': 'LGPL-3',
     'category': 'point_of_sale',

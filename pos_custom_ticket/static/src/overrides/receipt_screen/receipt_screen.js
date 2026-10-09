@@ -11,7 +11,7 @@ patch(ReceiptScreen, {
 patch(ReceiptScreen.prototype, {
   async generateTicketImage(isBasicReceipt = false) {
     const order = this.pos.get_order();
-    let invoiceId = order && order.raw ? order.raw.account_move : false;
+    let invoiceId = order.raw.account_move;
     let receiptData = {
       data: this.pos.orderExportForPrinting(order),
       formatCurrency: this.env.utils.formatCurrency,
@@ -19,11 +19,13 @@ patch(ReceiptScreen.prototype, {
       basic_receipt: isBasicReceipt,
     };
 
-    if (!invoiceId && order && typeof order.id === "number") {
-      const [orderData] = await this.pos.data.read("pos.order", [order.id], [
-        "account_move",
-      ]);
-      invoiceId = orderData?.account_move || false;
+    if (!invoiceId) {
+      const invoice = await this.pos.data.orm.searchRead(
+        "account.move",
+        [["ref", "=", order.name]],
+        ["id"]
+      );
+      invoiceId = invoice.length ? invoice[0].id : false;
     }
     if (invoiceId) {
       const dianValues = await this.data.call(
@@ -34,7 +36,6 @@ patch(ReceiptScreen.prototype, {
       receiptData.dianValues = dianValues || {};
     }
     await this.renderer.toJpeg(OrderReceipt, {
-      props: receiptData,
       addClass: "pos-receipt-print p-3",
     });
   },

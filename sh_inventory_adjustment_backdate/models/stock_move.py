@@ -11,7 +11,11 @@ class StockMove(models.Model):
         string="Remarks for Inventory Adjustment")
 
     def _check_stock_account_installed(self):
-        return bool(self.env.registry.get('stock.valuation.layer'))
+        account_app = self.env['ir.module.module'].sudo().search([('name','=','stock_account')],limit=1)
+        if account_app.state != 'installed':
+            return False
+        else:
+            return True
 
     # FOR BACKDATE INVENTORY ADJUSTMENT
 
@@ -20,44 +24,23 @@ class StockMove(models.Model):
         The function `_action_done` performs backdating of account moves and stock valuation layers
         based on the context provided.
         """
-        backdate = self.env.context.get('sh_backdate')
         res = super()._action_done(cancel_backorder)
-
-        if not backdate:
-            return res
-
-        backdate_remark = self.env.context.get('sh_backdate_remark')
-        affected_moves = (res | self) if res else self
-
-        affected_moves.write({
-            "date": backdate,
-            "remarks_for_inventory_adj": backdate_remark
-        })
-        if affected_moves:
-            self.env.cr.execute(
-                """
-                UPDATE stock_move_line
-                SET date = %s
-                WHERE move_id IN %s
-                """,
-                (backdate, tuple(affected_moves.ids)),
-            )
-        if self._check_stock_account_installed():
-            account_moves = self.env['account.move'].search(
-                [('stock_move_id', 'in', affected_moves.ids)])
-            if account_moves:
+        backdate = self.env.context.get('sh_backdate')
+        if backdate:
+            backdate_remark = self.env.context.get('sh_backdate_remark')
+            self.write({
+                "date": backdate,
+                "remarks_for_inventory_adj": backdate_remark
+            })
+            self.move_line_ids.date = backdate
+            if self._check_stock_account_installed():
+                account_moves = self.env['account.move'].search(
+                    [('stock_move_id', 'in', (res|self).ids)])
                 account_moves.button_draft()
-                account_moves.write({
-                    'name': False,
-                    'date': backdate,
-                })
+                account_moves.name = False
+                account_moves.date = backdate
                 account_moves.action_post()
-            self.env.cr.execute(
-                """
-                UPDATE stock_valuation_layer
-                SET create_date = %s
-                WHERE stock_move_id IN %s
-                """,
-                (backdate, tuple(affected_moves.ids)),
-            )
+                self.env.cr.execute("""
+                        Update stock_valuation_layer set create_date=%s where stock_move_id in %s; 
+                    """, (backdate, tuple(self.ids)))
         return res

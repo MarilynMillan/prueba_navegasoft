@@ -1,0 +1,80 @@
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h2>DIAN - Restricción de líneas de factura</h2>
+    </div>
+  </div>
+
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h2>Visión general</h2>
+      <table class="table table-bordered" style="width: auto;">
+        <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Nombre técnico</td><td><code>dian_account_move_line_restriction</code></td></tr>
+          <tr><td>Nombre funcional</td><td>DIAN - Restricción de líneas de factura</td></tr>
+          <tr><td>Versión</td><td><code>1.0.0</code></td></tr>
+          <tr><td>Autor</td><td>Navegasoft</td></tr>
+          <tr><td>Sitio web</td><td>http://www.navegasoft.com</td></tr>
+          <tr><td>Licencia</td><td>OPL-1</td></tr>
+          <tr><td>Tipo</td><td>Localización/Facturación electrónica DIAN</td></tr>
+          <tr><td>Aplicación</td><td>No (<code>auto_install = False</code>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h2>Propósito principal</h2>
+      <p>Este módulo controla y agrupa líneas de factura de cliente para escenarios DIAN, limitando la cantidad de productos/variantes diferentes y asegurando consistencia entre PDF, XML UBL DIAN y validación previa a envío/impresión.</p>
+    </div>
+  </div>
+
+  <div class="oe_row oe_spaced">
+    <div class="col-md-6">
+      <h2>Idiomas soportados</h2>
+      <table class="table table-bordered" style="width: auto;">
+        <thead><tr><th>Idioma</th><th>Código</th></tr></thead>
+        <tbody>
+          <tr><td>Español</td><td><code>es</code></td></tr>
+          <tr><td>Español (Colombia)</td><td><code>es_CO</code></td></tr>
+          <tr><td>Base</td><td><code>dian_account_move_line_restriction.pot</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-6">
+      <h2>Dependencias</h2>
+      <ul>
+        <li><code>account</code></li>
+        <li><code>l10n_co_dian</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h2>Configuración requerida</h2>
+      <ol>
+        <li>Ir a <strong>Contabilidad &gt; Configuración &gt; Ajustes</strong>.</li>
+        <li>Configurar <strong>Alcance para líneas agrupadas</strong>, <strong>Diarios con agrupación</strong>, <strong>Agrupar por producto</strong> y <strong>Límite de líneas agrupadas para facturas</strong>.</li>
+        <li>Si el alcance es por diario, seleccionar diarios de venta aplicables.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h2>Guía de usuario</h2>
+      <ol>
+        <li>Crear o editar una factura de cliente.</li>
+        <li>Agregar líneas de producto.</li>
+        <li>El total agrupado se calcula solo cuando aplica el alcance DIAN (global o por diario configurado).</li>
+        <li>La agrupación puede ser por <strong>variante</strong> o por <strong>plantilla</strong>, según configuración.</li>
+        <li>Si supera el límite, se bloquea impresión/envío.</li>
+        <li>La vista previa, el PDF y el XML UBL DIAN usan líneas agrupadas.</li>
+      </ol>
+    </div>
+  </div>
+
+</section>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="hr_payroll" name="Payroll Certificates">
+        <div class="card">
+            <div class="card-header" id="payroll">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse_payroll" aria-expanded="false" aria-controls="payroll">
+                        Payroll Certificates
+                    </button>
+                </h5>
+            </div>
+            <div id="collapse_payroll" class="collapse" aria-labelledby="payroll" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="row" t-if="not payroll_list">
+                        <div class="col-12">
+                            <div class="card-body">
+                                <h4 class="card-title">Payroll cannot be rendered</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" t-if="payroll_list">
+                        <div>
+                            <table id="hr_payroll_table" class="table table-bordered" 
+                                data-toggle="table"
+                                data-pagination="true"
+                                data-pagination-h-align="right"
+                                data-pagination-detail-h-align="right"
+                                data-pagination-parts="['pageList']"
+                                data-show-header="false">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Payslip</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="payroll_list" t-as="payroll">
+                                        <tr>
+                                            <td scope="row">
+                                                <div class="row">
+                                                    <div class="col-sm-8">
+                                                        <h5 class="card-title">Payslip # <span t-esc="payroll['number']"/> [<span t-esc="payroll['date_from']" /> - <span t-esc="payroll['date_to']"/>]</h5>
+                                                        <p class="card-text"><span t-esc = "payroll['name']"/>.</p>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <form action="/certificate/payslip" method="post" target="_blank">
+                                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                            <input type="hidden" class="form-control o_website_form_input" name="payroll_id" t-att-value="payroll['id']" required=""/>
+                                                            <div class="row">
+                                                                <div class="col-sm-4" style="padding-left: 0px!important;  margin-top: 10px!important;">
+                                                                    <button type="submit" class="btn btn-link btn-md">Download</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        <record id="report_categorias" model="ir.ui.menu">
+            <field name="parent_id" ref="medios_magneticos.menu_account_exogena_config_root"/>
+            <field name="sequence" eval="20"/>
+        </record>
+
+        <record id="report_conceptos" model="ir.ui.menu">
+            <field name="parent_id" ref="medios_magneticos.menu_account_exogena_config_root"/>
+            <field name="sequence" eval="30"/>
+        </record>
+
+        <record id="report_aso_conceptos" model="ir.ui.menu">
+            <field name="parent_id" ref="medios_magneticos.menu_account_exogena_config_root"/>
+            <field name="sequence" eval="10"/>
+        </record>
+
+        <menuitem id="menu_action_medios_magneticos2"
+                  name="Generar Medios Magneticos"
+                  parent="account_reports.account_reports_audit_reports_menu"
+                  action="medios_magneticos.action_medios_magneticos2"
+                  sequence="50"/>
+
+        <!--
+        <menuitem id="menu_action_medios_magneticos_results"
+                  name="Resultados Generados"
+                  parent="medios_magneticos.menu_account_exogena_config_root"
+                  action="medios_magneticos.action_medios_mag"
+                  sequence="60"/>
+        -->
+    </data>
+</odoo>

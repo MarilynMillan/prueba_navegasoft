@@ -1,0 +1,30 @@
+<odoo>
+  <data>
+
+  <record model="ir.ui.view" id="tipo_lista">
+      <field name="name">Regla Lista</field>
+      <field name="model">hr.tipo</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name" string="Reglas"/>
+          
+
+        </list>
+      </field>
+    </record>
+
+  <record model="ir.ui.view" id="tipos_forma">
+      <field name="name">Regla forma</field>
+      <field name="model">hr.tipo</field>
+      <field name="arch" type="xml">
+        <form>
+          <group>
+            <field name="name" string="Regla"/>
+          </group>
+        </form>
+      </field>
+    </record>
+  
+
+  </data>
+</odoo>

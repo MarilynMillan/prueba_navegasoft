@@ -1,0 +1,57 @@
+<section class="oe_container">
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h2>Actualización funcional de retención por umbral</h2>
+      <p>
+        Esta actualización incorpora un modo global opcional para evaluar el umbral de retención
+        con la suma de líneas aplicables, manteniendo el modo por línea como comportamiento base.
+      </p>
+    </div>
+  </div>
+
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h3>Novedades agregadas</h3>
+      <ul>
+        <li>Configuración global en ajustes de contabilidad: <strong>Usar base global aplicable para retención</strong>.</li>
+        <li>Campo en producto (tab Contabilidad): <strong>Aplica al umbral de retención</strong>.</li>
+        <li>Líneas negativas: ajustan la base global y no disparan retención en la propia línea.</li>
+        <li>Recalculo automático al guardar en facturas, ventas y compras.</li>
+        <li>Botón <strong>Calcular Impuestos</strong> en factura con recálculo forzado consistente.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="oe_row oe_spaced">
+    <div class="col-md-12">
+      <h3>Reglas funcionales</h3>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Escenario</th>
+            <th>Comportamiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Modo global desactivado</td>
+            <td>Umbral evaluado por línea (comportamiento actual).</td>
+          </tr>
+          <tr>
+            <td>Modo global activado</td>
+            <td>Umbral evaluado sobre la suma de líneas aplicables.</td>
+          </tr>
+          <tr>
+            <td>Línea no aplicable</td>
+            <td>No participa en base global ni recibe retención.</td>
+          </tr>
+          <tr>
+            <td>Línea negativa</td>
+            <td>Reduce base global y no aplica retención en esa línea.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+    <record id="rule_bono_movilidad" model="hr.salary.rule">
+      <field name="name">Bono Movilidad</field>
+      <field name="code">MOB</field>
+      <field name="sequence">8</field>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="struct_id" ref="hr_payroll.structure_002"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute"><![CDATA[
+result = 0.0
+contract = contract or payslip.contract_id
+company = (contract and contract.company_id) or payslip.company_id or employee.company_id
+if contract:
+    days = payslip._compute_bono_movilidad_days(contract, payslip.date_from, payslip.date_to)
+    contract_amount = 0.0
+    company_amount = 0.0
+    if 'mobility_bonus' in contract._fields:
+        contract_amount = contract.mobility_bonus or 0.0
+    if company and 'mobility_bonus' in company._fields:
+        company_amount = company.mobility_bonus or 0.0
+    result = (contract_amount or company_amount or 0.0) * days
+    ]]></field>
+      <field name="appears_on_payslip" eval="True"/>
+      <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_aux_rodamiento" model="hr.salary.rule">
+      <field name="name">Auxilio Rodamiento</field>
+      <field name="code">ROD</field>
+      <field name="sequence">8</field>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="struct_id" ref="hr_payroll.structure_002"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute"><![CDATA[
+result = 0.0
+contract = contract or payslip.contract_id
+company = (contract and contract.company_id) or payslip.company_id or employee.company_id
+if contract:
+    days = payslip._compute_aux_rodamiento_days(contract, payslip.date_from, payslip.date_to)
+    contract_amount = 0.0
+    company_amount = 0.0
+    if 'aux_rodamiento' in contract._fields:
+        contract_amount = contract.aux_rodamiento or 0.0
+    if company and 'aux_rodamiento' in company._fields:
+        company_amount = company.aux_rodamiento or 0.0
+    result = (contract_amount or company_amount or 0.0) * days
+    ]]></field>
+      <field name="appears_on_payslip" eval="True"/>
+      <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_recargo_nocturno" model="hr.salary.rule">
+      <field name="name">Recargo Nocturno</field>
+      <field name="code">HRN</field>
+      <field name="sequence">310</field>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="struct_id" ref="hr_payroll.structure_002"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute"><![CDATA[
+result = 0.0
+contract = contract or payslip.contract_id
+company = (contract and contract.company_id) or payslip.company_id or employee.company_id
+if contract and company:
+    hours = payslip._compute_hours_recargo_nocturno(contract, payslip.date_from, payslip.date_to)
+    hourly = (contract.wage or 0.0) / 220.0
+    perc_val = 35.0
+    if company._fields.get('perc_rec_noct'):
+        perc_val = company.perc_rec_noct or 0.0
+    perc = (perc_val or 0.0) / 100.0
+    result = hours * hourly * perc
+      ]]></field>
+      <field name="appears_on_payslip" eval="True"/>
+      <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_recargo_nocturno_fest" model="hr.salary.rule">
+      <field name="name">Recargo Nocturno Dominical / Festivo</field>
+      <field name="code">HRNDF</field>
+      <field name="sequence">320</field>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="struct_id" ref="hr_payroll.structure_002"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute"><![CDATA[
+result = 0.0
+contract = contract or payslip.contract_id
+company = (contract and contract.company_id) or payslip.company_id or employee.company_id
+if contract and company:
+    hours = payslip._compute_hours_recargo_nocturno_fest(contract, payslip.date_from, payslip.date_to)
+    hourly = (contract.wage or 0.0) / 220.0
+    perc_val = 75.0
+    if company._fields.get('perc_rec_noct_fest'):
+        perc_val = company.perc_rec_noct_fest or 0.0
+    perc = (perc_val or 0.0) / 100.0
+    result = hours * hourly * perc
+      ]]></field>
+      <field name="appears_on_payslip" eval="True"/>
+      <field name="active" eval="True"/>
+    </record>
+
+    <record id="rule_recargo_diurno_dom" model="hr.salary.rule">
+      <field name="name">Recargo Diurno Dominical / Festivo</field>
+      <field name="code">HRDDF</field>
+      <field name="sequence">330</field>
+      <field name="category_id" ref="hr_payroll.ALW"/>
+      <field name="struct_id" ref="hr_payroll.structure_002"/>
+      <field name="condition_select">none</field>
+      <field name="amount_select">code</field>
+      <field name="amount_python_compute"><![CDATA[
+result = 0.0
+contract = contract or payslip.contract_id
+company = (contract and contract.company_id) or payslip.company_id or employee.company_id
+if contract and company:
+    hours = payslip._compute_hours_recargo_diurno_dom(contract, payslip.date_from, payslip.date_to)
+    hourly = (contract.wage or 0.0) / 220.0
+    perc_val = 75.0
+    if company._fields.get('perc_rec_diur_dom'):
+        perc_val = company.perc_rec_diur_dom or 0.0
+    perc = (perc_val or 0.0) / 100.0
+    result = hours * hourly * perc
+      ]]></field>
+      <field name="appears_on_payslip" eval="True"/>
+      <field name="active" eval="True"/>
+    </record>
+
+    <function model="hr.salary.rule" name="sync_payroll_rules_planning_salary_rules"/>
+  </data>
+</odoo>

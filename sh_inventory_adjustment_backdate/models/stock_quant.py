@@ -39,4 +39,4 @@ class StockQuant(models.Model):
             for quant in backdate_quant:
                 super(StockQuant,quant.with_context(sh_backdate = quant.sh_backdate,sh_backdate_remark=quant.remarks_for_inventory_adj))._apply_inventory()
                 quant.inventory_date = quant.sh_backdate
-        return super(StockQuant,self-backdate_quant)._apply_inventory()
+        super(StockQuant,self-backdate_quant)._apply_inventory()

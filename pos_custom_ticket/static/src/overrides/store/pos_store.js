@@ -10,7 +10,7 @@ patch(PosStore.prototype, {
     order = this.get_order(),
     printBillActionTriggered = false,
   } = {}) {
-    let invoiceId = order && order.raw ? order.raw.account_move : false;
+    let invoiceId = order.raw.account_move;
     let receiptData = {
       data: this.orderExportForPrinting(order),
       formatCurrency: this.env.utils.formatCurrency,
@@ -18,13 +18,14 @@ patch(PosStore.prototype, {
       basic_receipt: basic,
     };
 
-    if (!invoiceId && order && typeof order.id === "number") {
-      const [orderData] = await this.data.read("pos.order", [order.id], [
-        "account_move",
-      ]);
-      invoiceId = orderData?.account_move || false;
+    if (!invoiceId) {
+      const invoice = await this.data.orm.searchRead(
+        "account.move",
+        [["ref", "=", order.name]],
+        ["id"]
+      );
+      invoiceId = invoice.length ? invoice[0].id : false;
     }
-
     if (invoiceId) {
       const dianValues = await this.data.call(
         "account.move",

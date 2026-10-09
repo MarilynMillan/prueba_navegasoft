@@ -1,0 +1,1830 @@
+<?xml version="1.0" ?>
+<odoo>
+ 
+    <!-- <record id="seq_refund_salary_slip" model="ir.sequence">
+        <field name="name">Refund Salary Slip</field>
+        <field name="code">salary.refund</field>
+        <field name="prefix">NOA</field>
+        <field name="padding">3</field>
+        <field name="sequence_dian_type">invoice_computer_generated</field>
+    </record> -->
+
+    <record id="n0a" model="base_electronicos.tabla">
+        <field name="id">1</field>
+        <field name="name">Nómina electrónica</field>
+    </record>
+    <record id="n0b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaIngreso</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">str(self.contract_id.date_start)</field>
+        <field name="detalle">Fecha de Ingreso del trabajador a la empresa (AAAA-MM-DD)*</field>
+    </record>
+     <!-- <record id="n0b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaIngreso</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.date_start</field>
+        <field name="detalle">Fecha de Ingreso del trabajador a la empresa (AAAA-MM-DD)*</field>
+    </record> -->
+    <record id="n1b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaLiquidacionInicio</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">str(self.date_from)</field>
+        <field name="detalle">Fecha de inicio de Liquidación de Nómina (AAAA-MM-DD)*</field>
+    </record>
+    <record id="n2b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaLiquidacionFin</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">str(self.date_to)</field>
+        <field name="detalle">Fecha fin de Liquidación de Nómina (AAAA-MM-DD)*</field>
+    </record>
+    <record id="n3b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaGen</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">str(self.date_from)</field>
+        <field name="detalle">Fecha de emisión del documento (AAAA-MM-DD)*</field>
+    </record>
+    <record id="n4a" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CodigoTrabajador:</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Código del Trabajador</field>
+    </record>
+    <record id="n4b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Prefijo</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.prefijo</field>
+        <field name="detalle">Prefijo de la Nómina</field>
+    </record>
+    <record id="n5b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Consecutivo</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.consecutivo</field>
+        <field name="detalle">Consecutivo manejado por el Empleador</field>
+    </record>
+    <record id="n6b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Numero</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.number</field>
+        <field name="detalle">Prefijo y consecutivo manejado por el Empleador</field>
+    </record>
+    <record id="n7b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PaisGeneracion</field>
+        <field name="categoria">lugargeneracion</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.paisgeneracion</field>
+        <field name="detalle">Código del país donde se genera el documento (Ver tabla DOC.4.1) Nota: Se tomará el valor “Código alfa-2” de tabla mencionada</field>
+    </record>
+    <record id="n8b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DepartamentoEstado</field>
+        <field name="categoria">lugargeneracion</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.departamentoestado</field>
+        <field name="detalle">Código del departamento donde se genera el documento (Vertabla DOC.4.2)</field>
+    </record>
+    <record id="n9b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">MunicipioCiudad</field>
+        <field name="categoria">lugargeneracion</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.municipiociudad</field>
+        <field name="detalle">Código del municipio o ciudad donde se genera el documento(Ver tabla DOC.4.3)</field>
+    </record>
+    <record id="n10b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Idioma</field>
+        <field name="categoria">lugargeneracion</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.Idioma</field>
+        <field name="detalle">Código del país donde se genera el documento (Ver tabla DOC.3.1)</field>
+    </record>
+   <record id="n11c" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Version</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.version</field>
+        <field name="detalle">Versión base de Schema XML usada para crear este perfil Nota: Que para este caso será “V1.0: Documento Soporte de Pago de Nómina Electrónica”</field>
+    </record>
+    <record id="n11b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Ambiente</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.ambiente</field>
+        <field name="detalle">Tipo de Ambiente de Emisión del Documento (Ver tabla DOC.1.1) Nota: Demo o Producción</field>
+    </record>
+    <record id="n12b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoXML</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.tipoXML</field>
+        <field name="detalle">Tipo de XML del Documento</field>
+    </record>
+    <record id="n13b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaGen</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">str(self.FechaGen)</field>
+        <field name="detalle">Fecha de emisión del documento (AAAA-MM-DD)</field>
+    </record>
+    <record id="n14b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">HoraGen</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.HoraGen</field>
+        <field name="detalle">Hora generacion del documento</field>
+    </record>
+    <record id="n15b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PeriodoNomina</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.PeriodoNomina</field>
+        <field name="detalle">Corresponde al Código de Periodo de Nómina (Ver tabla NOM.1.1)</field>
+    </record>
+    <record id="n16b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoMoneda</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.TipoMoneda</field>
+        <field name="detalle">Tipo de Moneda utilizada en el documento (Ver tabla DOC.3.2)</field>
+    </record>
+    <!---Revisar Leidy No se ve este nodo en el archivo-->
+    <record id="n17b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Notas</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.Notas</field>
+        <field name="detalle">Notas dentro de la nomina</field>
+    </record>
+    <record id="n18b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">RazonSocial</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.RazonSocial</field>
+        <field name="detalle">La razon social del empleador</field>
+    </record>
+    <record id="n19b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PrimerApellidoEmpleador</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.PrimerApellido</field>
+        <field name="detalle">Primer apellido del empleador</field>
+    </record>
+    <record id="n20b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">SegundoApellidoEmpleador</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.SegundoApellido</field>
+        <field name="detalle">Segundo apellido del empleador</field>
+    </record>
+    <record id="n21b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PrimerNombreEmpleador</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.PrimerNombre</field>
+        <field name="detalle">Primer apellido del empleador</field>
+    </record>
+    <record id="n22b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">OtrosNombresEmpleador</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.OtrosNombres</field>
+        <field name="detalle">Otros nombres del empleador</field>
+    </record>
+    <record id="n23b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">NIT</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.NIT</field>
+        <field name="detalle">NIT del empleador</field>
+    </record>
+    <record id="n24b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DV</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.DV</field>
+        <field name="detalle">Digito de Verificacion del empleador</field>
+    </record>
+    <record id="n25b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Pais</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.PaisEmpleador</field>
+        <field name="detalle">Pais del Empleador</field>
+    </record>
+    <record id="n26b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">MunicipioCiudad</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.MunicipioCiudadEmpleador</field>
+        <field name="detalle">Municipio Ciudad del Empleador</field>
+    </record>
+    <record id="n27b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DepartamentoEstado</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.DepartamentoEstadoEmpleador</field>
+        <field name="detalle">Departamento Estado del Empleador</field>
+    </record>
+    <record id="n28b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Direccion</field>
+        <field name="categoria">Empleador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.DireccionEmpleador</field>
+        <field name="detalle">Direccion del Empleador</field>
+    </record>
+    <record id="n29a" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaInicioLabores</field>
+        <field name="categoria">Periodo</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">str(self.contract_id.date_start)</field>
+        <field name="detalle">Fecha inicio labores del empleador</field>
+    </record>
+    <record id="n29b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoTrabajador</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.tipo_trabajador</field>
+        <field name="detalle">Tipo Trabajador</field>
+    </record>
+    <record id="n30b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">SubTipoTrabajador</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.sub_tipo_trabajador</field>
+        <field name="detalle">Sub Tipo trabajador</field>
+    </record>
+    <record id="n31b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">AltoRiesgoPension</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.AltoRiegoPension</field>
+        <field name="detalle">Alto riesgo pension del trabajador</field>
+    </record>
+    <record id="n32b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoDocumento</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.l10n_latam_identification_type_id.name</field>
+        <field name="detalle">Tipo documento del trabajador</field>
+    </record>
+    <record id="n33b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">NumeroDocumento</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.vat</field>
+        <field name="detalle">Numero documento trabajador</field>
+    </record>
+    <record id="n34b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PrimerApellido</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.last_name</field>
+        <field name="detalle">Primer apellido trabajador</field>
+    </record>
+    <record id="n35b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">SegundoApellido</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.second_last_name</field>
+        <field name="detalle">Segundo apellido trabajador</field>
+    </record>
+    <record id="n36b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PrimerNombre</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.first_name</field>
+        <field name="detalle">Primer nombre del trabajador</field>
+    </record>
+    <record id="n37b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">OtrosNombres</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.middle_name</field>
+        <field name="detalle">OtrosNombres Trabajador</field>
+    </record>
+    <record id="n38b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">LugarTrabajoPais</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.country_id.code</field>
+        <field name="detalle">Lugar Trabajo Pais</field>
+    </record>
+    <record id="n39b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">LugarTrabajoMunicipioCiudad</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.city_id.code</field>
+        <field name="detalle">Lugar trabajo codigo DANE municipio ciudad</field>
+    </record>
+    <record id="n40b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">LugarTrabajoDepartamentoEstado</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.state_id.code</field>
+        <field name="detalle">Lugar Trabajo codigo DANE Departamento </field>
+    </record>
+    <record id="n41b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">LugarTrabajoDireccion</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.employee_address_home.street</field>
+        <field name="detalle">Lugar trabajo direccion</field>
+    </record>
+    <record id="n42b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">SalarioIntegral</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.SalarioIntegral</field>
+        <field name="detalle">Si tiene o no salario Salario Integral</field>
+    </record>
+    <record id="n43b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoContrato</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.tipo_contrato</field>
+        <field name="detalle">El tipo del contrato del trabajador</field>
+    </record>
+    <record id="n44b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Sueldo</field>
+        <field name="categoria">Trabajador</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.wage</field>
+        <field name="detalle">Sueldo del trabajador</field>
+    </record>
+    <record id="n45b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Forma</field>
+        <field name="categoria">Pago</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">1</field>
+        <field name="detalle">Forma de pago al trabajador</field>
+    </record>
+    <record id="n46b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Metodo</field>
+        <field name="categoria">Pago</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.metodo_pago</field>
+        <field name="detalle">Metodo de pago al trabajador</field>
+    </record>
+    <record id="n47b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Banco</field>
+        <field name="categoria">Pago</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.bank_account_id.bank_id.name</field>
+        <field name="detalle">Banco por el cual se hace el pago al trabajador</field>
+    </record>
+    <record id="n48b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoCuenta</field>
+        <field name="categoria">Pago</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.tipo_cuenta</field>
+        <field name="detalle">Tipo cuenta del Banco</field>
+    </record>
+    <record id="n49b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">NumeroCuenta</field>
+        <field name="categoria">Pago</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.employee_id.bank_account_id.acc_number</field>
+        <field name="detalle">Numero de la cuenta bancaria</field>
+    </record>
+    <record id="n50b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaPago</field>
+        <field name="categoria">Pago</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">str(self.fecha_pago)</field>
+        <field name="detalle">Fecha en que se efectuo el pago</field>
+    </record>
+    <record id="n51b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Basico</field>
+        <field name="codigo">Basico</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Sueldo basico del trabajador</field>
+    </record>
+    <record id="n52b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DiasTrabajados</field>
+        <field name="dias">true</field>
+        <field name="codigo">WORK100</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Dias trabajados que tiene el trabajador</field>
+    </record>
+    <!-- <record id="n53b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">SueldoTrabajado</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.contract_id.date_start</field>
+        <field name="detalle">Sueldo trabajador</field>
+    </record> -->
+    <record id="n54b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">AuxilioTransporte</field>
+        <field name="codigo">AuxilioTransporte</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Auxilio transporte del trabajador</field>
+    </record>
+    <record id="n55b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">ViaticoManuAlojS</field>
+        <field name="codigo">ViaticoManuAlojS</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Viaticos manutencion alojamientos salarial</field>
+    </record>
+    <record id="n56b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">ViaticoManuAlojNS</field>
+        <field name="codigo">ViaticoManuAlojNS</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Viaticos manutencion alojamientos NO salarial</field>
+    </record>
+    <record id="n57b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadHED</field>
+        <field name="codigo">HED</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">true</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HED</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de horas extras diurnas</field>
+    </record>
+    <record id="n58b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeHED</field>
+        <field name="codigo">HED</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HED</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje segun la tabla 25% de horas extras diurnas</field>
+    </record>
+    <record id="n59b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoHED</field>
+        <field name="codigo">HED</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HED</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago horas extras diurnas</field>
+    </record>
+    <record id="n60b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadHEN</field>
+        <field name="codigo">HEN</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">true</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HEN</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad horas extras nocturnas</field>
+    </record>
+    <record id="n61b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeHEN</field>
+        <field name="codigo">HEN</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HEN</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje horas extras nocturnas</field>
+    </record>
+    <record id="n62b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoHEN</field>
+        <field name="codigo">HEN</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HEN</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago de horas extras nocturnas</field>
+    </record>
+    <record id="n63b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadHRN</field>
+        <field name="codigo">HRN</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">true</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRN</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad recargo hora extra nocturna</field>
+    </record>
+    <record id="n64b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeHRN</field>
+        <field name="codigo">HRN</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRN</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje recargo hora extra nocturna</field>
+    </record>
+    <record id="n65b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoHRN</field>
+        <field name="codigo">HRN</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRN</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago recargo hora extra nocturna</field>
+    </record>
+    <record id="n66b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadHEDDF</field>
+        <field name="codigo">HEDDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">true</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HEDDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad recargo hora extra diurna festiva</field>
+    </record>
+    <record id="n67b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeHEDDF</field>
+        <field name="codigo">HEDDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HEDDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje recargo hora extra diurna festiva</field>
+    </record>
+    <record id="n68b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoHEDDF</field>
+        <field name="codigo">HEDDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HEDDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago recargo hora extra diurna festiva</field>
+    </record>
+    <record id="n69b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadHRDDF</field>
+        <field name="codigo">HRDDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">true</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRDDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad hora extra recargo diurna dominical festiva</field>
+    </record>
+    <record id="n70b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeHRDDF</field>
+        <field name="codigo">HRDDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRDDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje recargo hora extra recargo diurna festiva</field>
+    </record>
+    <record id="n71b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoHRDDF</field>
+        <field name="codigo">HRDDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRDDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago recargo hora extra recargo diurna festiva</field>
+    </record>
+    <record id="n72b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadHENDF</field>
+        <field name="codigo">HENDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">true</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HENDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad hora extra nocturna festiva dominical</field>
+    </record>
+    <record id="n73b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeHENDF</field>
+        <field name="codigo">HENDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HENDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje hora extra nocturna festiva dominical</field>
+    </record>
+    <record id="n74b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoHENDF</field>
+        <field name="codigo">HENDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">DevengadoHENDF</field>
+        <field name="subcategoria">HENDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago hora extra nocturna festiva dominical</field>
+    </record>
+    <record id="n75b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadHRNDF</field>
+        <field name="codigo">HRNDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">true</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRNDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad recargo hora extra nocturna festiva dominical</field>
+    </record>
+    <record id="n76b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeHRNDF</field>
+        <field name="codigo">HRNDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRNDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje recargo hora extra nocturna festiva dominical</field>
+    </record>
+    <record id="n77b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoHRNDF</field>
+        <field name="codigo">HRNDF</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">HRNDF</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago recargo hora extra nocturna festiva dominical</field>
+    </record>
+    <record id="n78b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadVacacionesComunes</field>
+        <field name="codigo">VacacionesComunes</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">VacacionesComunes</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de Dias Vacaciones Comunes</field>
+    </record>
+    <record id="n79b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoVacacionesComunes</field>
+        <field name="codigo">VacacionesComunes</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">VacacionesComunes</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago Vacaciones Comunes</field>
+    </record>
+    <record id="n80b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadPrimas</field>
+        <field name="codigo">Primas</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Primas</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de Dias primas</field>
+    </record>
+    <record id="n90b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoPrimas</field>
+        <field name="codigo">Primas</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Primas</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago de primas</field>
+    </record>
+    <record id="n91b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoNSPrimas</field>
+        <field name="codigo">PrimasNS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Primas</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago NO salarial primas</field>
+    </record>
+    <record id="n92b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeCesantias</field>
+        <field name="codigo">Cesantias</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Cesantias</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje de Cesantias</field>
+    </record>
+    <record id="n93b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoCesantias</field>
+        <field name="codigo">Cesantias</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Cesantias</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago de Cesantias</field>
+    </record>
+    <record id="n94b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoInteresesCesantias</field>
+        <field name="codigo">InteresesCesantias</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Cesantias</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago intereses de Cesantias</field>
+    </record>
+    <record id="n95b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadIncapacidad_comun</field>
+        <field name="codigo">Incapacidad_comun</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_comun</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de dias incapacidad comun</field>
+    </record>
+    <!-- <record id="n96b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoIncapacidad_comun</field>
+        <field name="codigo">Incapacidad_comun</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_comun</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Tipo de incapacidad colocar numero 1 en porcentaje de la regla salarial</field>
+    </record> -->
+    <record id="n97b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoIncapacidad_comun</field>
+        <field name="codigo">Incapacidad_comun</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_comun</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor incapacidad comun</field>
+    </record>
+    <record id="n98b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadIncapacidad_profesional</field>
+        <field name="codigo">Incapacidad_profesional</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_profesional</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de dias Incapacidad profesional</field>
+    </record>
+    <!-- <record id="n99b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoIncapacidad_profesional</field>
+        <field name="codigo">Incapacidad_profesional</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_profesional</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Tipo de incapacidad colocar numero 2 en porcentaje de la regla salarial</field>
+    </record> -->
+    <record id="n100b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoIncapacidad_profesional</field>
+        <field name="codigo">Incapacidad_profesional</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_profesional</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor de la incapacidad</field>
+    </record>
+    <record id="n101b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadIncapacidad_laboral</field>
+        <field name="codigo">Incapacidad_laboral</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_laboral</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de dias Incapacidad laboral</field>
+    </record>
+    <!-- <record id="n102b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">TipoIncapacidad_laboral</field>
+        <field name="codigo">Incapacidad_laboral</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_laboral</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Tipo de incapacidad colocar numero 3 en porcentaje de la regla salarial</field>
+    </record> -->
+    <record id="n103b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoIncapacidad_laboral</field>
+        <field name="codigo">Incapacidad_laboral</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">Incapacidad_laboral</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor de incapacidad laboral</field>
+    </record>
+    <record id="n104b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadLicenciaMP</field>
+        <field name="codigo">LicenciaMP</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">LicenciaMP</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de dias licencia MP</field>
+    </record>
+    <record id="n105b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoLicenciaMP</field>
+        <field name="codigo">LicenciaMP</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">LicenciaMP</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor licencia MP</field>
+    </record>
+    <record id="n106b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadLicenciaR</field>
+        <field name="codigo">LicenciaR</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">LicenciaR</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cantidad de dias licencia REMUNERADA</field>
+    </record>
+    <record id="n107b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoLicenciaR</field>
+        <field name="codigo">LicenciaR</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">LicenciaR</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor licencia REMUNERADA</field>
+    </record>
+    <record id="n109b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CantidadLicenciaNR</field>
+        <field name="codigo">LicenciaNR</field>
+        <field name="dias">true</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">LicenciaNR</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor licencia NO REMUNERADA</field>
+    </record>
+    <record id="n110b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="codigo">BonificacionS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="name">BonificacionS</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Bonificacion salarial</field>
+    </record>
+    <record id="n111b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">BonificacionNS</field>
+        <field name="codigo">BonificacionNS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Bonificacion NO salarial </field>
+    </record>
+    <record id="n112b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">AuxilioS</field>
+        <field name="codigo">AuxilioS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Auxilio Salarial</field>
+    </record>
+    <record id="n113b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">AuxilioNS</field>
+        <field name="codigo">AuxilioNS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Auxilio No Salarial</field>
+    </record>
+    <record id="n114b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">HuelgaLegal</field>
+        <field name="codigo">HuelgaLegal</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Huelga legal Valor</field>
+    </record>
+    <record id="n115b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CompensacionO</field>
+        <field name="codigo">CompensacionO</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Compensacion O</field>
+    </record>
+    <record id="n116b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CompensacionE</field>
+        <field name="codigo">CompensacionE</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Compensacion E</field>
+    </record>
+    <record id="n117b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoSBonoEPCTV</field>
+        <field name="codigo">PagoSBonoEPCTV</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">BonoEPCTV</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago Salarial</field>
+    </record>
+    <record id="n118b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoNS</field>
+        <field name="codigo">PagoNSBonoEPCTV</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="subcategoria">BonoEPCTV</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago no salarial BonoEPCTV</field>
+    </record>
+    <record id="n119b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoAlimentacionS</field>
+        <field name="codigo">PagoAlimentacionS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago Alimentacion Salarial</field>
+    </record>
+    <record id="n120b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoAlimentacionNS</field>
+        <field name="codigo">PagoAlimentacionNS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago Alimentacion NO Salarial</field>
+    </record>
+    <record id="n121b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Comision</field>
+        <field name="codigo">Comision</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor Comision</field>
+    </record>
+    <record id="n122b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoTercero</field>
+        <field name="codigo">PagoTercero</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Pago a Tercero</field>
+    </record>
+    <record id="n123b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Anticipo</field>
+        <field name="codigo">Anticipo</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Anticipo</field>
+    </record>
+    <record id="n124b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Dotacion</field>
+        <field name="codigo">Dotacion</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Dotacion Valor</field>
+    </record>
+    <record id="n125b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">ApoyoSost</field>
+        <field name="codigo">ApoyoSost</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Apoyo Sostenimiento</field>
+    </record>
+    <record id="n126b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Teletrabajo</field>
+        <field name="codigo">Teletrabajo</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Teletrabajo Pago</field>
+    </record>
+    <record id="n127b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">BonifRetiro</field>
+        <field name="codigo">BonifRetiro</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Bonificacion Retirio</field>
+    </record>
+    <record id="n128b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Indemnizacion</field>
+        <field name="codigo">Indemnizacion</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Indemnizacion</field>
+    </record>
+    <record id="n129b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Reintegro</field>
+        <field name="codigo">Reintegro</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Reintegro</field>
+    </record>
+    
+    <record id="n128c" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">ConceptoS</field>
+        <field name="codigo">ConceptoS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Otros conceptos Salarial</field>
+    </record>
+    <record id="n129c" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">ConceptoNS</field>
+        <field name="codigo">ConceptoNS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Otros conceptos No salarial</field>
+    </record>
+    
+    
+    <record id="n130b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeSalud</field>
+        <field name="codigo">Salud</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Salud</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion Salud</field>
+    </record>
+    <record id="n131b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DeduccionSalud</field>
+        <field name="codigo">Salud</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Salud</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion Salud</field>
+    </record>
+    <record id="n132b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeFondoPension</field>
+        <field name="codigo">FondoPension</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">FondoPension</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion fondo de pension</field>
+    </record>
+    <record id="n133b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DeduccionFondoPension</field>
+        <field name="codigo">FondoPension</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">FondoPension</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion fondo de pension</field>
+    </record>
+
+
+<record id="n134b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeFondoSP</field>
+        <field name="codigo">FondoSP</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">FondoSP</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje FondoSP</field>
+    </record>
+    <record id="n135b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DeduccionFondoSP</field>
+        <field name="codigo">FondoSP</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Salud</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion FondoSP</field>
+    </record>
+    <record id="n136b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeSubFondoSP</field>
+        <field name="codigo">SubFondoSP</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">FondoSP</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion FondoSP sub</field>
+    </record>
+    <record id="n137b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DeduccionSubFondoSP</field>
+        <field name="codigo">SubFondoSP</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">FondoPension</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion FondoSP sub</field>
+    </record>
+
+
+<record id="n138b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PorcentajeSindicato</field>
+        <field name="codigo">Sindicato</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Sindicato</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje Sindicato</field>
+    </record>
+    <record id="n139b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DeduccionSindicato</field>
+        <field name="codigo">Sindicato</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Sindicato</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion Sindicato</field>
+    </record>
+    <record id="n140b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">SancionPublic</field>
+        <field name="codigo">SancionPublic</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">SancionPublic</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion SancionPublic</field>
+    </record>
+    <record id="n141b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">SancionPriv</field>
+        <field name="codigo">SancionPriv</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">SancionPriv</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion SancionPriv</field>
+    </record>
+
+<record id="n142b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DescripcionLibranza</field>
+        <field name="codigo">Libranza</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">true</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Libranza</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje Libranza</field>
+    </record>
+    <record id="n143b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DeduccionLibranza</field>
+        <field name="codigo">Libranza</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Libranza</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion Libranza</field>
+    </record>
+    <record id="n144b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PagoTercero</field>
+        <field name="codigo">PagoTercero</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">PagoTercero</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion PagoTercero</field>
+    </record>
+    <record id="n145b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Anticipo</field>
+        <field name="codigo">Anticipo</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Anticipo</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion Anticipo</field>
+    </record>
+
+<record id="n146b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">OtraDeduccion</field>
+        <field name="codigo">OtraDeduccion</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">OtraDeduccion</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">OtraDeduccion</field>
+    </record>
+    <record id="n147b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PensionVoluntaria</field>
+        <field name="codigo">PensionVoluntaria</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">PensionVoluntaria</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion PensionVoluntaria</field>
+    </record>
+    <record id="n148b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">RetencionFuente</field>
+        <field name="codigo">RetencionFuente</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">RetencionFuente</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion RetencionFuente</field>
+    </record>
+    <record id="n149b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">AFC</field>
+        <field name="codigo">AFC</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">AFC</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion AFC</field>
+    </record>
+
+    <record id="n150b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Cooperativa</field>
+        <field name="codigo">Cooperativa</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Cooperativa</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Cooperativa</field>
+    </record>
+    <record id="n151b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">EmbargoFiscal</field>
+        <field name="codigo">EmbargoFiscal</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">EmbargoFiscal</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion EmbargoFiscal</field>
+    </record>
+    <record id="n152b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">PlanComplementarios</field>
+        <field name="codigo">PlanComplementarios</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">PlanComplementarios</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion PlanComplementarios</field>
+    </record>
+    <record id="n153b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Educacion</field>
+        <field name="codigo">Educacion</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Educacion</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion Educacion</field>
+    </record>
+
+<record id="n154b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Reintegro</field>
+        <field name="codigo">Reintegro</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Reintegro</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Porcentaje deduccion Reintegro</field>
+    </record>
+    <record id="n155b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">Deuda</field>
+        <field name="codigo">Deuda</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Deuda</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion Deuda</field>
+    </record>
+
+    <record id="n156b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">id_plataforma</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Reintegro</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.id_plataforma</field>
+        <field name="detalle">Id de la plataforma facturatech</field>
+    </record>
+    <record id="n157b" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">password</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">Deuda</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.password</field>
+        <field name="detalle">Password de la plataforma facturatech</field>
+    </record>
+
+    <record id="z1" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DevengadosTotal</field>
+        <field name="codigo">GROSS</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Devengado</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Sumatoria total devengados</field>
+    </record>
+    <record id="z2" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">DeduccionesTotal</field>
+        <field name="codigo">DED</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor total deducciones</field>
+    </record>
+    <record id="z3" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">ComprobanteTotal</field>
+        <field name="codigo">NET</field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">Deducciones</field>
+        <field name="subcategoria">FondoPension</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Valor deduccion fondo de pension</field>
+    </record>
+
+    <record id="z4" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">credit_note</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="subcategoria"></field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.credit_note</field>
+        <field name="detalle">Indica si es ajuste de nomina o nota credito</field>
+    </record>
+    <record id="z5" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">nota_credito</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="subcategoria"></field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.nota_credito</field>
+        <field name="detalle">Indica el tipo de ajuste eliminacion o ajuste</field>
+    </record>
+    <record id="z6" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">causa</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="subcategoria"></field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.causa</field>
+        <field name="detalle">causa por el ajuste nomina</field>
+    </record>
+    <record id="z7" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">CUNEPred</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="subcategoria"></field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.CUNEPred</field>
+        <field name="detalle">El numero cune predecesor si existe</field>
+    </record>
+    <record id="z8" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">NumeroPred</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="subcategoria"></field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.NumeroPred</field>
+        <field name="detalle">Numero predecesor de la nomina a ajustar</field>
+    </record>
+    <record id="z9" model="base_electronicos.line">
+        <field name="mp_id" ref="n0a"/>
+        <field name="name">FechaGenPred</field>
+        <field name="codigo"></field>
+        <field name="dias">false</field>
+        <field name="porcentaje">false</field>
+        <field name="horas">false</field>
+        <field name="categoria">informaciongeneral</field>
+        <field name="subcategoria"></field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">str(self.FechaGenPred)</field>
+        <field name="detalle">Fecha de generacion predecesor nomina</field>
+    </record>
+
+</odoo>

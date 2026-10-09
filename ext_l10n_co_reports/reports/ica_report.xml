@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  
+    <template id="report_certification_inherit_ica_account" inherit_id="l10n_co_reports.report_certification">
+        <!-- 1) Agregar cabecera "Nombre de cuenta" SOLO para ICA (después de Bimestre) -->
+        <xpath expr="//table[@t-if=&quot;report_name.endswith('fuente') or report_name.endswith('ica')&quot;]/thead/tr/th[@t-if=&quot;report_name.endswith('ica')&quot;]" position="after">
+            <th t-if="report_name.endswith('ica') and line_has_account_name">
+                <strong>Nombre de cuenta</strong>
+            </th>
+        </xpath>
+
+        <!-- 2) Agregar celda "account_name" SOLO para ICA (después de la celda de bimestre) -->
+        <xpath expr="//table[@t-if=&quot;report_name.endswith('fuente') or report_name.endswith('ica')&quot;]/tbody/tr/td[@t-if=&quot;report_name.endswith('ica')&quot;]" position="after">
+            <td t-if="report_name.endswith('ica') and line_has_account_name">
+                <t t-esc="line.get('account_name') or ''"/>
+            </td>
+        </xpath>
+
+        <!-- 3) Definir variable line_has_account_name (true si al menos una línea trae account_name) -->
+        <xpath expr="//table[@t-if=&quot;report_name.endswith('fuente') or report_name.endswith('ica')&quot;]" position="before">
+            <t t-set="line_has_account_name" t-value="report_name.endswith('ica') and partner.get('lines') and any([(l.get('account_name') for l in partner.get('lines'))])"/>
+        </xpath>
+    </template>
+
+</odoo>

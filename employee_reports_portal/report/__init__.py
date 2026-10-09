@@ -1,0 +1,4 @@
+from . import report_laboral_certification_base
+from . import report_income_withholding_certification
+from . import report_laboral_certification
+from . import report_laboral_certification_salary

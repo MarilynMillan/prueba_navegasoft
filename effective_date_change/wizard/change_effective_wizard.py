@@ -1,5 +1,5 @@
+from werkzeug.routing import ValidationError
 from odoo import models, fields
-from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
 class ChangeEffectiveWizard(models.TransientModel):
@@ -90,8 +90,7 @@ class ChangeEffectiveWizard(models.TransientModel):
     effective_date = fields.Datetime(string="Effective Date", help="Date at which the transfer is processed")
 
     def update_effective_date(self):
-        active_pickings = self.env['stock.picking'].browse(self._context.get('active_ids', []))
-        for picking in active_pickings:
+        for picking in self.env['stock.picking'].browse(self._context.get('active_ids', [])):
 
             # Mengatur tanggal done
             selected_date = self.effective_date
@@ -158,6 +157,7 @@ class ChangeEffectiveWizard(models.TransientModel):
                                         WHERE id = %s
                                         """, (selected_date, account_move.id))
 
+                                    self.env.cr.commit()
 
                         line.product_id._run_fifo_vacuum(picking.company_id)
 
@@ -203,6 +203,7 @@ class ChangeEffectiveWizard(models.TransientModel):
                                         WHERE id = %s
                                     """, (account_move.id,))
 
+                            self.env.cr.commit()
 
                             # Set the flag to avoid sequence gap warnings
                             self.env.cr.execute("""
@@ -333,6 +334,7 @@ class ChangeEffectiveWizard(models.TransientModel):
                                                         WHERE id = %s
                                                     """, (selected_date, journal.id))
 
+                                                self.env.cr.commit()
 
                             elif product_id in duplicate_product:
                                 valuation_layers = self.env['stock.valuation.layer'].search([
@@ -464,6 +466,7 @@ class ChangeEffectiveWizard(models.TransientModel):
                                         WHERE id = %s
                                     """, (selected_date, new_sequence_prefix, new_sequence_number, account_move.id))
 
+                                self.env.cr.commit()
 
                                 # Step 4: Finally update the name with the new formatted name
                                 self.env.cr.execute("""
@@ -488,8 +491,10 @@ class ChangeEffectiveWizard(models.TransientModel):
                                     """, (account_move.id,))
 
                     # Recalculate the cost in produt template based on stock valuations
+                    self.env.cr.commit()
                     self.action_update_valuation_layers(self.env['stock.picking'].browse(self._context.get('active_ids', [])))
 
+            self.env.cr.commit()
 
             for move in picking.move_ids_without_package:
                 # Get lots from move lines since lots are stored on move lines, not moves

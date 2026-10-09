@@ -15,7 +15,7 @@ class MrpProductionn(models.Model):
     is_boolean = fields.Boolean()
 
     def write(self, vals):
-        res = super().write(vals)
+        res = super(models.Model, self).write(vals)
         for mrp_production in self:
 
             stock_moves = self.env['stock.move'].search(['|', '|', '|', ('production_id', '=', mrp_production.id), (
@@ -42,14 +42,9 @@ class MrpProductionn(models.Model):
                 move.date = mrp_production.date_start
 
             for layer in valuation_layers:
-                self.env.cr.execute(
-                    """
-                    UPDATE stock_valuation_layer
-                    SET create_date = %s
-                    WHERE id = %s
-                    """,
-                    (mrp_production.date_start, layer.id),
-                )
+                self.env.cr.execute("""
+                    Update stock_valuation_layer set create_date='%s' where id=%s; 
+                """ % (mrp_production.date_start, layer.id))
         return res
 
     @api.onchange('date_start')
