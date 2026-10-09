@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <function model="hr.work.entry.type" name="sync_payroll_rules_planning_types"/>
-    </data>
-</odoo>

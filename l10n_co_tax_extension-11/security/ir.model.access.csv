@@ -1,8 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sequence_dian_resolution,ir_sequence_dian_resolution,model_ir_sequence_dian_resolution,base.group_user,1,1,1,1
-access_account_fiscal_position_base_tax,account.fiscal.position.base.tax,model_account_fiscal_position_base_tax,base.group_user,1,1,1,1
-access_sequence_dian_resolution2,ir_sequence_dian_resolution,model_ir_sequence_dian_resolution,account.group_account_invoice,1,1,1,1
-access_account_fiscal_position_base_tax2,account.fiscal.position.base.tax,model_account_fiscal_position_base_tax,account.group_account_invoice,1,1,1,1
-access_sequence_dian_resolution3,ir_sequence_dian_resolution,model_ir_sequence_dian_resolution,account.group_account_manager,1,1,1,1
-access_account_fiscal_position_base_tax3,account.fiscal.position.base.tax,model_account_fiscal_position_base_tax,account.group_account_manager,1,1,1,1
-access_account_base_tax,account.base.tax,l10n_co_tax_extension-11.model_account_base_tax,account.group_account_manager,1,1,1,1

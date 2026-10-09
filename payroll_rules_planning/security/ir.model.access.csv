@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_recargo_rule_user,access_recargo_rule_user,model_payroll_recargo_rule,hr_payroll.group_hr_payroll_manager,1,1,1,1
-access_hr_rule_time_window_user,access_hr_rule_time_window_user,model_hr_rule_time_window,hr_payroll.group_hr_payroll_manager,1,1,1,1

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="tempalte" xml:space="preserve">
-    <t t-name="pos_custom_ticket.BillScreen" t-inherit="pos_restaurant.BillScreen" t-inherit-mode="extension">
-        <xpath expr="//OrderReceipt[1]" position="replace">
-            <OrderReceipt data="{...pos.orderExportForPrinting(pos.get_order()), isBill: true, show_change: false }" formatCurrency="env.utils.formatCurrency" orderUuid="pos.get_order().uuid" />
-        </xpath>
-    </t>
-</templates>

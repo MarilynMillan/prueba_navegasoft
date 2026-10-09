@@ -1,7 +1,0 @@
-<odoo>
-  <data>
-
-    <menuitem id="res_country_city_menu" name="Cities" action="base_address_city.action_res_city_tree" parent="contacts.menu_localisation" groups="base.group_no_one"/>
-
-  </data>
-</odoo>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="pw_pos_auto_invoicing.PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension" owl="1">
-        <xpath expr="//button[hasclass('js_invoice')]" position="attributes">
-            <attribute name="t-att-class">{ 'highlight active': currentOrder.is_to_invoice() ,'disabled':pos.config.block_auto_invoice}</attribute>
-        </xpath>  
-    </t>
-</templates>
