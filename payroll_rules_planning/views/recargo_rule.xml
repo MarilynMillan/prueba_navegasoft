@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_recargo_rule_list" model="ir.ui.view">
+        <field name="name">payroll.recargo.rule.list</field>
+        <field name="model">payroll.recargo.rule</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="work_entry_type_id"/>
+                <field name="hour_from"/>
+                <field name="hour_to"/>
+                <field name="apply_on_normal"/>
+                <field name="apply_on_sunday"/>
+                <field name="apply_on_holiday"/>
+                <field name="apply_art_161_weekly_limit"/>
+                <field name="carry_previous_day_df"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_recargo_rule_form" model="ir.ui.view">
+        <field name="name">payroll.recargo.rule.form</field>
+        <field name="model">payroll.recargo.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="company_id"/>
+                        <field name="work_entry_type_id"/>
+                        <field name="hour_from"/>
+                        <field name="hour_to"/>
+                        <field name="apply_on_normal"/>
+                        <field name="apply_on_sunday"/>
+                        <field name="apply_on_holiday"/>
+                        <field name="apply_art_161_weekly_limit"/>
+                        <field name="carry_previous_day_df"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="notes"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_recargo_rules" model="ir.actions.act_window">
+        <field name="name">Reglas Recargos</field>
+        <field name="res_model">payroll.recargo.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_hr_rule_time_window_list" model="ir.ui.view">
+        <field name="name">hr.rule.time.window.list</field>
+        <field name="model">hr.rule.time.window</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="rule_type"/>
+                <field name="check_in_from"/>
+                <field name="check_in_to"/>
+                <field name="check_out_from"/>
+                <field name="check_out_to"/>
+                <field name="apply_on_normal"/>
+                <field name="apply_on_sunday"/>
+                <field name="apply_on_holiday"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_rule_time_window_form" model="ir.ui.view">
+        <field name="name">hr.rule.time.window.form</field>
+        <field name="model">hr.rule.time.window</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="company_id"/>
+                        <field name="rule_type"/>
+                        <field name="check_in_from"/>
+                        <field name="check_in_to"/>
+                        <field name="check_out_from"/>
+                        <field name="check_out_to"/>
+                        <field name="apply_on_normal"/>
+                        <field name="apply_on_sunday"/>
+                        <field name="apply_on_holiday"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="notes"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_rule_time_window" model="ir.actions.act_window">
+        <field name="name">Ventanas Bonos y Auxilios</field>
+        <field name="res_model">hr.rule.time.window</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hr_rule_time_window" name="Ventanas Bonos y Auxilios" parent="hr_payroll.menu_hr_salary_configuration" action="action_hr_rule_time_window" sequence="90"/>
+    <menuitem id="menu_recargo_rules" name="Reglas Recargos" parent="hr_payroll.menu_hr_salary_configuration" action="action_recargo_rules" sequence="50"/>
+</odoo>

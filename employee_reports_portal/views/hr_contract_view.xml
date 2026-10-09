@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="portal_archive_groups" name="Portal Archive Groups">
+        <h3 class="page-header">Archives</h3>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="archive_groups" t-as="group">
+                <t t-if="group['date_begin'] == date">
+                    <li class="active">
+                        <a t-att-href="default_url" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    </li>
+                </t>
+                <t t-if="group['date_begin'] != date">
+                    <li>
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    </li>
+                </t>
+            </t>
+        </ul>
+    </template>
+
+
+        <record id="nomina_hr_contract_pasante" model="ir.ui.view">
+        <field name="name">nomina_hr_contract_pasante</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='calendar_mismatch']" position="after">
+                <field name="docente"/>
+                <field name="pasante"/>
+                
+			</xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,688 @@
+<?xml version="1.0" ?>
+<odoo>
+ 
+    <record id="facturan0a" model="base_electronicos.tabla">
+        <field name="id">2</field>
+        <field name="name">Factura electrónica</field>
+    </record>
+    
+    <record id="facturan0b1" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nit_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.vat</field>
+        <field name="detalle">nit compania</field>
+    </record>
+    <record id="facturan0b2" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">tipo_documento_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.company_id.partner_id.vat_type</field>
+        <field name="detalle">Tipo de documento compania</field>
+    </record>
+    <record id="facturan0b2a" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">dv_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.company_id.partner_id.vat_vd</field>
+        <field name="detalle">digito de verificacion compania</field>
+    </record>
+    <record id="facturan0b3" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Tipo_contribuyente_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.tipo_contribuyente</field>
+        <field name="detalle">Tipo contribuyente compania</field>
+    </record>
+    <record id="facturan0b4" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nit_cliente</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.vat</field>
+        <field name="detalle">nit cliente</field>
+    </record>
+    <record id="facturan0b5" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">numero</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.name</field>
+        <field name="detalle">Numero de la factura</field>
+    </record>
+    <record id="facturan0b6" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">fecha</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.date</field>
+        <field name="detalle">Fecha de la factura</field>
+    </record>
+    <record id="facturan0b7" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">tipo</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Tipo de documento</field>
+    </record>
+    <record id="facturan0b8" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/> 
+        <field name="name">moneda</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.currency_id.name</field>
+        <field name="detalle">moneda</field>
+    </record>
+    <record id="facturan0b9" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">regimen_fiscal_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.regimen_fiscal</field>
+        <field name="detalle">regimen fiscal compania</field>
+    </record>
+    <record id="facturan0b10" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nombre_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.name</field>
+        <field name="detalle">nombre compania</field>
+    </record>
+    <record id="facturan0b11" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Direccion_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.street</field>
+        <field name="detalle">Direccion compania</field>
+    </record>
+    <record id="facturan0b12" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Codigo_de_estado_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.state_id.code</field>
+        <field name="detalle">Codigo de estado compania</field>
+    </record>
+    <record id="facturan0b13" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Nombre_del_estado_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.state_id.name</field>
+        <field name="detalle">Nombre del estado compania</field>
+    </record>
+    <record id="facturan0b14" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Codigo_ciudad_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.city_id.code</field>
+        <field name="detalle">Codigo ciudad compania</field>
+    </record>
+    <record id="facturan0b15" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Codigo_de_pais_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.country_id.code</field>
+        <field name="detalle">Codigo de pais compania</field>
+    </record>
+    <record id="facturan0b16" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Nombre_pais_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.country_id.name</field>
+        <field name="detalle">Nombre pais compania</field>
+    </record>
+    <record id="facturan0b17" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Codigo_ciiu_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.ciiu_id.code</field>
+        <field name="detalle">Codigo ciiu compania</field>
+    </record>
+    <record id="facturan0b18" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">codigo_zip_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.zip</field>
+        <field name="detalle">codigo zip compania</field>
+    </record>
+    <record id="facturan0b19" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Prefijo_del_diario</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.journal_id.secure_sequence_id.prefix</field>
+        <field name="detalle">Prefijo del diario</field>
+    </record>
+    <record id="facturan0b20" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Prefijo_del_diario_refund</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">Prefijo del diario refund</field>
+    </record>
+    <record id="facturan0b21" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">email_de_la_compania</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.email</field>
+        <field name="detalle">email de la compania</field>
+    </record>
+    <record id="facturan0b22" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">tipo_contribuyente_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.tipo_contribuyente</field>
+        <field name="detalle">tipo contribuyente partner</field>
+    </record>
+    <record id="facturan0b23" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">documento_del_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.vat</field>
+        <field name="detalle">documento del partner</field>
+    </record>
+    <record id="facturan0b24" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">tipo_documento_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.vat_type</field>
+        <field name="detalle">tipo documento partner</field>
+    </record>
+    <record id="facturan0b25" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nombre_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.name</field>
+        <field name="detalle">nombre partner</field>
+    </record>
+    <record id="facturan0b26" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">primer_nombre_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.partner_id.first_name</field>
+        <field name="detalle">primer nombre partner</field>
+    </record>
+    <record id="facturan0b27" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">segundo_nombre_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.partner_id.last_name</field>
+        <field name="detalle">segundo nombre partner</field>
+    </record>
+    <record id="facturan0b28" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">codigo_estado_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.city_id.code</field>
+        <field name="detalle">codigo estado partner</field>
+    </record>
+    <record id="facturan0b29" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">direccion_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.street</field>
+        <field name="detalle">direccion partner</field>
+    </record>
+    <record id="facturan0b30" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">codigo_ciudad_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.city_id.code</field>
+        <field name="detalle">codigo ciudad partner</field>
+    </record>
+    <record id="facturan0b31" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nombre_estado_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.state_id.name</field>
+        <field name="detalle">nombre estado partner</field>
+    </record>
+    <record id="facturan0b32" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nombre_pais_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.country_id.name</field>
+        <field name="detalle">nombre pais partner</field>
+    </record>
+    <record id="facturan0b33" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">dv_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.partner_id.vat_vd</field>
+        <field name="detalle">dv partner</field>
+    </record>
+    <record id="facturan0b34" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">codigo_pais_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.country_id.code</field>
+        <field name="detalle">codigo pais partner</field>
+    </record>
+    <record id="facturan0b35" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nombre_ciudad_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.city_id.name</field>
+        <field name="detalle">nombre ciudad partner</field>
+    </record>
+    <record id="facturan0b36" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">telefono_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.phone</field>
+        <field name="detalle">telefono partner</field>
+    </record>
+    <record id="facturan0b37" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Correo_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.partner_id.email</field>
+        <field name="detalle">Correo partner</field>
+    </record>
+    <record id="facturan0b38" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">totales</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">totales</field>
+        <field name="detalle">Son los totales de la factura</field>
+    </record>
+    <record id="facturan0b39" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">valor_impuestos</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">valor_impuestos</field>
+        <field name="detalle">valor impuestos</field>
+    </record>
+    <record id="facturan0b40" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">fecha_cambio</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.currency_id.date</field>
+        <field name="detalle">fecha cambio moneda</field>
+    </record>
+    <record id="facturan0b41" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">tasa_cambio</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.currency_id.rate</field>
+        <field name="detalle">Valor de la tasa de cambio entre las divisas</field>
+    </record>
+    <record id="facturan0b43" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">lineas_retenciones_total</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">retenciones</field>
+        <field name="detalle">lineas retenciones total</field>
+    </record>
+    <record id="facturan0b44" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">resolucion_Numero</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.journal_id.secure_sequence_id.dian_resolution_ids.resolution_number</field>
+        <field name="detalle">resolucion Numero</field>
+    </record>
+    <record id="facturan0b44a1" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">resolucion_Numero_desde</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.journal_id.secure_sequence_id.dian_resolution_ids.number_from</field>
+        <field name="detalle">resolucion Numero desde</field>
+    </record>
+    <record id="facturan0b44a2" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">resolucion_Numero_hasta</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.journal_id.secure_sequence_id.dian_resolution_ids.number_to</field>
+        <field name="detalle">resolucion Numero hasta</field>
+    </record>
+    <record id="facturan0b45" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">resolucion_fecha_desde</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.journal_id.secure_sequence_id.dian_resolution_ids.date_from</field>
+        <field name="detalle">resolucion fecha desde</field>
+    </record>
+     <record id="facturan0b46" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">resolucion_fecha_hasta</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.journal_id.secure_sequence_id.dian_resolution_ids.date_to</field>
+        <field name="detalle">resolucion fecha hasta</field>
+    </record>
+     <record id="facturan0b47" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">resolucion_refund_numero</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico"></field>
+        <field name="detalle">resolucion refund numero</field>
+    </record>
+     <record id="facturan0b48" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">date_from_refund_number</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.journal_id.refund_fecha_desde</field>
+        <field name="detalle">resolucion refund fecha desde</field>
+    </record>
+     <record id="facturan0b49" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">date_to_refund_number</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.journal_id.refund_fecha_hasta</field>
+        <field name="detalle">resolucion refund fecha hasta</field>
+    </record>
+     <record id="facturan0b50" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Checkin</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.checkin</field>
+        <field name="detalle">Checkin</field>
+    </record>
+     <record id="facturan0b51" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Checkout</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.checkout</field>
+        <field name="detalle">Checkout</field>
+    </record>
+    <record id="facturan0b52" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Huesped</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.nombre_not</field>
+        <field name="detalle">Huesped</field>
+    </record>
+    <record id="facturan0b53" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">comentarios</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.narration</field>
+        <field name="detalle">comentarios</field>
+    </record>
+    <record id="facturan0b54" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Numero_referecia_factura</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura.name</field>
+        <field name="detalle">Numero referecia factura</field>
+    </record>
+    <record id="facturan0b55" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">fecha_referencia_factura</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura.date</field>
+        <field name="detalle">fecha referencia factura</field>
+    </record>
+    <record id="facturan0b56" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">cufe_referencia_factura</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura.cufe</field>
+        <field name="detalle">cufe referencia factura</field>
+    </record>
+    <record id="facturan0b57a" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">tipo_factura</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.tipo_factura</field>
+        <field name="detalle">tipo factura</field>
+    </record>
+    <record id="facturan0b57" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">tipo_pago</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.tipo_pago</field>
+        <field name="detalle">tipo pago</field>
+    </record>
+    <record id="facturan0b58" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">metodo_de_pago</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.methodo_pago</field>
+        <field name="detalle">metodo de pago</field>
+    </record>
+    <record id="facturan0b59" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">fecha_vencimiento</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.invoice_date_due</field>
+        <field name="detalle">fecha_vencimiento</field>
+    </record>
+    <record id="facturan0b60" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">lineas_producto</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">lineas_producto</field>
+        <field name="detalle">lineas producto</field>
+    </record>
+    <record id="facturan0b61" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">documento_electronico</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">"factura"</field>
+        <field name="detalle">indica cual documento electronico se esta enviando</field>
+    </record>
+    <record id="facturan0b62" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">Ambiente</field>
+        <field name="categoria"></field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">"2"</field>
+        <field name="detalle">indica en cual ambiente estas</field>
+    </record>
+    <record id="facturan0b63" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">password</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.password</field>
+        <field name="detalle">password compania</field>
+    </record>
+    <record id="facturan0b64" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">id_plataforma</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">self.company_id.partner_id.id_plataforma</field>
+        <field name="detalle">el id plataforma</field>
+    </record>
+    <record id="facturan0b65" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">codigo_calidad</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">true</field>
+        <field name="campo_tecnico">"R-99-PN"</field>
+        <field name="detalle">el codigo calidad del partner</field>
+    </record>
+
+    <record id="facturan0b66" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">factura_nc</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura</field>
+        <field name="detalle">la factura de la nota credito</field>
+    </record>
+
+    <record id="facturan0b67" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">factura_nc</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura.name</field>
+        <field name="detalle">la factura de la nota credito</field>
+    </record>
+    <record id="facturan0b68" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">fecha_factura_nc</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura.date</field>
+        <field name="detalle">fecha factura de la nota credito</field>
+    </record>
+    <record id="facturan0b69" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">cufe_factura_nc</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura.cufe</field>
+        <field name="detalle">cufe factura de la nota credito</field>
+    </record>
+
+    <record id="facturan0b70" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">code_refund</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.journal_id.code_refund</field>
+        <field name="detalle">codigo refund nota credito</field>
+    </record>
+
+    <record id="facturan0b71" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">cufe_factura_nc</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.factura.cufe</field>
+        <field name="detalle">cufe factura de la nota credito</field>
+    </record>
+
+    <record id="facturan0b72" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">code_refund</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.journal_id.code_refund</field>
+        <field name="detalle">codigo refund nota credito</field>
+        
+    </record>
+
+    <record id="facturan0b73" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">nota_debito</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.nota_debito</field>
+        <field name="detalle">Tipo de nota debito</field>
+        
+    </record>
+
+
+    <record id="facturan0b74" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">ini_refund</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.journal_id.number_refund_to</field>
+        <field name="detalle">Inicio numeracion refund</field>
+    </record>
+
+    <record id="facturan0b75" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">fin_refund</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.journal_id.number_refund_from</field>
+        <field name="detalle">Fin numeracion refund</field>
+    </record>
+
+    <record id="facturan0b76" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">codigo_zip_partner</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.partner_id.zip</field>
+        <field name="detalle">Fin numeracion refund</field>
+    </record>
+    <record id="facturand1" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">resolucion_refund</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.journal_id.resolucion_refund</field>
+        <field name="detalle">resolucion numeracion refund</field>
+    </record>
+
+<!-- url y endpoint -->
+    <record id="facturane1" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">url</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.url</field>
+        <field name="detalle">url</field>
+    </record>
+    <record id="facturane2" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">proveedor_tecnologico</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.proveedor_tecnologico</field>
+        <field name="detalle">proveedor tecnologico</field>
+    </record>
+    <record id="facturane3" model="base_electronicos.line">
+        <field name="mp_id" ref="facturan0a"/>
+        <field name="name">otro_proveedor_tecnologico</field>
+        <field name="categoria">factura</field>
+        <field name="obligatorio">false</field>
+        <field name="campo_tecnico">self.otro_proveedor_tecnologico</field>
+        <field name="detalle">otro proveedor tecnologico</field>
+    </record>
+
+</odoo>

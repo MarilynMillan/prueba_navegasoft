@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_notprintable_taxes" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t[@t-set='taxes']" position="replace">
+            <t t-set="taxes" t-value="line._l10n_co_line_taxes_print()"/>
+        </xpath>
+    </template>
+
+    <template id="sale_order_portal_content_notprintable_taxes" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//td[@id='taxes']/span" position="replace">
+            <t t-set="taxes" t-value="line._l10n_co_line_taxes_print()"/>
+            <span t-out="taxes"/>
+        </xpath>
+    </template>
+</odoo>

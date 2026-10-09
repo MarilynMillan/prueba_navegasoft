@@ -1,0 +1,257 @@
+<odoo>
+  <data>
+    
+  <record model="ir.ui.view" id="electronicos_nomina.form">
+      <field name="name">Documentos electronicos</field>
+      <field name="model">base_electronicos.tabla</field>
+      <field name="inherit_id" ref="base_electronicos.form"/>
+      <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+              <group  string="Datos">
+                <field name="name"/>
+              </group>
+              <!-- attrs="{'invisible':[('name','!=','Nómina electrónica')]}" -->
+              <field name="generales_id" string="Campos" invisible = "name != 'Nómina'"  >
+                  <list>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                  
+                    <field name="RazonSocial"/>
+                    <field name="PrimerApellido"/>
+                    <field name="SegundoApellido"/>
+                    <field name="PrimerNombre"/>
+                    <field name="OtrosNombres"/>
+                    <field name="NIT"/>
+                    <field name="DV"/>
+                    <field name="id_plataforma"/>
+                    <field name="password"/>
+                  </list>
+                <form>
+                  <group>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="paisgeneracion"/>
+                    <field name="departamentoestado"/>
+                    <field name="municipiociudad"/>
+                    <field name="Idioma"/>
+                    <field name="version"/>
+                    <field name="ambiente"/>
+                    <field name="tipoXML"/>
+                    <field name="Algoritmo"/>
+                    <field name="TipoMoneda"/>
+                    <field name="PeriodoNomina"/>
+                    <field name="RazonSocial"/>
+                    <field name="PrimerApellido"/>
+                    <field name="SegundoApellido"/>
+                    <field name="PrimerNombre"/>
+                    <field name="OtrosNombres"/>
+                    <field name="NIT"/>
+                    <field name="DV"/>
+                    <field name="id_plataforma"/>
+                    <field name="password"/>
+                    <field name="PaisEmpleador"/>
+                    <field name="MunicipioCiudadEmpleador"/>
+                    <field name="DepartamentoEstadoEmpleador"/>
+                    <field name="DireccionEmpleador"/>
+                  </group>
+              </form>
+             </field>        
+        
+        </xpath>   
+          <!-- <button name="add_data" type="object" string="llenar default datos" /> -->
+      </field>
+    </record>
+
+    <record id="nomina_electronica_button" model="ir.ui.view">
+        <field name="name">nomina_electronica</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_print_payslip']" position="after">
+                 <!-- states="draft,open"   -->
+                <button name="envio_directo" type="object"  string="Generar Documento electrónico" groups="account.group_account_invoice" 
+                invisible ="estado in 'Generada_correctamente' or state in 'draft'"/>
+                <!-- attrs="{'invisible':['|',('estado','in',('Generada_correctamente')),('state','in',('draft'))]}" -->
+                
+                <!-- attrs="{'invisible':['|',('estado','in',('no_generada','generada_con_errores')),('state','in',('draft'))]}" -->
+                <button name="action_cfdi_generate" type="object"  string="Imprimir DE" groups="account.group_account_invoice" 
+                invisible ="estado in ['no_generada','generada_con_errores'] or state in 'draft'" />
+                
+                <!-- <button name="genera_cufe" type="object"  string="Generar CUFE" groups="account.group_account_invoice" attrs="{'invisible':['|',('estado','in',('generada_correctamente')),('state','in',('draft'))]}"/> -->
+                
+            </xpath>
+            <xpath expr="//field[@name='number']" position="replace">
+                 <!-- states="draft,open"  attrs="{'invisible':['|',('estado_factura','in',('factura_correcta')),('state','in',('draft','open'))]}" -->
+                <field name="number" readonly="1"/>
+                <group>
+                <field name="fecha_pago" />
+                <!-- attrs="{'invisible':[('credit_note','=',False)]}" -->
+                <field name="nota_credito" invisible ="credit_note == False" />
+                <field name="causa" invisible ="credit_note == False"/>
+                <field name="CUNEPred" invisible ="credit_note == False"/>
+                <field name="NumeroPred" invisible ="credit_note == False"/>
+                <field name="FechaGenPred" invisible ="credit_note == False"/>
+                </group>
+            </xpath>
+            <!-- <xpath expr="//field[@name='input_line_ids']" position="replace">
+              <field name="input_line_ids" colspan="5" nolabel="1">
+                    <list string="Input Data" editable="bottom">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="cantidad"/>
+                        <field name="amount"/>
+                        <field name="contract_id"/>
+                        <field name="sequence" invisible="True"/>
+                    </list>
+                    <form string="Payslip Line">
+                        <group col="5">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="cantidad"/>
+                            <field name="sequence"/>
+                            <field name="amount"/>
+                            <field name="contract_id"/>
+                        </group>
+                    </form>
+                </field>
+            </xpath> -->
+            <xpath expr="//page[3]" position="after">
+                <page string="Nomina electronica">
+                        <group cols="2">
+                            <group string="Datos Entrada">
+                                <field name="prefijo" readonly="1"/>
+                                <field name="consecutivo" readonly="1"/>
+                                <field name="paisgeneracion"/>
+                                <field name="departamentoestado"/>
+                                <field name="municipiociudad"/>
+                                <field name="Idioma"/>
+                                <field name="ambiente"/>
+                                <field name="tipoXML"/>
+                                <field name="FechaGen"/>
+                                <field name="HoraGen"/>
+                                <field name="PeriodoNomina"/>
+                                <field name="TipoMoneda"/>
+                                <field name="Notas"/>
+                                </group>
+                              <group>
+                                <!-- empleador -->
+                                <field name="RazonSocial"/>
+                                <field name="PrimerApellido"/>
+                                <field name="SegundoApellido"/>
+                                <field name="PrimerNombre"/>
+                                <field name="OtrosNombres"/>
+                                <field name="NIT"/>
+                                <field name="DV"/> 
+                                <field name="PaisEmpleador"/>
+                                <field name="MunicipioCiudadEmpleador"/>
+                                <field name="DepartamentoEstadoEmpleador"/>
+                                <field name="DireccionEmpleador"/> 
+                                <field name="id_plataforma"/>
+                                <field name="password"/>
+                               </group>
+                            
+                        </group>
+                        <group string="Datos resultado">
+                                <field name="estado" readonly='1'/>
+                                <field name="transaccionID"/>
+                                <field name="error"/>
+                                <field name="solucion"/>
+                            </group>
+                        <!-- <div colspan="4">
+                            <field name="note" placeholder="Add an internal note..."/>
+                        </div> -->
+                   </page>
+                 <!-- <page string="XML">
+                        <div colspan="4">
+                            <field name="xml" placeholder="Al generar el documento se crea este..."/>
+                        </div>
+                   </page>   -->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="nomina_hr_tree" model="ir.ui.view">
+        <field name="name">nomina_hr_tree</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='number']" position="after">
+            <field name="estado"/>
+            <field name="error"/>
+            <field name="solucion"/>
+					</xpath>
+        </field>
+    </record>
+
+    <record id="nomina_hr_contract" model="ir.ui.view">
+        <field name="name">nomina_hr_contract</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='calendar_mismatch']" position="after">
+						
+            <field name="auxilio_de_transporte"/>
+						<field name="uvt"/>
+            <field name="salario_minimo"/>
+            <field name="tipo_contrato"/>
+						<field name="tipo_trabajador"/>
+            <field name="sub_tipo_trabajador"/>
+            <field name="AltoRiegoPension"/>
+            <field name="metodo_pago"/>
+            <!-- <field name="banco"/> -->
+            <field name="tipo_cuenta"/>
+            <!-- <field name="numero_cuenta"/> -->
+            
+					</xpath>
+        </field>
+    </record>
+
+    <record id="nomina_rule_salary" model="ir.ui.view">
+        <field name="name">nomina_rule_salary</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='appears_on_payslip']" position="after">
+						  <field name="porcentaje"/>
+              <!-- <field name="tipo_devengado"/>
+                <field name="tipo_deduccion"/> -->
+					</xpath>
+        </field>
+    </record>   
+
+
+    <record model="ir.actions.server" id="action_payroll_multiple">
+        <field name="name">Generar documento electronico</field>
+        <field name="model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.generate_multiple_payroll()
+        </field>
+    </record>
+
+
+    <!-- <record id="nomina_atributo" model="ir.ui.view">
+        <field name="name">nomina_hr_atributo</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//form" position="attributes">
+              <attribute t-if='record.estado=="Generada_correctamente"' name="delete">false</attribute>
+          </xpath>
+        </field>
+    </record>
+
+  <record id="nomina_atributo_tree" model="ir.ui.view">
+        <field name="name">nomina_hr_atributo_tree</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+          <xpath expr="//list" position="attributes">
+              <attribute name="delete">false</attribute>
+          </xpath>
+        </field>
+    </record> -->
+
+  </data>
+</odoo>

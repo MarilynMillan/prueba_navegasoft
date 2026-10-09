@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="balance_test_account_partner_view_tree" model="ir.ui.view">
+        <field name="name">balance.test.account.partner.view.list</field>
+        <field name="model">balance.test.account.partner</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code_account" />
+                <field name="name_account" />
+                <field name="vat_partner" />
+                <field name="name_partner" />
+                <field name="inicial_amount" />
+                <field name="debit" />
+                <field name="credit" />
+                <field name="total" />
+            </list>
+        </field>
+    </record>
+    <record id="balance_test_account_general_view_tree" model="ir.ui.view">
+        <field name="name">balance.test.account.general.view.list</field>
+        <field name="model">balance.test.account.general</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code_account" />                
+                <field name="name_account" />                
+                <field name="inicial_amount" sum="Total"/>                
+                <field name="debit" sum="Total"/>                
+                <field name="credit" sum="Total"/>                
+                <field name="total" sum="Total"/>                
+            </list>
+        </field>
+    </record>
+
+    <record id="balance_test_account_view_form" model="ir.ui.view">
+        <field name="name">balance.test.account.view.form</field>
+        <field name="model">balance.test.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="report_type" widget="radio"/>  
+                        <field name="view_type" widget="radio"/>  
+                    </group>
+                    <group>
+                        <field name="date_start" />  
+                        <field name="date_end" />  
+                    </group>
+                </group>
+                <group>
+                    <field name="account_account_ids" />
+                </group>
+                <group>
+                    <!-- attrs="{'invisible':[('report_type','!=','partner')]}" -->
+                    <field name="partner_ids"  invisible="report_type != 'partner'"/>
+                </group>
+                <footer>
+                    <button string="Generar" name="generate_report" type="object" class="oe_highlight"/>
+                    <button string="Cancelar" class="btn btn-secondary" special="cancel"/>
+                </footer> 
+            </form>
+        </field>
+    </record>
+
+    <record id="balance_test_account_action" model="ir.actions.act_window">
+        <field name="name">Balance de Pruebas</field>
+        <field name="res_model">balance.test.account</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="balance_test_account_menu"
+        action="balance_test_account_action"
+        groups="trial_report_balance.group_trial_balance"
+        parent="account_reports.account_reports_audit_reports_menu"
+        />
+
+</odoo>

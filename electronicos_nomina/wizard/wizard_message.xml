@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2015-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- "License URL : <https://store.webkul.com/license.html/>" -->
+<odoo>
+	<data>
+		<record id="form_wizard_message2" model="ir.ui.view">
+			<field name="name">Message wizard2</field>
+			<field name="model">wk.wizard.message2</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Message">
+				
+					<separator string="Ajuste nomina" colspan="6" />
+					<group>
+						<field name="text"  />
+						<field name="tipo"  />
+					</group>
+					<newline/>
+					<separator colspan="6"/>
+					<footer> 
+						<button name="button_generar_nota" string="Generar Nota" type="object" />
+						<!-- <button name="save" string="Save" invisible="1"/> -->
+						<button special="cancel" class="oe_highlight" string="Close"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

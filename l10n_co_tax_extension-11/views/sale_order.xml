@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <!-- Extending Invoice Form View -->
+        <record id="saleorder_line_disable_rete_base_view" model="ir.ui.view">
+          <field name="model">sale.order</field>
+          <field name="inherit_id" ref="sale.view_order_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/list/field[@name='tax_id']" position="after">
+              <field name="nav_disable_rete_base_calc_line" optional="show"/>
+              <field name="nav_manual_tax_override" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='tax_id']" position="after">
+              <field name="nav_disable_rete_base_calc_line"/>
+              <field name="nav_manual_tax_override" invisible="1"/>
+            </xpath>
+          </field>
+        </record>
+</odoo>

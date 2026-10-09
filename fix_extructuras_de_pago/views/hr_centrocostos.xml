@@ -1,0 +1,36 @@
+<odoo>
+  <data>
+
+  
+    <record model="ir.ui.view" id="centro_de_costos_list">
+      <field name="name">Centro de costos list</field>
+      <field name="model">hr.centrocostos</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="departamentos" widget="many2many_tags"/>
+          <!-- <field name="cuenta_debito"/>
+          <field name="cuenta_credito"/> -->
+ 
+        </list>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="centro_de_costos_form">
+      <field name="name">Centro de costos form</field>
+      <field name="model">hr.centrocostos</field>
+      <field name="arch" type="xml">
+        <form>
+          <group>
+            <field name="name"/>
+            <field name="departamentos" widget="many2many_tags"/>
+            <!-- <field name="cuenta_debito"/>
+          <field name="cuenta_credito"/> -->
+          </group>
+        </form>
+      </field>
+    </record>
+
+ 
+  </data>
+</odoo>

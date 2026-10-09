@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+act_user_asoconcepto,account medios,medios_magneticos.model_account_asoconcepto,account.group_account_manager,1,1,1,1
+act_user_concepto,account concepto,medios_magneticos.model_account_concepto,account.group_account_manager,1,1,1,1
+act_user_categoria,account categoria,medios_magneticos.model_account_categoria,account.group_account_manager,1,1,1,1
+act_user_medios_magneticos,account medios_magneticos,medios_magneticos.model_account_medios_magneticos,account.group_account_manager,1,1,1,1
+access_wizard_medios,Accesswizard.medios.magneticos,medios_magneticos.model_wizard_medios_magneticos,account.group_account_manager,1,1,1,1
+act_user_exogena,account exogena,medios_magneticos.model_account_exogena,account.group_account_manager,1,1,1,1
+access_wizard_wxogena,Accesswizard.configuracion.exogena,medios_magneticos.model_wizard_configuracion_exogena,account.group_account_manager,1,1,1,1
+access_account_exogena_config_user,access.account.exogena_config.user,model_account_exogena_config,base.group_user,1,1,1,1

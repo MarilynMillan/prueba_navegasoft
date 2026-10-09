@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_income_withholding_certificate" model="ir.ui.view">
+            <field name="name">income.withholding.report.form</field>
+            <field name="model">income.withholding.report</field>
+            <field name="arch" type="xml">
+                <form string="y">
+                    <group col="3">
+                        <field name="certificate_year"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print Report" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_income_withholding_certificate" model="ir.actions.act_window">
+            <field name="name">Income Withholding Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">income.withholding.report</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

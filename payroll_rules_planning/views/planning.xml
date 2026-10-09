@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="payroll_planning_form_approval_v18" model="ir.ui.view">
+    <field name="name">planning.slot.form.approval.payroll.v18.page</field>
+    <field name="model">planning.slot</field>
+    <field name="inherit_id" ref="planning.planning_view_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form/header" position="inside">
+        <button name="action_submit" type="object" string="Enviar" class="btn btn-primary" invisible="approval_state not in ('draft','rejected')"/>
+        <button name="action_to_manager" type="object" string="A revision L1" class="btn btn-secondary" invisible="approval_state != 'submitted'"/>
+        <button name="action_approve_l1" type="object" string="Aprobar L1" class="btn btn-success" invisible="approval_state != 'waiting_manager'"/>
+        <button name="action_approve_l2" type="object" string="Aprobar L2" class="btn btn-success" invisible="approval_state != 'waiting_hr'"/>
+        <button name="action_reject" type="object" string="Rechazar" class="btn btn-outline-danger" invisible="approval_state not in ('submitted','waiting_manager','waiting_hr')"/>
+        <button name="action_cancel" type="object" string="Cancelar" class="btn btn-danger" invisible="approval_state == 'cancelled'"/>
+        <button name="action_reset_to_draft" type="object" string="Volver a Borrador" class="btn btn-secondary" invisible="approval_state == 'draft'"/>
+      </xpath>
+
+      <xpath expr="//field[@name='company_id']" position="after">
+        <field name="is_rest_day"/>
+      </xpath>
+
+      <xpath expr="//form/sheet" position="inside">
+        <notebook>
+          <page string="Aprobacion">
+            <group>
+              <field name="approval_state" readonly="1" string="Estado"/>
+              <group>
+                <field name="approver_level1_id" readonly="1" string="Aprobador L1"/>
+                <field name="approver_level2_id" readonly="1" string="Aprobador L2"/>
+              </group>
+              <separator string="Comentario"/>
+              <field name="approval_comment" placeholder="Comentario de aprobacion / rechazo..."/>
+            </group>
+          </page>
+        </notebook>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="payroll_planning_form_approval_v18_list" model="ir.ui.view">
+    <field name="name">planning.slot.form.approval.payroll.v18.page.list</field>
+    <field name="model">planning.slot</field>
+    <field name="inherit_id" ref="planning.planning_view_tree"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='resource_id']" position="after">
+        <field name="is_rest_day"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

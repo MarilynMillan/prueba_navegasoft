@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================
+         Formulario de Factura/Compra: Botones de Eventos RADIAN
+         ============================================================ -->
+    <record id="view_account_move_form_inherit_l10n_co_dian_extended" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_co_dian.extended</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <!-- RADIAN event buttons for vendor bills -->
+            <xpath expr="//button[@name='button_cancel']" position="after">
+
+                <!-- 030 - Acuse de recibo (pending or False for older bills without DIAN documents) -->
+                <button name="l10n_co_dian_send_event_update_status_received"
+                        string="Acusar Recibo (030)"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="move_type not in ('in_invoice', 'in_refund') or l10n_co_edi_is_support_document or (l10n_co_dian_commercial_state and l10n_co_dian_commercial_state != 'pending') or state != 'posted'"/>
+
+                <!-- 032 - Recibo del bien -->
+                <button name="l10n_co_dian_send_event_update_status_goods_received"
+                        string="Recibir Bienes (032)"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="move_type not in ('in_invoice', 'in_refund') or l10n_co_edi_is_support_document or l10n_co_dian_commercial_state != 'received' or state != 'posted'"/>
+
+                <!-- 033 - Aceptación expresa -->
+                <button name="l10n_co_dian_send_event_update_status_accepted"
+                        string="Aceptar (033)"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="move_type not in ('in_invoice', 'in_refund') or l10n_co_edi_is_support_document or l10n_co_dian_commercial_state != 'goods_received' or state != 'posted'"/>
+
+                <!-- 031 - Reclamo (opens wizard) -->
+                <button name="%(action_commercial_event_reject)d"
+                        string="Reclamar (031)"
+                        type="action"
+                        groups="account.group_account_invoice"
+                        invisible="move_type not in ('in_invoice', 'in_refund') or l10n_co_edi_is_support_document or l10n_co_dian_commercial_state != 'goods_received' or state != 'posted'"/>
+
+                <!-- 034 - Aceptación tácita (for outgoing invoices, seller side) -->
+                <button name="l10n_co_dian_send_event_update_status_accepted_by_issuer"
+                        string="Aceptación Tácita (034)"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="move_type not in ('out_invoice', 'out_refund') or l10n_co_edi_is_support_document or l10n_co_dian_commercial_state != 'goods_received' or state != 'posted'"/>
+
+                <!-- Regenerate DIAN zip (XML + PDF with CUFE) -->
+                <button name="l10n_co_dian_regenerate_zip"
+                        string="Regenerar ZIP DIAN"
+                        type="object"
+                        groups="account.group_account_manager"
+                        confirm="Esto regenerará el PDF con datos CUFE/QR y creará un nuevo ZIP. ¿Continuar?"
+                        invisible="l10n_co_dian_state != 'invoice_accepted' or state != 'posted'"/>
+            </xpath>
+
+            <!-- CUFE/CUDE field for vendor bills -->
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="l10n_co_edi_cufe_cude_ref"
+                       string="CUFE/CUDE"
+                       readonly="False"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or not l10n_co_dian_is_enabled"/>
+            </xpath>
+
+            <!-- Commercial Status widget for outgoing invoices -->
+            <xpath expr="//group[@id='header_right_group']" position="inside">
+                <label string="Estado Comercial" for="l10n_co_dian_commercial_state"
+                       invisible="move_type != 'out_invoice'"/>
+                <div invisible="move_type != 'out_invoice'">
+                    <field name="l10n_co_dian_commercial_state" readonly="1" class="oe_inline"
+                           widget="badge"
+                           decoration-warning="l10n_co_dian_commercial_state == 'pending'"
+                           decoration-info="l10n_co_dian_commercial_state in ('received', 'goods_received')"
+                           decoration-success="l10n_co_dian_commercial_state in ('accepted', 'accepted_by_issuer')"
+                           decoration-danger="l10n_co_dian_commercial_state == 'claimed'"/>
+                    <button name="l10n_co_dian_action_update_event_status"
+                            title="Actualizar Estado Comercial"
+                            type="object"
+                            class="oe_inline oe_link fa fa-refresh"
+                            invisible="not l10n_co_dian_update_commercial_event_enabled"/>
+                </div>
+                <field string="Estado Comercial"
+                       name="l10n_co_dian_commercial_state"
+                       readonly="1"
+                       widget="badge"
+                       decoration-warning="l10n_co_dian_commercial_state == 'pending'"
+                       decoration-info="l10n_co_dian_commercial_state in ('received', 'goods_received')"
+                       decoration-success="l10n_co_dian_commercial_state in ('accepted', 'accepted_by_issuer')"
+                       decoration-danger="l10n_co_dian_commercial_state == 'claimed'"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or l10n_co_edi_is_support_document"/>
+            </xpath>
+
+            <!-- Estado Comercial en la columna de la tab DIAN -->
+            <xpath expr="//page[@id='edi_documents']//field[@name='show_button_get_status']" position="after">
+                <field name="show_button_fetch_attached_document" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@id='edi_documents']//field[@name='move_id']" position="after">
+                <field name="commercial_state" string="Estado Comercial"/>
+            </xpath>
+            <!-- Traducir botones de la tab DIAN que vienen en inglés del módulo base -->
+            <xpath expr="//page[@id='edi_documents']//button[@name='action_get_status']" position="attributes">
+                <attribute name="string">Obtener Estado</attribute>
+            </xpath>
+            <xpath expr="//page[@id='edi_documents']//button[@name='action_download_file']" position="attributes">
+                <attribute name="string">Descargar</attribute>
+            </xpath>
+            <xpath expr="//page[@id='edi_documents']//button[@name='action_get_attached_document']" position="attributes">
+                <attribute name="string">Obtener Documento Adjunto</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Lista de Facturas de Venta: columna de Estado Comercial
+         ============================================================ -->
+    <record id="view_out_invoice_list_inherit_l10n_co_dian_extended" model="ir.ui.view">
+        <field name="name">account.out.invoice.list.l10n_co_dian.extended</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-warning">l10n_co_dian_commercial_state == 'pending'</attribute>
+                <attribute name="decoration-success">l10n_co_dian_commercial_state in ('accepted', 'accepted_by_issuer')</attribute>
+                <attribute name="decoration-danger">l10n_co_dian_commercial_state == 'claimed'</attribute>
+            </xpath>
+            <field name="status_in_payment" position="before">
+                <field name="l10n_co_dian_commercial_state" string="Estado Comercial"
+                       widget="badge" optional="show"
+                       decoration-warning="l10n_co_dian_commercial_state == 'pending'"
+                       decoration-info="l10n_co_dian_commercial_state in ('received', 'goods_received')"
+                       decoration-success="l10n_co_dian_commercial_state in ('accepted', 'accepted_by_issuer')"
+                       decoration-danger="l10n_co_dian_commercial_state == 'claimed'"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Lista de Facturas de Compra: columna de Estado Comercial
+         ============================================================ -->
+    <record id="view_in_invoice_bill_list_inherit_l10n_co_dian_extended" model="ir.ui.view">
+        <field name="name">account.in.invoice.bill.list.l10n_co_dian.extended</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-warning">l10n_co_dian_commercial_state == 'pending'</attribute>
+                <attribute name="decoration-success">l10n_co_dian_commercial_state in ('accepted', 'accepted_by_issuer')</attribute>
+                <attribute name="decoration-danger">l10n_co_dian_commercial_state == 'claimed'</attribute>
+            </xpath>
+            <field name="status_in_payment" position="before">
+                <field name="l10n_co_dian_commercial_state" string="Estado Comercial"
+                       widget="badge" optional="show"
+                       decoration-warning="l10n_co_dian_commercial_state == 'pending'"
+                       decoration-info="l10n_co_dian_commercial_state in ('received', 'goods_received')"
+                       decoration-success="l10n_co_dian_commercial_state in ('accepted', 'accepted_by_issuer')"
+                       decoration-danger="l10n_co_dian_commercial_state == 'claimed'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

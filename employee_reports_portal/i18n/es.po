@@ -1,0 +1,628 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* employee_reports_portal
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-22 23:04+0000\n"
+"PO-Revision-Date: 2022-11-22 18:16-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,print_report_name:employee_reports_portal.action_report_income_withholding_certification
+msgid "'Income Withholding'"
+msgstr "'Ingresos y retenciones'"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,print_report_name:employee_reports_portal.action_report_laboral_certification_fn_salary
+msgid "'Laboral Certification + Functions + Salary'"
+msgstr "'Cargo + Fecha de Contrato + Tipo de Contrato + Funciones + Salario'"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,print_report_name:employee_reports_portal.action_report_laboral_certification_fn
+msgid "'Laboral Certification + Functions'"
+msgstr "'Cargo + Fecha de Contrato + Tipo de Contrato + Funciones'"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,print_report_name:employee_reports_portal.action_report_laboral_certification_salary
+msgid "'Laboral Certification + Salary'"
+msgstr "'Cargo + Fecha de Contrato + Tipo de Contrato + Salario'"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,print_report_name:employee_reports_portal.action_report_laboral_certification
+msgid "'Laboral Certification'"
+msgstr "'Cargo + Fecha de Contrato + Tipo de Contrato'"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "<span class=\"badge rounded-pill text-bg-info\">To Submit</span>"
+msgstr "<span class=\"badge rounded-pill text-bg-info\">Por enviar</span>"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "<span class=\"badge rounded-pill text-bg-light\">Refused</span>"
+msgstr "<span class=\"badge rounded-pill text-bg-light\">Rechazado</span>"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "<span class=\"badge rounded-pill text-bg-success\">Approved</span>"
+msgstr "<span class=\"badge rounded-pill text-bg-success\">Aprobado</span>"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid ""
+"<span class=\"badge rounded-pill text-bg-warning\">Second Approval</span>"
+msgstr ""
+"<span class=\"badge rounded-pill text-bg-warning\">Segunda<br/>\n"
+"aprobación</span>"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "<span class=\"badge rounded-pill text-bg-warning\">To Approve</span>"
+msgstr "<span class=\"badge rounded-pill text-bg-warning\">Por aprobar</span>"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.res_config_settings_view_form_base
+msgid "Add certificate company info"
+msgstr "Agregar información de la compañía para certificados"
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_hr_employee_functions
+msgid "Almacena las funciones de los empleados"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_hr_employee_program
+msgid "Almacena los programas de formación de los empleados"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_certified_concept__type__2
+msgid "Aportes"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Archivos"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.view_income_withholding_certificate
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__diplomatic_card
+msgid "Carné diplomatico"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_res_company__certificate_company_info
+msgid "Certificate Company Info"
+msgstr "Información de la compañía para certificados"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_res_config_settings__certificate_company_info
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.res_config_settings_view_form_base
+msgid "Certificate company info"
+msgstr "Información de la compañía para certificados"
+
+#. module: employee_reports_portal
+#: model:ir.actions.act_window,name:employee_reports_portal.action_payroll_certified_concept
+#: model:ir.ui.menu,name:employee_reports_portal.menu_payroll_certified_concept_configuration
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.certified_concept_form
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.certified_concept_tree
+msgid "Certified Concept"
+msgstr "Concepto de Certificado"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__code
+msgid "Code"
+msgstr "Código"
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__company_id
+msgid "Company"
+msgstr "Compañia"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_salary_rule__concept
+msgid "Concept"
+msgstr "Concepto"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.certified_concept_form
+msgid "Concept Name"
+msgstr "Nombre del concepto"
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de configuración"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__create_uid
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__create_uid
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__create_uid
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__create_date
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__create_date
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__create_date
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__create_date
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__current_contract
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__message_contract
+msgid "Current contract"
+msgstr "Contrato Actual"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__id_document
+msgid "Cédula"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__national_citizen_id
+msgid "Cédula de ciudadanía"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__foreign_id_card
+msgid "Cédula extranjera"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__date_now
+msgid "Date Now"
+msgstr "Fecha actual"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_contract__date_start_contract
+msgid "Date Start Contract"
+msgstr "Fecha de inicio del contrato"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "Description"
+msgstr "Descripción"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__display_name
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__display_name
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__display_name
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__type_document
+msgid "Document type"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_payroll
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Download"
+msgstr "Descargar"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Download Certification"
+msgstr "Descargar certificado"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Download Your Documents and Certificates"
+msgstr "Descarga documentos y certificados"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Download your labor certificate with salary"
+msgstr "Descarga Cargo + Fecha de Contrato + Tipo de Contrato + Salario"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Download your labor certificate with salary and functions"
+msgstr ""
+"Descarga Cargo + Fecha de Contrato + Tipo de Contrato + Funciones + Salario"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Download your labor certificate without salary"
+msgstr "Descarga Cargo + Fecha de Contrato + Tipo de Contrato"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Download your labor certificate without salary with functions"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato + Funciones"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "Duration"
+msgstr "Duración"
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_hr_employee
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__employee_id
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__employee_id
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato de empleado"
+
+#. module: employee_reports_portal
+#: model:ir.actions.act_window,name:employee_reports_portal.open_view_program_form
+msgid "Employee Programs"
+msgstr "Programa del empleado"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__employee_ids
+msgid "Employees"
+msgstr "Empleados"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.view_employee_program_list
+msgid "Employees Programs"
+msgstr "Programas de los empleados"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "End Date"
+msgstr "Fecha de finalización"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__firm
+msgid "Firm"
+msgstr "Firma"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__firm_url
+msgid "Firm Url"
+msgstr "URL de la firma"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__employee_functions
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_employee_view
+msgid "Functions"
+msgstr "Funciones"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__id
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__id
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__id
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__id
+msgid "ID"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__external_id
+msgid "ID del exterior"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,name:employee_reports_portal.action_report_income_withholding_certification
+msgid "Income Withholding"
+msgstr "Ingresos y retenciones"
+
+#. module: employee_reports_portal
+#: model:ir.actions.act_window,name:employee_reports_portal.action_income_withholding_certificate
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Income Withholding Report"
+msgstr "Reporte Ingresos y retenciones"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_certified_concept__type__1
+msgid "Ingresos"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__is_print
+msgid "Is Print"
+msgstr "Es Imprimible"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+#: code:addons/employee_reports_portal/controllers/employee_page_controller.py:109
+#, python-format
+msgid "Labor Certificate"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+#: code:addons/employee_reports_portal/controllers/employee_page_controller.py:116
+#, python-format
+msgid "Labor Certificate With Functions"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato + Funciones"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+#: code:addons/employee_reports_portal/controllers/employee_page_controller.py:120
+#, python-format
+msgid "Labor Certificate With Functions And Salary"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato + Funciones + Salario"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+#: code:addons/employee_reports_portal/controllers/employee_page_controller.py:112
+#, python-format
+msgid "Labor Certificate With Salary"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato + Salario"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Labor Certificates"
+msgstr "Certificados laborales"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,name:employee_reports_portal.action_report_laboral_certification
+msgid "Laboral Certification"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,name:employee_reports_portal.action_report_laboral_certification_fn
+msgid "Laboral Certification + Functions"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato + Funciones"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,name:employee_reports_portal.action_report_laboral_certification_fn_salary
+msgid "Laboral Certification + Functions +  Salary"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato + Funciones + Salario"
+
+#. module: employee_reports_portal
+#: model:ir.actions.report,name:employee_reports_portal.action_report_laboral_certification_salary
+msgid "Laboral Certification + Salary"
+msgstr "Cargo + Fecha de Contrato + Tipo de Contrato + Salario"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept____last_update
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions____last_update
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program____last_update
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report____last_update
+msgid "Last Modified on"
+msgstr "Última modificación"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__write_uid
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__write_uid
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__write_uid
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__write_date
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__write_date
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__write_date
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__write_date
+msgid "Last Updated on"
+msgstr "Última actualización"
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_hr_certified_concept
+msgid "Modelo que permite almacenar los conceptos para las reglas salariales"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "My Time Off"
+msgstr "Mis Ausencias"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__rut
+msgid "NIT"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__name
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_functions__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "No Time off found"
+msgstr "No se han encontrado ausencias"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "No active contracts found"
+msgstr "No se han encontrado contratos activos"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__passport
+msgid "Pasaporte"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_payroll
+msgid "Payroll Certificates"
+msgstr "Certificados de nómina"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__payroll_manager
+#: model:ir.model.fields,field_description:employee_reports_portal.field_res_config_settings__payroll_manager
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.res_config_settings_view_form
+msgid "Payroll Manager"
+msgstr "Director de nómina"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_payroll
+msgid "Payroll cannot be rendered"
+msgstr "La nómina no puede ser visualizada"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_payroll
+msgid "Payslip"
+msgstr "Nómina"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_payroll
+msgid "Payslip #"
+msgstr "Nómina #"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.view_income_withholding_certificate
+msgid "Print Report"
+msgstr "Imprimir reporte"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee_program__name
+msgid "Program Name"
+msgstr "Nombre del programa"
+
+#. module: employee_reports_portal
+#: model:ir.model.constraint,message:employee_reports_portal.constraint_hr_employee_program_name_uniq
+msgid "Program name already exists !"
+msgstr "¡El programa ya existe!"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__program_ids
+#: model:ir.ui.menu,name:employee_reports_portal.menu_view_employee_program_form
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_employee_view
+msgid "Programs"
+msgstr "Programas"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,help:employee_reports_portal.field_res_company__verification_code
+msgid "Redundancy check to verify the vat number has been typed in correctly."
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__civil_registration
+msgid "Registro civil"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "Regla salarial"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__residence_document
+msgid "Salvoconducto de permanencia"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.res_config_settings_view_form
+msgid "Set chief payroll."
+msgstr "Establecer jefe de nómina."
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_not_found_certificate
+msgid "Sorry, certificate not found"
+msgstr "Lo siento, certificado no encontrado"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_employee__start_date_current_contract
+msgid "Start Date Current Contract"
+msgstr "Fecha de inicio del contrato actual"
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "State"
+msgstr "Estado"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_res_company__var
+msgid "TIN"
+msgstr "NIF"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields.selection,name:employee_reports_portal.selection__hr_employee__type_document__id_card
+msgid "Tarjeta de identidad"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_income_withholding_report__certificate_year
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.portal_my_home_employee
+msgid "Taxable year"
+msgstr "Año Gravable"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,help:employee_reports_portal.field_res_company__var
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr ""
+"El número de identificación fiscal. Complételo si el contacto está sujeto a "
+"impuestos gubernamentales. Se utiliza en algunas declaraciones legales."
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_leave
+msgid "Time Off Type"
+msgstr "Tipo de ausencia"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_certified_concept__type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_res_company__verification_code
+msgid "VC"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model.fields,field_description:employee_reports_portal.field_hr_contract__wage_to_word
+msgid "Wage To Word"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_income_withholding_report
+msgid "income.withholding.report"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_report_employee_reports_portal_iw_certification
+msgid "report.employee_reports_portal.iw_certification"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_report_employee_reports_portal_laboral_c
+msgid "report.employee_reports_portal.laboral_c"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model:ir.model,name:employee_reports_portal.model_report_employee_reports_portal_laboral_c_salary
+msgid "report.employee_reports_portal.laboral_c_salary"
+msgstr ""
+
+#. module: employee_reports_portal
+#: model_terms:ir.ui.view,arch_db:employee_reports_portal.hr_employee_view
+msgid "Related User"
+msgstr "Usuario relacionado"

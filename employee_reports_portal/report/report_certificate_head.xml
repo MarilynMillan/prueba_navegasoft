@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="certificate_head">
+        <xpath expr="//head" position="inside">
+            <style>
+                h3{
+                    font-size: 20px;
+                    font-weight: bold;
+                }
+                .o_report_layout_standard, .header{
+                    font-size: 17px;
+                    font-family: Arimo, sans-serif;
+                    letter-spacing: 0px;
+                }
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo Medium'), local('Arimo-Medium'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-Medium.ttf') format('truetype');
+                    font-weight: 500;
+                    font-style: normal;
+                }
+
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo Italic'), local('Arimo-Italic'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-Italic.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: italic;
+                }
+
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo Bold'), local('Arimo-Bold'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-Bold.ttf') format('truetype');
+                    font-weight: bold;
+                    font-style: normal;
+                }
+
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo Bold Italic'), local('Arimo-BoldItalic'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-BoldItalic.ttf') format('truetype');
+                    font-weight: bold;
+                    font-style: italic;
+                }
+
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo Regular'), local('Arimo-Regular'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-Regular.ttf') format('truetype');
+                    font-weight: normal;
+                    font-style: normal;
+                }
+
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo SemiBold Italic'), local('Arimo-SemiBoldItalic'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-SemiBoldItalic.ttf') format('truetype');
+                    font-weight: 600;
+                    font-style: italic;
+                }
+
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo SemiBold'), local('Arimo-SemiBold'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-SemiBold.ttf') format('truetype');
+                    font-weight: 600;
+                    font-style: normal;
+                }
+
+                @font-face {
+                    font-family: 'Arimo';
+                    src: local('Arimo Medium Italic'), local('Arimo-MediumItalic'),
+                        url('/employee_reports_portal/static/src/fonts/Arimo-MediumItalic.ttf') format('truetype');
+                    font-weight: 500;
+                    font-style: italic;
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>

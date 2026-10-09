@@ -1,0 +1,9 @@
+<odoo>
+  
+  
+  <!-- <data noupdate="1">
+    <record id="base.main_company" model="res.company">
+      <field name="default_partner_id" ref="l10n_co_bases.default_customer"/> 
+    </record>
+  </data> -->
+</odoo>

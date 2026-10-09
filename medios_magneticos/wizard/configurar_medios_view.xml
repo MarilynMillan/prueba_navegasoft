@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- <record id="view_wizard_configuracion_exogena" model="ir.ui.view">
+        <field name="name">wizard.configuracion.exogena.form</field>
+        <field name="model">wizard.configuracion.exogena</field>
+        <field name="arch" type="xml">
+            <form string="Configuración de Información Exógena">
+                <group>
+                    <field name="year"/>
+                    <field name="response_message" nolabel="1" readonly="1"/>
+                </group>
+                
+                <footer>
+                    <button name="probar_local" type="object" string="Ejecutar" class="btn-primary"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_configuracion_exogena" model="ir.actions.act_window">
+        <field name="name">Configuración de Información Exógena</field>
+        <field name="res_model">wizard.configuracion.exogena</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_configuracion_exogena" name="Configuración Exógena"
+              action="action_wizard_configuracion_exogena" parent="account.account_account_menu" sequence="103"/> -->
+</odoo>

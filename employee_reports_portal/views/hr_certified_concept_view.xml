@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- View Payroll -->
+        <record id="certified_concept_tree" model="ir.ui.view">
+            <field name="name">hr.certified.concept.tree</field>
+            <field name="model">hr.certified.concept</field>
+            <field name="arch" type="xml">
+                <list string="Certified Concept">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="type"/>
+                    <field name="is_print"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="certified_concept_form" model="ir.ui.view">
+            <field name="name">hr_certified_concept.form</field>
+            <field name="model">hr.certified.concept</field>
+            <field name="arch" type="xml">
+                <form string="Certified Concept">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Concept Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="type"/>
+                                <field name="is_print"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_payroll_certified_concept" model="ir.actions.act_window">
+            <field name="name">Certified Concept</field>
+            <field name="res_model">hr.certified.concept</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_payroll_certified_concept"
+                  name="Certified Concept"
+                  id="menu_payroll_certified_concept_configuration"
+                  parent="hr_payroll.menu_hr_payroll_global_settings"
+                  sequence="14">
+        </menuitem>
+
+    </data>
+</odoo>

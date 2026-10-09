@@ -1,0 +1,133 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* endowment_pilas
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-07 00:00+0000\n"
+"PO-Revision-Date: 2026-07-07 00:00+0000\n"
+"Last-Translator: \n"
+"Language: es\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: endowment_pilas
+#: model:ir.model.fields,field_description:endowment_pilas.field_hr_payroll_excel_wizard__plantilla_excel
+msgid "Plantilla Excel"
+msgstr "Plantilla Excel"
+
+#. module: endowment_pilas
+#: model:ir.model.fields,field_description:endowment_pilas.field_hr_payroll_excel_wizard__plantilla_guardada_nombre
+msgid "Plantilla actual"
+msgstr "Plantilla actual"
+
+#. module: endowment_pilas
+#: model:ir.model.fields,field_description:endowment_pilas.field_hr_payroll_excel_wizard__plantilla_guardada_fecha
+msgid "Última actualización"
+msgstr "Última actualización"
+
+#. module: endowment_pilas
+#: model:ir.model.fields,help:endowment_pilas.field_hr_payroll_excel_wizard__plantilla_excel
+msgid "Sube la plantilla de Excel para usar en el reporte. Si está vacío, se usará la plantilla guardada para la compañía."
+msgstr "Sube la plantilla de Excel para usar en el reporte. Si está vacío, se usará la plantilla guardada para la compañía."
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Debe cargar una plantilla PILA para la compañía %s. La plantilla cargada se guardará para futuros reportes de esta compañía."
+msgstr "Debe cargar una plantilla PILA para la compañía %s. La plantilla cargada se guardará para futuros reportes de esta compañía."
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "La plantilla PILA no es un archivo válido."
+msgstr "La plantilla PILA no es un archivo válido."
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Tipo de planilla"
+msgstr "Tipo de planilla"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Tipo de aportante"
+msgstr "Tipo de aportante"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Código de sucursal"
+msgstr "Código de sucursal"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Nombre de sucursal"
+msgstr "Nombre de sucursal"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Administradora de riesgos"
+msgstr "Administradora de riesgos"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Complete estos campos antes de generar el Excel:\n%s"
+msgstr "Complete estos campos antes de generar el Excel:\n%s"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "No se encontró RGDIVIDEPTO"
+msgstr "No se encontró RGDIVIDEPTO"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Departamento inválido PILA:\n%s"
+msgstr "Departamento inválido PILA:\n%s"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Ciudad inválida PILA:\n%s"
+msgstr "Ciudad inválida PILA:\n%s"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "No se encontró ningún recibo de nómina para los filtros"
+msgstr "No se encontró ningún recibo de nómina para los filtros"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "No existe DatosPruebaEmp. Hojas: %s"
+msgstr "No existe DatosPruebaEmp. Hojas: %s"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "No existe Liquidaciones. Hojas: %s"
+msgstr "No existe Liquidaciones. Hojas: %s"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/wizard/payroll_excel_wizard.py:0
+msgid "Corrija estos datos antes de generar PILA:\n\n%s"
+msgstr "Corrija estos datos antes de generar PILA:\n\n%s"
+
+#. module: endowment_pilas
+#. odoo-python
+#: code:addons/endowment_pilas/models/hr_administradoras.py:0
+msgid "La administradora destino debe ser diferente a la administradora origen."
+msgstr "La administradora destino debe ser diferente a la administradora origen."

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_base_electronicos_tabla,base_electronicos.tabla,model_base_electronicos_tabla,,1,1,1,1
+access_base_electronicos_tabla_line,base_electronicos.line,model_base_electronicos_line,,1,1,1,1
