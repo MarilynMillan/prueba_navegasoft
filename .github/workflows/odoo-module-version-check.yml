@@ -1,0 +1,24 @@
+name: Odoo Module Version Check
+
+on:
+  pull_request:
+    branches:
+      - "18"
+      - "18-test"
+      - "18-test-pre"
+      - "19"
+      - "19-test"
+      - "19-test-pre"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    uses: navegasoftco/navegasoft-1-deploy/.github/workflows/odoo-module-version-check.yml@main
+    with:
+      base_ref: ${{ github.base_ref }}
+      base_sha: ${{ github.event.pull_request.base.sha }}
+      head_sha: ${{ github.event.pull_request.head.sha }}
+    secrets:
+      deploy_repo_token: ${{ secrets.DEPLOY_REPO_TOKEN }}

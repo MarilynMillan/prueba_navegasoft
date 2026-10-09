@@ -1,0 +1,166 @@
+name: Dispatch Customer Repository Sync
+
+on:
+  push:
+    branches:
+      - "18"
+      - "18-test"
+      - "19"
+      - "19-test"
+  workflow_dispatch:
+    inputs:
+      target_repository:
+        description: Optional customer repository to process, for example owner/repo.
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    name: Dispatch Deploy Repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch sync
+        env:
+          DEPLOY_REPO_TOKEN: ${{ secrets.DEPLOY_REPO_TOKEN }}
+          TARGET_REPOSITORY: ${{ github.event.inputs.target_repository || '' }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$DEPLOY_REPO_TOKEN" ]]; then
+            echo "DEPLOY_REPO_TOKEN is required" >&2
+            exit 1
+          fi
+
+          source_ref="${GITHUB_REF_NAME}"
+          if [[ "$source_ref" =~ ^([0-9]+-test)-pre$ ]]; then
+            version="${BASH_REMATCH[1]}"
+          elif [[ "$source_ref" =~ ^([0-9]+-test)$ ]]; then
+            version="${BASH_REMATCH[1]}"
+          elif [[ "$source_ref" =~ ^([0-9]+)$ ]]; then
+            version="${BASH_REMATCH[1]}"
+          else
+            echo "Could not derive Odoo version from ref: $source_ref" >&2
+            exit 1
+          fi
+
+          dispatch_key="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${GITHUB_SHA:0:12}"
+
+          payload="$(jq -n \
+            --arg event_type "customer-repository-sync" \
+            --arg version "$version" \
+            --arg source_ref "$source_ref" \
+            --arg source_repository "$GITHUB_REPOSITORY" \
+            --arg source_sha "$GITHUB_SHA" \
+            --arg target_repository "$TARGET_REPOSITORY" \
+            --arg dispatch_key "$dispatch_key" \
+            --arg trigger_event "$GITHUB_EVENT_NAME" \
+            '{
+              event_type: $event_type,
+              client_payload: {
+                version: $version,
+                source_ref: $source_ref,
+                source_repository: $source_repository,
+                source_sha: $source_sha,
+                target_repository: $target_repository,
+                dispatch_key: $dispatch_key,
+                trigger_event: $trigger_event
+              }
+            }')"
+
+          curl --fail-with-body \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${DEPLOY_REPO_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/navegasoftco/navegasoft-1-deploy/dispatches \
+            -d "$payload"
+
+          workflow_url="https://github.com/navegasoftco/navegasoft-1-deploy/actions/workflows/customer-repository-sync.yml"
+          runs_api="https://api.github.com/repos/navegasoftco/navegasoft-1-deploy/actions/workflows/customer-repository-sync.yml/runs?event=repository_dispatch&per_page=20"
+          run_id=""
+          run_url=""
+          run_status=""
+          run_conclusion=""
+
+          for attempt in $(seq 1 90); do
+            runs="$(curl --fail-with-body \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${DEPLOY_REPO_TOKEN}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$runs_api")"
+
+            run="$(jq -r --arg dispatch_key "$dispatch_key" '
+              .workflow_runs
+              | map(select((.display_title // "") | contains($dispatch_key)))
+              | sort_by(.created_at)
+              | last // empty
+            ' <<< "$runs")"
+
+            if [[ -n "$run" && "$run" != "null" ]]; then
+              run_id="$(jq -r '.id' <<< "$run")"
+              run_url="$(jq -r '.html_url' <<< "$run")"
+              run_status="$(jq -r '.status' <<< "$run")"
+              run_conclusion="$(jq -r '.conclusion // ""' <<< "$run")"
+
+              if [[ "$run_status" == "completed" ]]; then
+                break
+              fi
+            fi
+
+            sleep 10
+          done
+
+          if [[ -z "$run_id" ]]; then
+            echo "Could not find dispatched Customer Repository Sync run for key: $dispatch_key" >&2
+            exit 1
+          fi
+
+          logs_url="https://api.github.com/repos/navegasoftco/navegasoft-1-deploy/actions/runs/${run_id}/logs"
+          if curl --location --fail-with-body \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${DEPLOY_REPO_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -o customer-repository-sync-logs.zip \
+            "$logs_url"; then
+            echo "::group::Customer Repository Sync output"
+            unzip -Z1 customer-repository-sync-logs.zip | grep -E '(^|/)Run sync\\.txt$' > run-sync-log-files.txt || true
+            if [[ -s run-sync-log-files.txt ]]; then
+              while IFS= read -r log_file; do
+                unzip -p customer-repository-sync-logs.zip "$log_file"
+              done < run-sync-log-files.txt
+            else
+              echo "Run sync step log was not found; showing the last 200 lines of the full deploy log." >&2
+              unzip -p customer-repository-sync-logs.zip > customer-repository-sync.log || true
+              tail -n 200 customer-repository-sync.log || true
+            fi
+            echo "::endgroup::"
+          else
+            echo "Could not download Customer Repository Sync logs: $run_url" >&2
+          fi
+
+          {
+            echo "### Customer Repository Sync"
+            echo
+            echo "- Version: \`$version\`"
+            echo "- Source ref: \`$source_ref\`"
+            echo "- Source SHA: \`$GITHUB_SHA\`"
+            echo "- Target repository: \`${TARGET_REPOSITORY:-all}\`"
+            echo "- Dispatch key: \`$dispatch_key\`"
+            echo "- Deploy workflow: $workflow_url"
+            echo "- Deploy run: $run_url"
+            echo "- Deploy status: \`$run_status\`"
+            echo "- Deploy conclusion: \`${run_conclusion:-pending}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "$run_status" != "completed" ]]; then
+            echo "Deploy workflow did not complete before timeout: $run_url" >&2
+            exit 1
+          fi
+
+          if [[ "$run_conclusion" != "success" ]]; then
+            echo "Deploy workflow failed with conclusion '$run_conclusion': $run_url" >&2
+            exit 1
+          fi
