@@ -812,23 +812,44 @@ class PayrollExcelWizard(models.TransientModel):
             # Definición de códigos relevantes y Inicialización a 'NO'
             ABSENCE_CODES = ['SLN', 'IGE', 'LMA', 'VAL-LR', 'AVP', 'VCT', 'IRL']
 
-            # Buscar ausencias en el rango consolidado del empleado
-            leaves = self.env['hr.leave'].search([
+            dt_from = datetime.combine(emp_date_from, datetime.min.time())
+            dt_to = datetime.combine(emp_date_to, datetime.max.time())
+
+            # Buscar entradas de trabajo del empleado en el período consolidado
+            work_entries = self.env['hr.work.entry'].search([
                 ('employee_id', '=', employee.id),
-                ('state', '=', 'validate'),
-                ('date_from', '<=', emp_date_to),
-                ('date_to', '>=', emp_date_from),
+                ('date_start', '<=', dt_to),
+                ('date_stop', '>=', dt_from),
+                ('state', 'in', ['draft', 'validated']),
             ])
 
-            # Filtramos solo las que nos interesan
-            relevant_leaves = []
-            if leaves:
-                for leave in leaves:
-                    novelty_code = leave.holiday_status_id.pila_novelty_code
-                    if novelty_code and novelty_code in ABSENCE_CODES:
-                        relevant_leaves.append(leave)
+            # Agrupar por tipo de ausencia para obtener Fecha Desde y Fecha Hasta continuas
+            novelties_grouped = {}
+            for entry in work_entries:
+                work_type = entry.work_entry_type_id
+                novelty_code = getattr(work_type, 'pila_novelty_code', False)
 
-            # Si no hay hojas relevantes, añadimos un None para que el bucle haga una iteración con todo "NO"
+                if novelty_code and novelty_code in ABSENCE_CODES:
+                    # Acotar fechas al periodo de la planilla
+                    d_start = max(entry.date_start.date(), emp_date_from)
+                    d_stop = min(entry.date_stop.date(), emp_date_to)
+
+                    if novelty_code not in novelties_grouped:
+                        novelties_grouped[novelty_code] = {
+                            'code': novelty_code,
+                            'name': work_type.name,
+                            'date_from': d_start,
+                            'date_to': d_stop,
+                        }
+                    else:
+                        if d_start < novelties_grouped[novelty_code]['date_from']:
+                            novelties_grouped[novelty_code]['date_from'] = d_start
+                        if d_stop > novelties_grouped[novelty_code]['date_to']:
+                            novelties_grouped[novelty_code]['date_to'] = d_stop
+
+            relevant_leaves = list(novelties_grouped.values())
+
+            # Si no hay ausencias, colocamos None para generar la fila ordinaria regular
             if not relevant_leaves:
                 relevant_leaves = [None]
 
@@ -839,17 +860,13 @@ class PayrollExcelWizard(models.TransientModel):
                 count_ige = 0
 
                 if current_leave:
-                    novelty_code = current_leave.holiday_status_id.pila_novelty_code
-                    if novelty_code == 'LMA':
-                        count_lma = int(current_leave.number_of_days)
-                    elif novelty_code == 'IGE':
-                        count_ige = int(current_leave.number_of_days)
-
-                    absence_novelties[novelty_code]['value'] = current_leave.holiday_status_id.name or 'SI'
+                    novelty_code = current_leave['code']
+                    # Asigna el nombre que viene del tipo de entrada
+                    absence_novelties[novelty_code]['value'] = current_leave['name'] or 'SI'
 
                     if novelty_code != 'AVP':
-                        absence_novelties[novelty_code]['start'] = current_leave.date_from.date()
-                        absence_novelties[novelty_code]['end'] = current_leave.date_to.date()
+                        absence_novelties[novelty_code]['start'] = current_leave['date_from']
+                        absence_novelties[novelty_code]['end'] = current_leave['date_to']
 
                 # Usaremos el nombre (label) para el Excel.
                 # El método _get_selection_label() toma el nombre legible del campo de selección.
@@ -1565,7 +1582,7 @@ class PayrollExcelWizard(models.TransientModel):
 
                 # --- ESTAS DOS LÍNEAS DEBEN IR AQUÍ (Fuera del bucle de columnas) ---
                 row_num += 1
-            row_counter += 1
+                row_counter += 1
 
         # fuera de todos los bucles
         start_clean_row = row_num

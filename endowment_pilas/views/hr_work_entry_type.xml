@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_work_entry_type_form_inherit" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+           
+            <xpath expr="//field[@name='color']" position="after">
+                <field name="pila_novelty_code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
