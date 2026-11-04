@@ -489,10 +489,29 @@ class PayrollExcelWizard(models.TransientModel):
 
         errores_pila = set()
 
+        # Agrupar las nóminas por empleado
+        payslips_by_employee = {}
         for payslip in payslips:
-            employee = payslip.employee_id
+            emp = payslip.employee_id
+            if emp not in payslips_by_employee:
+                payslips_by_employee[emp] = []
+            payslips_by_employee[emp].append(payslip)
+
+        for employee, emp_payslips in payslips_by_employee.items():
+            # Tomar el contrato y datos base de la nómina más reciente
+            emp_payslips_sorted = sorted(emp_payslips, key=lambda p: p.date_to, reverse=True)
+            payslip = emp_payslips_sorted[0]
             contract = payslip.contract_id
-            correction_status_value = payslip.correction_status if hasattr(payslip, 'correction_status') else 'No'
+
+            # Obtener el rango de fechas consolidado del empleado
+            emp_date_from = min(p.date_from for p in emp_payslips)
+            emp_date_to = max(p.date_to for p in emp_payslips)
+
+            correction_status_value = 'No'
+            for p in emp_payslips:
+                if hasattr(p, 'correction_status') and p.correction_status not in [False, 'no', 'No']:
+                    correction_status_value = p.correction_status
+                    break
 
 
             ############################## type identification#########################
@@ -564,17 +583,38 @@ class PayrollExcelWizard(models.TransientModel):
             horas_laboradas = 0.0
             dias_laborados = 0.0  # 👈 nuevo acumulador
 
-            for worked_day_line in payslip.worked_days_line_ids:
-                days = worked_day_line.number_of_days
-                hours = worked_day_line.number_of_hours
-                code = worked_day_line.code
+            dias_cotizados_pension = 0.0
+            dias_cotizados_salud = 0.0
+            dias_cotizados_arl = 0.0
+            dias_cotizados_ccf = 0.0
 
-                # DÍAS: Se acumulan todos los días procesados de la nómina
-                dias_laborados += days
+            # Consolidar días y horas de todas las nóminas del empleado
+            for p_slip in emp_payslips:
+                for worked_day_line in p_slip.worked_days_line_ids:
+                    days = worked_day_line.number_of_days
+                    hours = worked_day_line.number_of_hours
+                    code = worked_day_line.code
 
-                # HORAS: Únicamente si es el código de asistencia
-                if code == 'WORK100':
-                    horas_laboradas += hours
+                    # DÍAS: Se acumulan todos los días procesados de la nómina
+                    dias_laborados += days
+
+                    # HORAS: Únicamente si es el código de asistencia
+                    if code == 'WORK100':
+                        horas_laboradas += hours
+
+                    # 2. ACUMULACIÓN DE DÍAS COTIZADOS
+                    # Se utiliza el código de la línea del día trabajado directamente
+                    # para determinar a qué columna PILA se suma.
+
+                    if code == 'pension':
+                        dias_cotizados_pension += days
+                    elif code == 'salud':
+                        dias_cotizados_salud += days
+                    elif code == 'arl':
+                        dias_cotizados_arl += days
+                    elif code == 'ccf':
+                        dias_cotizados_ccf += days
+
 
             # =========================================================================
             # 🟢 AJUSTE DE PRECISIÓN Y VALIDACIÓN TOTAL (FUERA DEL BUCLE FOR)
@@ -596,21 +636,6 @@ class PayrollExcelWizard(models.TransientModel):
                     "%s | Días laborados inválidos: %s."
                     % (employee.display_name, dias_laborados)
                 )
-
-
-                # 2. ACUMULACIÓN DE DÍAS COTIZADOS
-                # Se utiliza el código de la línea del día trabajado directamente
-                # para determinar a qué columna PILA se suma.
-
-                if code == 'pension':
-                    dias_cotizados_pension += days
-                elif code == 'salud':
-                    dias_cotizados_salud += days
-                elif code == 'arl':
-                    dias_cotizados_arl += days
-                elif code == 'ccf':
-                    dias_cotizados_ccf += days
-
 
             ####################################################
 
@@ -772,20 +797,13 @@ class PayrollExcelWizard(models.TransientModel):
             #####################################################################
             valor_vst = 'NO'
 
-            payslips_vst = self.env['hr.payslip'].search([
-                ('employee_id', '=', contract.employee_id.id),
-                ('date_from', '>=', report_start_date),
-                ('date_to', '<=', report_end_date),
-                ('state', '=', 'done')
-            ])
-
-            if payslips_vst:
-                transitory_lines = payslips_vst.mapped('line_ids').filtered(
-                    lambda l: l.salary_rule_id.is_payment_transitory and l.total > 0
+            for p_slip in emp_payslips:
+                transitory_lines = p_slip.mapped('line_ids').filtered(
+                    lambda l: getattr(l.salary_rule_id, 'is_payment_transitory', False) and l.total > 0
                 )
-
                 if transitory_lines:
                     valor_vst = 'SI'
+                    break
 
             # ----------------------------------------------------
             # 📌 Lógica para Ausencias (Usando hr.leave - Solicitudes de Ausencia)
@@ -794,12 +812,12 @@ class PayrollExcelWizard(models.TransientModel):
             # Definición de códigos relevantes y Inicialización a 'NO'
             ABSENCE_CODES = ['SLN', 'IGE', 'LMA', 'VAL-LR', 'AVP', 'VCT', 'IRL']
 
-            # Tu búsqueda actual (sin cambios)
+            # Buscar ausencias en el rango consolidado del empleado
             leaves = self.env['hr.leave'].search([
                 ('employee_id', '=', employee.id),
                 ('state', '=', 'validate'),
-                ('date_from', '<=', report_end_date),
-                ('date_to', '>=', report_start_date),
+                ('date_from', '<=', emp_date_to),
+                ('date_to', '>=', emp_date_from),
             ])
 
             # Filtramos solo las que nos interesan
@@ -835,13 +853,17 @@ class PayrollExcelWizard(models.TransientModel):
 
                 # Usaremos el nombre (label) para el Excel.
                 # El método _get_selection_label() toma el nombre legible del campo de selección.
-                correction_status_raw = payslip.correction_status or 'no'
+                correction_status_raw = correction_status_value or 'no'
 
                 mapeo_correccion = {
                     'no': 'NO',
                     'actual': 'ACTUAL',
                     'coreccion': 'CORRECCIÓN',
                 }
+
+                # Fallback para asegurarse de que las opciones con mayúsculas estén contempladas
+                if isinstance(correction_status_raw, str):
+                    correction_status_raw = correction_status_raw.lower()
 
                 correction_status_excel_value = mapeo_correccion.get(correction_status_raw, 'NO')
 
@@ -893,14 +915,15 @@ class PayrollExcelWizard(models.TransientModel):
                 # 2. Inicializar con 0.0 (es mejor para cálculos numéricos)
                 valores_reglas = {k: 0.0 for k in claves_reporte}
 
-                # 3. Recorrer las líneas de la nómina
-                for line in payslip.line_ids:
-                    # Obtenemos la marca de la regla
-                    tipo = line.salary_rule_id.tipo_reporte_excel
+                # 3. Consolidar las líneas de todas las nóminas del empleado
+                for p_slip in emp_payslips:
+                    for line in p_slip.line_ids:
+                        # Obtenemos la marca de la regla
+                        tipo = line.salary_rule_id.tipo_reporte_excel
 
-                    # Si la regla tiene una marca y esa marca está en nuestras claves
-                    if tipo and tipo in valores_reglas:
-                        valores_reglas[tipo] += line.total
+                        # Si la regla tiene una marca y esa marca está en nuestras claves
+                        if tipo and tipo in valores_reglas:
+                            valores_reglas[tipo] += line.total
 
                 ######################Otras tarifas ##################################
                 admins = payslip.contract_id.administradoras_ids
