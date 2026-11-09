@@ -8,6 +8,12 @@
             <xpath expr="//field[@name='struct_id']" position="after">
                 <field name="correction_status"/>
             </xpath>
+
+            <xpath expr="//field[@name='worked_days_line_ids']//field[@name='number_of_days']"
+               position="after">
+            <field name="pila_include_days"
+                   string="Incluir días en total PILA"/>
+        </xpath>
         </field>
     </record>
 </odoo>
