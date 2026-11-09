@@ -966,9 +966,7 @@ class PayrollExcelWizard(models.TransientModel):
                 val_centro_trabajo = ""
                 if contract.work_center_id:
                     val_centro_trabajo = contract.work_center_id.name.upper()
-                else:
-                    # SI NO HAY REGISTRO, PASAMOS EL VALOR FIJO
-                    val_centro_trabajo = "RIESGO III"
+                else ''
 
                 #####################Actividad Economica #######################################
                 actividad_economica = contract.economic_activitity if contract.economic_activitity else ''
@@ -1485,7 +1483,6 @@ class PayrollExcelWizard(models.TransientModel):
                     # ---------------- CENTRO TRABAJO ----------------
                     if col_num == 79:
                         val = clean_text(cell_value)
-                        val = val if val else "RIESGO III"
                         cell.value = val
                         cell.data_type = 's'
                         continue
