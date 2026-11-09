@@ -595,25 +595,26 @@ class PayrollExcelWizard(models.TransientModel):
                     hours = worked_day_line.number_of_hours
                     code = worked_day_line.code
 
-                    # DÍAS: Se acumulan todos los días procesados de la nómina
-                    dias_laborados += days
-
                     # HORAS: Únicamente si es el código de asistencia
                     if code == 'WORK100':
                         horas_laboradas += hours
 
-                    # 2. ACUMULACIÓN DE DÍAS COTIZADOS
-                    # Se utiliza el código de la línea del día trabajado directamente
-                    # para determinar a qué columna PILA se suma.
+                    if worked_day_line.pila_include_days:
+                        # DÍAS: Se acumulan todos los días procesados de la nómina
+                        dias_laborados += days
 
-                    if code == 'pension':
-                        dias_cotizados_pension += days
-                    elif code == 'salud':
-                        dias_cotizados_salud += days
-                    elif code == 'arl':
-                        dias_cotizados_arl += days
-                    elif code == 'ccf':
-                        dias_cotizados_ccf += days
+                        # 2. ACUMULACIÓN DE DÍAS COTIZADOS
+                        # Se utiliza el código de la línea del día trabajado directamente
+                        # para determinar a qué columna PILA se suma.
+
+                        if code == 'pension':
+                            dias_cotizados_pension += days
+                        elif code == 'salud':
+                            dias_cotizados_salud += days
+                        elif code == 'arl':
+                            dias_cotizados_arl += days
+                        elif code == 'ccf':
+                            dias_cotizados_ccf += days
 
 
             # =========================================================================
