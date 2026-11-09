@@ -868,6 +868,12 @@ class PayrollExcelWizard(models.TransientModel):
                         absence_novelties[novelty_code]['start'] = current_leave['date_from']
                         absence_novelties[novelty_code]['end'] = current_leave['date_to']
 
+                    # Calcular dias para count_lma y count_ige si corresponde
+                    if novelty_code == 'LMA':
+                        count_lma = (current_leave['date_to'] - current_leave['date_from']).days + 1
+                    elif novelty_code == 'IGE':
+                        count_ige = (current_leave['date_to'] - current_leave['date_from']).days + 1
+
                 # Usaremos el nombre (label) para el Excel.
                 # El método _get_selection_label() toma el nombre legible del campo de selección.
                 correction_status_raw = correction_status_value or 'no'
@@ -960,9 +966,7 @@ class PayrollExcelWizard(models.TransientModel):
                 val_centro_trabajo = ""
                 if contract.work_center_id:
                     val_centro_trabajo = contract.work_center_id.name.upper()
-                else:
-                    # SI NO HAY REGISTRO, PASAMOS EL VALOR FIJO
-                    val_centro_trabajo = "RIESGO III"
+                else ''
 
                 #####################Actividad Economica #######################################
                 actividad_economica = contract.economic_activitity if contract.economic_activitity else ''
@@ -1087,6 +1091,14 @@ class PayrollExcelWizard(models.TransientModel):
                 'INCAPACIDAD 66.66%': 'INCAPACIDAD GENERAL',
                 'SUSPENSION': 'LICENCIA NO REMUNERADA', # 🟢 Mapea "Suspensión" a la opción aceptada por PILA
                 'LICENCIA DE LUTO': 'LICENCIA REMUNERADA',
+
+                # Mapeos desde los nombres de hr.work.entry.type
+                'SLN - SUSPENSIÓN DEL CONTRATO': 'LICENCIA NO REMUNERADA',
+                'IGE - INCAPACIDAD POR ENFERMEDAD GENERAL': 'INCAPACIDAD GENERAL',
+                'LMA - LICENCIA DE MATERNIDAD': 'LICENCIA DE MATERNIDAD (LMA)',
+                'VAL-LR - VACACIONES O LICENCIA REMUNERADA': 'VACACIONES', # PILA acepta VACACIONES o LICENCIA REMUNERADA, asignamos VACACIONES por defecto si el texto trae ambos
+                'AVP - AUSENCIA POR VACACIONES PAGADAS': 'SI',
+                'VCT - VACACIONES COLECTIVAS': 'SI',
             }
 
 
@@ -1471,7 +1483,6 @@ class PayrollExcelWizard(models.TransientModel):
                     # ---------------- CENTRO TRABAJO ----------------
                     if col_num == 79:
                         val = clean_text(cell_value)
-                        val = val if val else "RIESGO III"
                         cell.value = val
                         cell.data_type = 's'
                         continue
